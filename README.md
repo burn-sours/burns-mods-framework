@@ -58,12 +58,19 @@ burns-mods-framework/
 
 ## Branches
 
-- **`main`** — Core framework, docs, and skeleton. No mods live here.
-- **`mod/<name>`** — Each mod gets its own branch, never merged back to main.
+- **`main`** — Core framework, docs, and skeleton.
+- **`mod/<name>`** — Each mod gets its own branch.
 
 ## Knowledge
 
 All modding knowledge lives in `docs/`. If it's not documented, we don't assume it works.
+
+All patch data definitions — variable names, function signatures, parameter descriptions, and behavioral observations — are entirely the interpretation of Burn and the project's contributors based on reverse engineering. They may be incomplete or inaccurate. 
+
+Other community resources such as [TRosettaStone](https://opentomb.github.io/TRosettaStone3/trosettastone.html), [OpenLara](https://github.com/XProger/OpenLara), or [Croft Engine](https://github.com/stohrendorf/CroftEngine) may offer deeper or more accurate explanations of certain game mechanisms.
+
+All contributors are welcome to improve the understanding of the game — better descriptions, corrected signatures, newly discovered variables — it all helps the project and everyone who enjoys it. Put in a PR!
+
 
 ## Contributing
 
