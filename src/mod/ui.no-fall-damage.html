@@ -1,0 +1,17 @@
+<div>
+    <h3 style="margin-bottom: 8px; color: #f5f3f0;">No Fall Damage</h3>
+    <p style="color: #9ca3af; font-size: 13px;">Prevents Lara's fall damage.</p>
+    <p id="nfd-status" style="color: #9ca3af; font-size: 13px;"></p>
+    <p id="nfd-level" style="color: #9ca3af; font-size: 13px;"></p>
+</div>
+
+<script>
+    window.framework.onEvent((payload) => {
+        if (payload.event === 'stateUpdate' && payload.data) {
+            const status = document.getElementById('nfd-status');
+            const level = document.getElementById('nfd-level');
+            status.textContent = payload.data.laraActive ? 'Active - Protecting Lara' : 'Waiting for Lara...';
+            level.textContent = 'Level: ' + payload.data.level;
+        }
+    });
+</script>
