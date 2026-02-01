@@ -67,10 +67,10 @@ mod.hook('SoundEffect')
 
 // onLeave receives the return value (typed) and original params
 // return a value to override the original return value
-mod.hook('LoadedLevel')
-    .onLeave(function(returnValue, levelId, a, b, c) {
-        log('Loaded level:', levelId);
-        if (levelId === 0) return 1; // override return value
+mod.hook('SoundEffect')
+    .onLeave(function(returnValue, soundId, pos, flags) {
+        log('SoundEffect:', soundId);
+        if (soundId === 0) return 1; // override return value
     });
 
 // replace works the same way
