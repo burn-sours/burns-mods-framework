@@ -22,14 +22,14 @@ Brief description of what this function does.
 | 1   | `pointer` | Description of second param    |
 | 2   | `int`     | Description of third param     |
 
-## Pseudocode
-```
-// Pseudocode of what the function does
-// Can be partial — still useful context
-```
-
 ## Usage
 ### Calling from mod code
 ```javascript
 const result = game.callFunction(game.module, 'Name', arg0, arg1, arg2);
+```
+
+## Pseudocode
+```
+// Pseudocode of what the function does
+// Can be partial — still useful context
 ```
