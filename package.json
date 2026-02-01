@@ -1,0 +1,35 @@
+{
+  "name": "burns-mods-framework",
+  "version": "0.1.0",
+  "main": "src/framework/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder -p never --win",
+    "postinstall": "node -e \"const fs=require('fs');if(fs.existsSync('frida_binding.node'))fs.copyFileSync('frida_binding.node','node_modules/frida/build/frida_binding.node')\""
+  },
+  "dependencies": {
+    "frida": "16.4.10"
+  },
+  "devDependencies": {
+    "electron": "^27.0.0",
+    "electron-builder": "^25.1.8"
+  },
+  "build": {
+    "appId": "com.laracrofts.aimods",
+    "productName": "Burn's Mod Framework",
+    "files": [
+      "src/**/*",
+      "media/**/*",
+      "node_modules/frida/build/frida_binding.node",
+      "node_modules/frida/package.json"
+    ],
+    "icon": "media/burn.ico",
+    "directories": {
+      "output": "releases"
+    },
+    "win": {
+      "publisherName": "burn_sours",
+      "target": ["portable"]
+    }
+  }
+}

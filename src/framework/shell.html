@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title></title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #010101;
+            color: #f5f3f0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+        }
+        #header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 0 16px;
+            background-color: #010101;
+            height: 50px;
+            flex-shrink: 0;
+            border-bottom: 1px solid #1a1a1a;
+        }
+        #status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: #444;
+            flex-shrink: 0;
+        }
+        #status-dot.idle { background: #444; }
+        #status-dot.waiting { background: #fb6010; }
+        #status-dot.attaching { background: #fb6010; }
+        #status-dot.injecting { background: #fb6010; }
+        #status-dot.active { background: #40c050; }
+        #status-dot.error { background: #e04040; }
+        #status-text {
+            flex: 1;
+            font-size: 13px;
+            color: #9ca3af;
+        }
+        button {
+            padding: 8px 20px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 600;
+            transition: background-color 0.2s ease, opacity 0.2s ease;
+        }
+        .btn-group {
+            position: relative;
+            display: inline-flex;
+        }
+        #btn-launch {
+            background-color: #fb6010;
+            color: #f5f3f0;
+            border-radius: 6px 0 0 6px;
+        }
+        #btn-launch:hover:not(:disabled) { background-color: #e05500; }
+        #btn-launch-arrow {
+            background-color: #fb6010;
+            color: #f5f3f0;
+            border-radius: 0 6px 6px 0;
+            padding: 8px 8px;
+            border-left: 1px solid rgba(0,0,0,0.2);
+            font-size: 11px;
+        }
+        #btn-launch-arrow:hover:not(:disabled) { background-color: #e05500; }
+        #launch-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            right: 0;
+            margin-top: 4px;
+            background: #2a2a2a;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            z-index: 100;
+            min-width: 150px;
+        }
+        #launch-dropdown.open { display: block; }
+        #launch-dropdown button {
+            width: 100%;
+            text-align: left;
+            background: none;
+            color: #f5f3f0;
+            padding: 8px 14px;
+            border-radius: 6px;
+            font-weight: 500;
+        }
+        #launch-dropdown button:hover { background: #3a3a3a; }
+        #btn-stop {
+            background-color: #2a2a2a;
+            color: #f5f3f0;
+        }
+        #btn-stop:hover:not(:disabled) { background-color: #3a3a3a; }
+        button:disabled { opacity: 0.3; cursor: default; }
+        #mod-select {
+            background-color: #2a2a2a;
+            color: #f5f3f0;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 12px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            outline: none;
+            max-width: 220px;
+            text-overflow: ellipsis;
+        }
+        #mod-select:disabled { opacity: 0.3; cursor: default; }
+        #content {
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+            overflow: hidden;
+        }
+        #mod-ui {
+            flex: 1;
+            padding: 16px;
+            overflow-y: auto;
+        }
+        #log-wrapper {
+            height: 150px;
+            background-color: #0a0a0a;
+            border-top: 1px solid #1a1a1a;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+        }
+        #log-header {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding: 4px 8px;
+            flex-shrink: 0;
+        }
+        #btn-export-logs {
+            background: none;
+            border: none;
+            padding: 2px;
+            cursor: pointer;
+            opacity: 0.3;
+            transition: opacity 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+        #btn-export-logs:hover { opacity: 0.7; }
+        #log-panel {
+            flex: 1;
+            padding: 0 8px 8px;
+            overflow-y: auto;
+            font-family: 'Cascadia Code', 'Consolas', monospace;
+            font-size: 11px;
+            line-height: 1.6;
+            user-select: text;
+        }
+        .log-entry {
+            padding: 1px 0;
+            word-break: break-all;
+            color: #9ca3af;
+        }
+        .log-entry.error { color: #e04040; }
+        .log-entry.system { color: #555; }
+        .log-entry.event { color: #fb6010; }
+    </style>
+</head>
+<body>
+    <div id="header">
+        <div id="status-dot" class="idle"></div>
+        <span id="status-text">Idle</span>
+        <select id="mod-select"></select>
+        <div class="btn-group">
+            <button id="btn-launch">Launch</button>
+            <button id="btn-launch-arrow">&#9662;</button>
+            <div id="launch-dropdown">
+                <button id="btn-launch-with">Launch with...</button>
+            </div>
+        </div>
+        <button id="btn-stop">Stop</button>
+    </div>
+    <div id="content">
+        <div id="mod-ui"></div>
+        <div id="log-wrapper">
+            <div id="log-header">
+                <button id="btn-export-logs" title="Export logs">
+                    <svg width="14" height="14" viewBox="0 0 16 16" fill="none" stroke="#9ca3af" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M8 2v8M5 7l3 3 3-3M3 12v1.5h10V12"/>
+                    </svg>
+                </button>
+            </div>
+            <div id="log-panel"></div>
+        </div>
+    </div>
+    <script>
+        const statusDot = document.getElementById('status-dot');
+        const statusText = document.getElementById('status-text');
+        const logPanel = document.getElementById('log-panel');
+
+        const STATUS_LABELS = {
+            idle: 'Idle',
+            waiting: 'Waiting for game...',
+            attaching: 'Attaching...',
+            injecting: 'Injecting script...',
+            active: 'Active',
+            error: 'Error',
+        };
+
+        const MAX_LOG_ENTRIES = 500;
+
+        function log(text, type = 'event') {
+            const entry = document.createElement('div');
+            entry.className = 'log-entry ' + type;
+            entry.textContent = '[' + new Date().toLocaleTimeString() + '] ' + text;
+            logPanel.appendChild(entry);
+            while (logPanel.children.length > MAX_LOG_ENTRIES) {
+                logPanel.removeChild(logPanel.firstChild);
+            }
+            logPanel.scrollTop = logPanel.scrollHeight;
+        }
+
+        const btnLaunch = document.getElementById('btn-launch');
+        const btnLaunchArrow = document.getElementById('btn-launch-arrow');
+        const launchDropdown = document.getElementById('launch-dropdown');
+        const btnLaunchWith = document.getElementById('btn-launch-with');
+        const btnStop = document.getElementById('btn-stop');
+        const modSelect = document.getElementById('mod-select');
+        btnStop.disabled = true;
+
+        function updateButtons(status) {
+            const launchDisabled = status !== 'idle' && status !== 'error';
+            btnLaunch.disabled = launchDisabled;
+            btnLaunchArrow.disabled = launchDisabled;
+            modSelect.disabled = launchDisabled;
+            btnStop.disabled = status === 'idle' || status === 'error';
+        }
+
+        btnLaunch.addEventListener('click', async () => {
+            try {
+                log('Launching...', 'system');
+                await window.framework.launch();
+            } catch (e) {
+                log('Launch failed: ' + e.message, 'error');
+            }
+        });
+
+        btnLaunchArrow.addEventListener('click', (e) => {
+            e.stopPropagation();
+            launchDropdown.classList.toggle('open');
+        });
+
+        document.addEventListener('click', () => {
+            launchDropdown.classList.remove('open');
+        });
+
+        btnLaunchWith.addEventListener('click', async () => {
+            launchDropdown.classList.remove('open');
+            try {
+                log('Launching with custom exe...', 'system');
+                await window.framework.launchWith();
+            } catch (e) {
+                log('Launch failed: ' + e.message, 'error');
+            }
+        });
+
+        btnStop.addEventListener('click', async () => {
+            try {
+                log('Stopping...', 'system');
+                await window.framework.stop();
+            } catch (e) {
+                log('Stop failed: ' + e.message, 'error');
+            }
+        });
+
+        window.framework.onStatus((status) => {
+            statusDot.className = status;
+            statusText.textContent = STATUS_LABELS[status] || status;
+            updateButtons(status);
+            log('Status: ' + status, 'system');
+        });
+
+        window.framework.onEvent((payload) => {
+            if (payload.event === '__log') {
+                const d = payload.data;
+                log(d.message, { info: 'event', warning: 'system', error: 'error' }[d.level] || 'event');
+            } else if (payload.event === '__error') {
+                log(payload.data.message, 'error');
+            }
+        });
+
+        document.getElementById('btn-export-logs').addEventListener('click', () => {
+            const lines = Array.from(logPanel.children).map(el => el.textContent);
+            window.framework.exportLogs(lines.join('\n'));
+        });
+
+        function loadModUI(modId) {
+            window.framework.clearModListeners();
+            const uiFile = modId === 'default' ? '../mod/ui.html' : '../mod/ui.' + modId + '.html';
+            const container = document.getElementById('mod-ui');
+            fetch(uiFile)
+                .then(r => {
+                    if (!r.ok) throw new Error(r.status);
+                    return r.text();
+                })
+                .then(html => {
+                    container.innerHTML = html;
+                    container.querySelectorAll('script').forEach(oldScript => {
+                        const newScript = document.createElement('script');
+                        if (oldScript.src) {
+                            newScript.src = oldScript.src;
+                        } else {
+                            newScript.textContent = oldScript.textContent;
+                        }
+                        oldScript.replaceWith(newScript);
+                    });
+                })
+                .catch(() => {
+                    container.innerHTML = '';
+                    log('No UI file for this mod', 'system');
+                });
+        }
+
+        modSelect.addEventListener('change', async () => {
+            try {
+                await window.framework.selectMod(modSelect.value);
+                loadModUI(modSelect.value);
+            } catch (e) {
+                log('Failed to switch mod: ' + e.message, 'error');
+            }
+        });
+
+        (async () => {
+            try {
+                const mods = await window.framework.getMods();
+                mods.forEach(m => {
+                    const opt = document.createElement('option');
+                    opt.value = m.id;
+                    opt.textContent = m.game + ' - ' + m.name;
+                    modSelect.appendChild(opt);
+                });
+                const defaultMod = mods.find(m => m.id === 'default') || mods[0];
+                if (defaultMod) {
+                    modSelect.value = defaultMod.id;
+                    loadModUI(defaultMod.id);
+                }
+            } catch (e) {
+                log('Failed to load mod list: ' + e.message, 'error');
+            }
+        })();
+    </script>
+</body>
+</html>
