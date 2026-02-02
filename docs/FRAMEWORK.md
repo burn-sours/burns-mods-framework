@@ -94,6 +94,8 @@ mod.hook('SoundEffect')
 
 Use either `.onEnter()`/`.onLeave()` or `.replace()`, not both.
 
+> ⚠️ **Warning:** Using `.replace()` can make your mod incompatible with other mods running at the same time. If a second mod hooks the same function after a replace, and the replacing mod is removed first, it can break the game or the other mod. **Only use `.replace()` when you absolutely cannot achieve the result with `.onEnter()`/`.onLeave()`.** Prefer the enter/leave approach as a rule of thumb.
+
 ### `mod.loop(name)`
 
 Register a recurring game-side loop. Runs via recursive `setTimeout` to prevent callback stacking.
