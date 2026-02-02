@@ -12,7 +12,7 @@ module.exports = {
         NewGamePlus: { Address: "0x68f178", Type: "UInt8" },
         InterpolationFactor: { Address: "0x4957b0", Type: "UInt32" },
         LaraId: { Address: "0x4f3d80", Type: "Int16" },
-        LaraBase: { Address: "0x4f3f40", Type: "UInt64" },
+        Lara: { Address: "0x4f3f40", Type: "Pointer" },
         LaraOxygen: { Address: "0x4f3d96", Type: "Int16" },
         LaraPoisoned: { Address: "0x4f3db2", Type: "Int16" },
         PoisonFactor: { Address: "0x1bc0c8", Type: "Int16" },

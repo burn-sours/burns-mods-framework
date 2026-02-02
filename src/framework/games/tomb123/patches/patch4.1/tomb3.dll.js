@@ -11,7 +11,7 @@ module.exports = {
         InterpolationFactor: { Address: "0x32f2a4", Type: "UInt32" },
         NewGamePlus: { Address: "0x55e6d4", Type: "UInt8" },
         LaraId: { Address: "0x3a1ec0", Type: "Int16" },
-        LaraBase: { Address: "0x3a2070", Type: "UInt64" },
+        Lara: { Address: "0x3a2070", Type: "Pointer" },
         LaraBehaviourFlags: { Address: "0x3A1Efc", Type: "Int8" },
         LaraClimbState: { Address: "0x3a1ece", Type: "Int16" },
         LaraOxygen: { Address: "0x3a1ed6", Type: "Int16" },

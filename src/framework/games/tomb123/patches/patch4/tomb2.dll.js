@@ -11,7 +11,7 @@ module.exports = {
         InterpolationFactor: { Address: "0x2cfa98", Type: "UInt32" },
         NewGamePlus: { Address: "0x4f7466", Type: "UInt8" },
         LaraId: { Address: "0x30eaa0", Type: "Int16" },
-        LaraBase: { Address: "0x342fc0", Type: "UInt64" },
+        Lara: { Address: "0x342fc0", Type: "Pointer" },
         LaraOxygen: { Address: "0x30EAB6", Type: "Int16" },
         LaraCircleShadow: { Address: "0x342fc0", Type: "Block", Pointer: "0xe20", Size: "0x30" },
         LaraClimbState: { Address: "0x30EAAe", Type: "Int16" },
@@ -54,7 +54,6 @@ module.exports = {
         EntitiesCount: { Address: "0x3fa010", Type: "Int16" },
         Rooms: { Address: "0x4241c0", Type: "Pointer" },
         RoomsCount: { Address: "0x3FA010", Type: "Int16" },
-        OgGraphicsTable: "0x3fa188",
     },
 
     hooks: {
