@@ -74,7 +74,7 @@ module.exports = {
         DrawSetup: { Address: "0x7ffd0", Params: ['int', 'pointer'], Return: 'void' },
         DrawRect: { Address: "0x80e90", Params: ['int', 'int', 'int', 'int', 'uint64', 'uint64'], Return: 'void' },
         DrawHealth: { Address: "0x92020", Params: ['int'], Return: 'void' },
-        RenderSkiidoo: { Address: "0x6d010", Params: ['pointer'], Return: 'void' },
+        RenderSkidoo: { Address: "0x6d010", Params: ['pointer'], Return: 'void' },
         RenderBoat: { Address: "0x16930", Params: ['pointer'], Return: 'void' },
         RoomChange: { Address: "0x3c9b0", Params: ['int', 'int'], Return: 'void' },
         GetRelYawPitch: { Address: "0x98340", Params: ['int', 'int', 'int', 'pointer'], Return: 'void' },

@@ -17,7 +17,6 @@ module.exports = {
         LaraBasicData: { Address: "0x39de90", Type: "Block", Pointer: "0x0", Size: "0x28" },
         LaraClimbState: { Address: "0x39DCEE", Type: "Int16" },
         LaraBehaviourFlags: { Address: "0x39DD1C", Type: "Int8" },
-        LaraHairX: { Address: "0x3D8480", Type: "Int32" },
         LaraGunFlags: { Address: "0x39dd20", Type: "UInt16" },
         LaraGunType: { Address: "0x39DCE4", Type: "Int32" },
         LaraAimingEnemy: { Address: "0x39ddd0", Type: "UInt64" },

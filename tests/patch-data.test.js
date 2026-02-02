@@ -132,47 +132,116 @@ describe('Patch consistency', () => {
         const patchNames = Object.keys(config.patches);
         if (patchNames.length < 2) continue;
 
-        for (const modName of [config.executable, ...Object.keys(config.modules)]) {
-            describe(`${name} / ${modName}: variables consistent across patches`, () => {
-                const patchesWithMod = patchNames.filter(p =>
-                    config.patches[p].memory[modName] && config.patches[p].memory[modName].variables
-                );
+        // Build the full set of module names across ALL patches
+        const allModuleNames = new Set();
+        for (const patchName of patchNames) {
+            for (const modName of Object.keys(config.patches[patchName].memory)) {
+                allModuleNames.add(modName);
+            }
+        }
 
-                if (patchesWithMod.length < 2) return;
+        describe(`${name}: module presence across patches`, () => {
+            for (const modName of allModuleNames) {
+                it(`${modName} exists in all patches`, () => {
+                    const missing = patchNames.filter(p => !config.patches[p].memory[modName]);
+                    assert.equal(missing.length, 0,
+                        `${modName} missing from patches: ${missing.join(', ')}`);
+                });
+            }
+        });
 
-                const baseVars = config.patches[patchesWithMod[0]].memory[modName].variables;
+        for (const modName of allModuleNames) {
+            // Collect all variable names (non-string) across all patches for this module
+            const allVarNames = new Set();
+            const allHookNames = new Set();
 
-                for (const otherPatch of patchesWithMod.slice(1)) {
-                    const otherVars = config.patches[otherPatch].memory[modName].variables;
-
-                    it(`${patchesWithMod[0]} vs ${otherPatch}: variable names consistent (additions allowed)`, () => {
-                        const baseNames = new Set(Object.keys(baseVars).filter(k => typeof baseVars[k] !== 'string'));
-                        const otherNames = new Set(Object.keys(otherVars).filter(k => typeof otherVars[k] !== 'string'));
-                        // Check no variables were removed (renamed counts as removed + added)
-                        const removed = [...baseNames].filter(n => !otherNames.has(n));
-                        const added = [...otherNames].filter(n => !baseNames.has(n));
-                        if (removed.length > 0 || added.length > 0) {
-                            // Log as info, not failure — patches evolve
-                            // But flag potential typos (similar names)
-                            console.log(`  [info] ${modName} ${patchesWithMod[0]}→${otherPatch}: +${added.length} added, -${removed.length} removed`);
-                            if (removed.length) console.log(`    removed: ${removed.join(', ')}`);
-                            if (added.length) console.log(`    added: ${added.join(', ')}`);
-                        }
-                    });
-
-                    it(`${patchesWithMod[0]} vs ${otherPatch}: same variable types`, () => {
-                        for (const varName of Object.keys(baseVars)) {
-                            if (typeof baseVars[varName] === 'string') continue;
-                            if (!otherVars[varName] || typeof otherVars[varName] === 'string') continue;
-                            assert.equal(
-                                baseVars[varName].Type,
-                                otherVars[varName].Type,
-                                `${varName} type changed: ${baseVars[varName].Type} → ${otherVars[varName].Type}`
-                            );
-                        }
-                    });
+            for (const patchName of patchNames) {
+                const modData = config.patches[patchName].memory[modName];
+                if (!modData) continue;
+                if (modData.variables) {
+                    for (const [k, v] of Object.entries(modData.variables)) {
+                        if (typeof v !== 'string') allVarNames.add(k);
+                    }
                 }
-            });
+                if (modData.hooks) {
+                    for (const k of Object.keys(modData.hooks)) {
+                        allHookNames.add(k);
+                    }
+                }
+            }
+
+            if (allVarNames.size > 0) {
+                describe(`${name} / ${modName}: variable consistency`, () => {
+                    for (const varName of allVarNames) {
+                        it(`${varName} exists in all patches`, () => {
+                            const missing = patchNames.filter(p => {
+                                const modData = config.patches[p].memory[modName];
+                                return !modData || !modData.variables || !(varName in modData.variables);
+                            });
+                            assert.equal(missing.length, 0,
+                                `variable "${varName}" missing from patches: ${missing.join(', ')}`);
+                        });
+                    }
+
+                    // Type consistency — compare all patches against the first
+                    const basePatch = patchNames[0];
+                    const baseVars = config.patches[basePatch].memory[modName]?.variables || {};
+
+                    for (const otherPatch of patchNames.slice(1)) {
+                        const otherVars = config.patches[otherPatch].memory[modName]?.variables || {};
+
+                        for (const varName of allVarNames) {
+                            const baseVar = baseVars[varName];
+                            const otherVar = otherVars[varName];
+                            if (!baseVar || typeof baseVar === 'string' || !otherVar || typeof otherVar === 'string') continue;
+
+                            it(`${varName}: same type in ${basePatch} and ${otherPatch}`, () => {
+                                assert.equal(baseVar.Type, otherVar.Type,
+                                    `${varName} type mismatch: ${basePatch} has ${baseVar.Type}, ${otherPatch} has ${otherVar.Type}`);
+                            });
+                        }
+                    }
+                });
+            }
+
+            if (allHookNames.size > 0) {
+                describe(`${name} / ${modName}: hook consistency`, () => {
+                    for (const hookName of allHookNames) {
+                        it(`${hookName} exists in all patches`, () => {
+                            const missing = patchNames.filter(p => {
+                                const modData = config.patches[p].memory[modName];
+                                return !modData || !modData.hooks || !(hookName in modData.hooks);
+                            });
+                            assert.equal(missing.length, 0,
+                                `hook "${hookName}" missing from patches: ${missing.join(', ')}`);
+                        });
+                    }
+
+                    // Signature consistency — params and return type must match across patches
+                    const basePatch = patchNames[0];
+                    const baseHooks = config.patches[basePatch].memory[modName]?.hooks || {};
+
+                    for (const otherPatch of patchNames.slice(1)) {
+                        const otherHooks = config.patches[otherPatch].memory[modName]?.hooks || {};
+
+                        for (const hookName of allHookNames) {
+                            const baseHook = baseHooks[hookName];
+                            const otherHook = otherHooks[hookName];
+                            if (!baseHook || !otherHook) continue;
+
+                            it(`${hookName}: same return type in ${basePatch} and ${otherPatch}`, () => {
+                                assert.equal(baseHook.Return, otherHook.Return,
+                                    `${hookName} return type mismatch: ${basePatch} has ${baseHook.Return}, ${otherPatch} has ${otherHook.Return}`);
+                            });
+
+                            it(`${hookName}: same params in ${basePatch} and ${otherPatch}`, () => {
+                                assert.deepEqual(baseHook.Params, otherHook.Params,
+                                    `${hookName} params mismatch: ${basePatch} has [${baseHook.Params}], ${otherPatch} has [${otherHook.Params}]`);
+                            });
+                        }
+                    }
+                });
+            }
         }
     }
 });
