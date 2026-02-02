@@ -4,7 +4,7 @@
 Camera field of view.
 
 ## Notes
-- Calculated during the draw setup based on the interpolation factor
+- Calculated during the draw setup
 
 ## Details
 
