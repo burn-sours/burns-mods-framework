@@ -76,9 +76,6 @@ for (const { config, name } of games) {
                         if (modData.variables) {
                             describe('variables', () => {
                                 for (const [varName, varDef] of Object.entries(modData.variables)) {
-                                    // Skip raw string offset entries (e.g. OgModels*)
-                                    if (typeof varDef === 'string') continue;
-
                                     it(`${varName}: valid address`, () => {
                                         assert.ok(varDef.Address, `${varName} missing Address`);
                                         assert.ok(isValidHex(varDef.Address), `${varName} invalid hex address: ${varDef.Address}`);
@@ -151,7 +148,7 @@ describe('Patch consistency', () => {
         });
 
         for (const modName of allModuleNames) {
-            // Collect all variable names (non-string) across all patches for this module
+            // Collect all variable names across all patches for this module
             const allVarNames = new Set();
             const allHookNames = new Set();
 
@@ -160,7 +157,7 @@ describe('Patch consistency', () => {
                 if (!modData) continue;
                 if (modData.variables) {
                     for (const [k, v] of Object.entries(modData.variables)) {
-                        if (typeof v !== 'string') allVarNames.add(k);
+                        allVarNames.add(k);
                     }
                 }
                 if (modData.hooks) {
@@ -193,7 +190,7 @@ describe('Patch consistency', () => {
                         for (const varName of allVarNames) {
                             const baseVar = baseVars[varName];
                             const otherVar = otherVars[varName];
-                            if (!baseVar || typeof baseVar === 'string' || !otherVar || typeof otherVar === 'string') continue;
+                            if (!baseVar || !otherVar) continue;
 
                             it(`${varName}: same type in ${basePatch} and ${otherPatch}`, () => {
                                 assert.equal(baseVar.Type, otherVar.Type,
