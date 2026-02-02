@@ -21,7 +21,7 @@ module.exports = {
         LaraCircleShadow: { Address: "0x1b0bb0", Type: "Block", Pointer: "0x0", Size: "0xc" },
         LaraBasicData: { Address: "0x4ebb00", Type: "Block", Pointer: "0x0", Size: "0x28" },
         LaraClimbState: { Address: "0x4EB94E", Type: "Int16" },
-        LaraBehaviousFlags: { Address: "0x4EB984", Type: "Int8" },
+        LaraBehaviourFlags: { Address: "0x4EB984", Type: "Int8" },
         LaraHairLeftX: { Address: "0x6336e0", Type: "Int32" },
         LaraHairRightX: { Address: "0x633d8c", Type: "Int32" },
         LaraGunFlagsLeft: { Address: "0x4eba44", Type: "Int16" },
