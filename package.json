@@ -5,6 +5,7 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder -p never --win",
+    "test": "node --test tests/*.test.js",
     "postinstall": "node -e \"const fs=require('fs');if(fs.existsSync('frida_binding.node'))fs.copyFileSync('frida_binding.node','node_modules/frida/build/frida_binding.node')\""
   },
   "dependencies": {
