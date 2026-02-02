@@ -4,6 +4,7 @@
 The ID of the currently loaded level.
 
 ## Notes
+- Read only
 - Each level has a unique numeric ID
 - Changes when a new level is loaded
 - This variable is per-module — each DLL has its own LevelId with its own level mappings
