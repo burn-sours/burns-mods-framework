@@ -34,6 +34,13 @@ Looks up the sound ID in a sample table to get playback properties (volume, pitc
 | 1   | `pointer` | Position in world space (X, Y, Z) or null for non-spatial |
 | 2   | `int`     | Flags — bit 0: ambient check, bit 2: custom volume in upper bits, bit 3: override volume |
 
+### Return Values
+
+| Value | Description                              |
+|-------|------------------------------------------|
+| `0`   | Sound failed to play (culled, no channel, or invalid ID) |
+| `1`   | Sound played successfully                |
+
 ## Usage
 ### Hooking
 ```javascript

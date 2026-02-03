@@ -18,12 +18,6 @@ On exit, cleans up UI text elements, restores camera state, and returns a value 
 - The main loop runs until an exit condition is met (player closes menu or an external signal)
 - Cleans up ammo count text and other UI text elements on both entry and exit (decrements UiTextsCount)
 - Camera state is saved and restored around the menu
-- Return values:
-  - `0` — menu closed, no action taken
-  - `1` — item was selected/used
-  - `0xC0` — special menu outcome (unknown purpose)
-  - `0x100` — special menu outcome (unknown purpose)
-  - `0x180` — special menu outcome (unknown purpose)
 - MenuSelection values observed in the exit logic: 0x47, 0x49, 99, 100, 0x65, 0x66, 0x6C, 0x6D — these map to specific inventory actions (not yet fully documented)
 
 ## Details
@@ -32,13 +26,23 @@ On exit, cleans up UI text elements, restores camera state, and returns a value 
 |-----------|-------------|
 | Usage     | `Hook`      |
 | Params    | `int`       |
-| Return    | `pointer`   |
+| Return    | `int`       |
 
 ### Parameters
 
 | #   | Type  | Description                                    |
 |-----|-------|------------------------------------------------|
 | 0   | `int` | Menu type (1 = weapons, 2 = items, others vary) |
+
+### Return Values
+
+| Value    | Description                              |
+|----------|------------------------------------------|
+| `0`      | Menu closed, no action taken             |
+| `1`      | Item was selected/used                   |
+| `0xC0`   | Special menu outcome (unknown purpose)   |
+| `0x100`  | Special menu outcome (unknown purpose)   |
+| `0x180`  | Special menu outcome (unknown purpose)   |
 
 ## Usage
 ### Hooking

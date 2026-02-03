@@ -23,6 +23,13 @@ Brief description of what this function does.
 | 1   | `pointer` | Description of second param    |
 | 2   | `int`     | Description of third param     |
 
+### Return Values
+
+| Value | Description                    |
+|-------|--------------------------------|
+| `0`   | Description of return value    |
+| `1`   | Description of return value    |
+
 ## Usage
 ### Hooking
 ```javascript
