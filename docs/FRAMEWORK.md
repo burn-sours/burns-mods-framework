@@ -416,7 +416,7 @@ const mod = createMod('no-fall-damage', 'tomb123', ['tomb1.dll']);
 
 mod.init(function() {
     try {
-        game._lara = game.getVarPtr(game.module, 'Lara').readPointer();
+        game._lara = game.readVar(game.module, 'Lara');
     } catch(e) {
         game._lara = null;
     }
@@ -425,7 +425,7 @@ mod.init(function() {
 mod.hook('LaraInLevel')
     .onLeave(function(returnValue) {
         try {
-            game._lara = game.getVarPtr(game.module, 'Lara').readPointer();
+            game._lara = game.readVar(game.module, 'Lara');
         } catch(e) {
             game._lara = null;
         }
