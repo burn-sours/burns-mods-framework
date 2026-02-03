@@ -61,7 +61,7 @@ module.exports = {
         InitializeLevelAI: { Address: "0x2cac0", Params: [], Return: 'void' },
         SoundEffect: { Address: "0x78ff0", Params: ['int', 'pointer', 'int'], Return: 'int' },
         RenderUI: { Address: "0x19780", Params: [], Return: 'void' },
-        Menu: { Address: "0x1b850", Params: ['int'], Return: 'pointer' },
+        Menu: { Address: "0x1b850", Params: ['int'], Return: 'int' },
         Clone: { Address: "0x8e780", Params: ['pointer', 'pointer', 'uint64'], Return: 'void' },
         AddText: { Address: "0x7be50", Params: ['int', 'int', 'int', 'pointer'], Return: 'pointer' },
         DrawSetup: { Address: "0x50460", Params: ['int', 'pointer'], Return: 'void' },
