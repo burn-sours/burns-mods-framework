@@ -1,14 +1,14 @@
 # Function: DrawSetup
 
 ## Description
-Configures the rendering state for subsequent 2D draw calls (DrawRect, etc.). Must be called before drawing UI primitives to set the draw mode and optional material/color data.
+Configures the rendering state for subsequent 2D draw calls (DrawRect, etc.). Must be called before drawing UI primitives to set the render layer and optional material/color data.
 
-Has an early-out optimisation — if the same draw mode and data are already active (and viewport dimensions haven't changed), it skips redundant setup. Otherwise, it records a new render command entry with the current viewport state, the draw mode, and the material data.
+Has an early-out optimisation — if the same render layer and data are already active (and viewport dimensions haven't changed), it skips redundant setup. Otherwise, it records a new render command entry with the current viewport state, the render layer, and the material data.
 
 ## Notes
 - Called by DrawHealth before drawing the health bar
 - The second parameter is a pointer to a 48-byte block (12 × 4-byte values) — likely color or material properties. Pass null to use the engine's default data
-- The early-out compares: draw mode, material data, viewport dimensions, and a scale factor
+- The early-out compares: render layer, material data, viewport dimensions, and a scale factor
 
 ## Details
 
@@ -22,15 +22,15 @@ Has an early-out optimisation — if the same draw mode and data are already act
 
 | #   | Type      | Description                                                    |
 |-----|-----------|----------------------------------------------------------------|
-| 0   | `int`     | Draw mode ID                                                   |
+| 0   | `int`     | Render layer — determines where in the pipeline UI elements are drawn |
 | 1   | `pointer` | Material/color data (48 bytes, 12 values) or null for default |
 
 ## Usage
 ### Hooking
 ```javascript
 mod.hook('DrawSetup')
-    .onEnter(function(mode, data) {
-        // mode: draw mode ID
+    .onEnter(function(layer, data) {
+        // layer: render layer ID
         // data: pointer to 48-byte material block, or null
     });
 ```
@@ -38,16 +38,16 @@ mod.hook('DrawSetup')
 ### Calling from mod code
 ```javascript
 // Set up draw state before drawing UI primitives
-game.callFunction(game.module, 'DrawSetup', mode, ptr(0));
+game.callFunction(game.module, 'DrawSetup', layer, ptr(0));
 
 // Then draw with DrawRect...
 ```
 
 ## Pseudocode
 ```
-function DrawSetup(mode, materialData):
+function DrawSetup(layer, materialData):
     // early-out if state unchanged
-    if mode == currentMode:
+    if layer == currentLayer:
         if materialData matches stored data (48-byte compare):
             if viewport dimensions unchanged:
                 return  // skip redundant setup
@@ -57,7 +57,7 @@ function DrawSetup(mode, materialData):
     increment render command counter
 
     // store new state
-    currentMode = mode
+    currentLayer = layer
     store viewport dimensions
 
     // copy material data (or use default if null)
@@ -68,5 +68,5 @@ function DrawSetup(mode, materialData):
 
     // finalize render command entry
     finalizeSetup()
-    write render command: mode, material, viewport snapshots
+    write render command: layer, material, viewport snapshots
 ```
