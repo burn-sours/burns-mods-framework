@@ -1,5 +1,9 @@
 /** tomb456.exe - Patch 2 */
 module.exports = {
+    constants: {
+        UI_RENDER_LAYER: 0x42,
+    },
+
     variables: {
         ExitingGame: { Address: "0x69a80c", Type: "Int8" },
         KeyToControl: { Address: "0x586120", Type: "Int64" },
