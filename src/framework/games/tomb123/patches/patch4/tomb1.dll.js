@@ -56,7 +56,7 @@ module.exports = {
 
     hooks: {
         RenderLara: { Address: "0xee40", Params: ['pointer'], Return: 'void' },
-        UpdatePhotoMode: { Address: "0x6ca50", Params: [], Return: 'void' },
+        UpdateLaraAppearance: { Address: "0x6ca50", Params: [], Return: 'void' },
         LoadLevel: { Address: "0x15ea0", Params: ['int', 'pointer', 'pointer', 'pointer'], Return: 'pointer' },
         LaraInLevel: { Address: "0x2cac0", Params: [], Return: 'void' },
         SoundEffect: { Address: "0x78ff0", Params: ['int', 'pointer', 'int'], Return: 'int' },

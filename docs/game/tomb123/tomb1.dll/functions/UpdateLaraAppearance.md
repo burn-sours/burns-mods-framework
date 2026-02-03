@@ -1,9 +1,9 @@
-# Function: UpdatePhotoMode
+# Function: UpdateLaraAppearance
 
 ## Description
-Updates Lara's visual state for photo mode. Manages weapon visibility, model swaps, hair simulation, and outfit configuration based on the current photo mode state and game version.
+Updates Lara's visual appearance. Manages weapon visibility, model swaps, hair simulation, and outfit configuration based on the current state and game version.
 
-When photo mode is inactive, it restores Lara's state — resetting gun flags, render flags, animation data, and copying back saved hair position data. When active, it sets a gun visibility flag and clears weapon/render state.
+Called from multiple contexts — not limited to photo mode. Handles two states: when a specific mode flag is inactive, it restores Lara's state (gun flags, render flags, animation data, hair positions). When active, it sets a gun visibility flag and clears weapon/render state.
 
 After state setup, it runs Lara's entity behaviour function, processes hair attachment (with multiple iterations for a settling pass), and then configures outfit model parts (gun models, pocket models, face pose) based on the current game version and outfit selection.
 
@@ -11,7 +11,7 @@ After state setup, it runs Lara's entity behaviour function, processes hair atta
 - The outfit configuration has extensive branching based on game version (TR1/TR2/TR3) and outfit index (0–9)
 - Each outfit can override which gun, pocket, and back models are displayed
 - Hair attachment runs once initially, then loops (30 or 60 times depending on a flag) for physics settling
-- `ENTITY_ANIM_ID` and `ENTITY_ANIM_FRAME` are restored from saved state when photo mode is inactive
+- `ENTITY_ANIM_ID` and `ENTITY_ANIM_FRAME` are restored from saved state when the mode flag is inactive
 - The function reads `LevelId` to handle special cases (e.g. title screen level 0, and level 0x12 in TR1)
 
 ## Details
@@ -25,18 +25,18 @@ After state setup, it runs Lara's entity behaviour function, processes hair atta
 ## Usage
 ### Hooking
 ```javascript
-mod.hook('UpdatePhotoMode')
+mod.hook('UpdateLaraAppearance')
     .onEnter(function() {
-        // called each frame during photo mode update
+        // called when Lara's appearance is being updated
     });
 ```
 
 ## Pseudocode
 ```
-function UpdatePhotoMode():
+function UpdateLaraAppearance():
     gameVersion = getGameVersion()
 
-    if photo mode inactive or paused:
+    if mode flag inactive:
         clear gun visibility flag from LaraGunFlags
         restore LaraGunType from saved state
         restore lara ENTITY_ANIM_ID and ENTITY_ANIM_FRAME from saved state
