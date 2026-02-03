@@ -222,22 +222,12 @@ game.isModuleSupported(game.module)  // true if module is in this mod's supporte
 
 ### Calling Game Functions
 
-All hooks from patch data are auto-registered as callable native functions. You can call them directly.
+All hooks from patch data are auto-registered as callable native functions. Any function declared with `mod.hook()` (including custom addresses via `.at()`) is also registered as callable.
 
 ```javascript
 if (game.hasFunction(game.module, 'SoundEffect')) {
     game.callFunction(game.module, 'SoundEffect', 42, ptr(0), 0);
 }
-```
-
-### Instruction Patching
-
-```javascript
-// NOP out instructions (original bytes are backed up)
-game.deleteInstruction('tomb1.dll', 0x1A2B3, 6);
-
-// Restore all patched instructions
-game.restoreInstructions();
 ```
 
 ### Pointer Arithmetic
