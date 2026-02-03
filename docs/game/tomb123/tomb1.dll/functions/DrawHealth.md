@@ -3,14 +3,14 @@
 ## Description
 Draws the health bar on screen. Called by RenderUI with a health value scaled to 0–100.
 
-Queries the game version via a dispatch function in the executable (offset 0x8) to select version-specific colors — each game (TR1, TR2, TR3) has its own color palette for the bar. Supports two rendering modes: a classic mode that draws the bar using primitives (DrawSetup, DrawRect, and gradient fills), and a modern/remastered mode that delegates to a separate rendering function.
+Queries the current game version to select version-specific colors — each game (TR1, TR2, TR3) has its own color palette for the bar. Supports two rendering modes: a classic mode that draws the bar using primitives (DrawSetup, DrawRect, and gradient fills), and a modern/remastered mode that delegates to a separate rendering function.
 
 In classic mode, the bar is drawn right-aligned using UiDrawWidth, with a 2-pixel border and a 5-pixel tall fill region. The fill width corresponds directly to the health value (0–100 pixels). Colors are interpolated based on the health value to create a gradient effect — each game version uses distinct color pairs for the gradient.
 
 ## Notes
 - `param_1` is the health value (0–100), passed from RenderUI as `hp / 10`
-- The exe dispatch function at offset 0x8 returns the game version index: 0 = TR1, 1 = TR2, 2+ = TR3
-- The flag at exe offset 0x7e4 (bit 0) selects rendering mode: 0 = classic (primitives), 1 = modern (delegated)
+- Game version determines the color palette: 0 = TR1, 1 = TR2, 2+ = TR3
+- A rendering mode flag selects classic (primitives) vs modern (delegated) — same flag checked in RenderUI
 - Bar position: right-aligned at `UiDrawWidth - 108`, border extends to `UiDrawWidth - 6`
 - Bar fill: Y rows 10–14 (5 pixels tall), X from bar start to `bar start + health value`
 - Border: Y 8–16, drawn with DrawRect for left edge, right edge, and top line
@@ -18,9 +18,7 @@ In classic mode, the bar is drawn right-aligned using UiDrawWidth, with a 2-pixe
   - TR1: blue/teal tones
   - TR2: blue-to-green gradient
   - TR3: dark blue to bright green
-- An unknown color interpolation function (`FUN_180064680`) blends between two color values based on the health parameter
-- An unknown gradient quad function (`FUN_180052a50`) draws shaded rectangles for border shading
-- In modern mode, an unknown function (`FUN_180064780`) handles all rendering with version-specific color data
+- Colors are interpolated between two values based on the health parameter (gradient from empty to full)
 - If health is 0, only the border/background is drawn — no fill
 
 ## Details
@@ -56,7 +54,7 @@ game.callFunction(game.module, 'DrawHealth', 75);
 ## Pseudocode
 ```
 function DrawHealth(health):
-    gameVersion = call exe dispatch function at offset 0x8
+    gameVersion = getGameVersion()
 
     // select color palette based on game version
     // 0 = TR1 (blue/teal), 1 = TR2 (blue-green), 2+ = TR3 (dark blue to green)
@@ -66,8 +64,7 @@ function DrawHealth(health):
     borderLeft = UiDrawWidth - 110
     borderRight = UiDrawWidth - 6
 
-    if modern rendering flag (exe offset 0x7e4, bit 0):
-        // delegate to modern renderer
+    if modern rendering mode:
         modernDrawHealth(barX, 8, health, colors.modernData)
         return
 
