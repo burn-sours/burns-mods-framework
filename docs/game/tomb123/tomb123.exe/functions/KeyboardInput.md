@@ -39,9 +39,9 @@ mod.hook('KeyboardInput')
 ### Calling from mod code
 ```javascript
 // Simulate a keypress
-game.callFunction(game.exe, 'KeyboardInput', keycode, 1);
+game.callFunction(game.executable, 'KeyboardInput', keycode, 1);
 // Simulate a key release
-game.callFunction(game.exe, 'KeyboardInput', keycode, 0);
+game.callFunction(game.executable, 'KeyboardInput', keycode, 0);
 ```
 
 ## Pseudocode
