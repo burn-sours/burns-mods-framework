@@ -121,6 +121,17 @@ ${this.mod._init ? `
             }
         }
 
+        // Register custom .at() hooks as callable too
+        for (const hook of this.mod._hooks) {
+            if (hook._module && hook._offset !== null) {
+                const returnType = hook._return || 'void';
+                const paramTypes = hook._params || [];
+                lines.push(`    try {`);
+                lines.push(`        game.registerFunction(${JSON.stringify(hook._module)}, ${JSON.stringify(hook.name)}, ${JSON.stringify(hook._offset)}, ${JSON.stringify(returnType)}, ${JSON.stringify(paramTypes)});`);
+                lines.push(`    } catch(e) { error('Failed to register ${hook.name}:', e.message); }`);
+            }
+        }
+
         lines.push('}');
         return lines.join('\n');
     }

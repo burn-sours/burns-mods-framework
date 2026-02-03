@@ -222,7 +222,7 @@ game.isModuleSupported(game.module)  // true if module is in this mod's supporte
 
 ### Calling Game Functions
 
-All hooks from patch data are auto-registered as callable native functions.
+All hooks from patch data are auto-registered as callable native functions. Custom hooks declared with `mod.hook().at()` are also registered as callable.
 
 ```javascript
 if (game.hasFunction(game.module, 'SoundEffect')) {
