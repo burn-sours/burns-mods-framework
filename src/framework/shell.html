@@ -337,6 +337,14 @@
 
         (async () => {
             try {
+                const platform = await window.framework.getPlatform();
+                if (platform === 'linux') {
+                    btnLaunchArrow.style.display = 'none';
+                    log('Linux mode — launch the game through Steam/Proton, then click Launch to attach', 'system');
+                }
+            } catch (e) { /* ignore */ }
+
+            try {
                 const mods = await window.framework.getMods();
                 mods.forEach(m => {
                     const opt = document.createElement('option');

@@ -5,8 +5,9 @@
   "scripts": {
     "start": "electron .",
     "build": "electron-builder -p never --win",
+    "build:linux": "electron-builder -p never --linux",
     "test": "node --test tests/*.test.js",
-    "postinstall": "node -e \"const fs=require('fs');if(fs.existsSync('frida_binding.node'))fs.copyFileSync('frida_binding.node','node_modules/frida/build/frida_binding.node')\""
+    "postinstall": "node scripts/postinstall.js"
   },
   "dependencies": {
     "frida": "16.4.10"
@@ -31,6 +32,11 @@
     "win": {
       "publisherName": "burn_sours",
       "target": ["portable"]
+    },
+    "linux": {
+      "target": ["AppImage"],
+      "category": "Game",
+      "icon": "media/burn.png"
     }
   }
 }

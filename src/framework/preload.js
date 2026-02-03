@@ -12,6 +12,7 @@ ipcRenderer.on('status-change', (_, status) => {
 });
 
 contextBridge.exposeInMainWorld('framework', {
+    getPlatform: () => ipcRenderer.invoke('get-platform'),
     launch: () => ipcRenderer.invoke('launch'),
     launchWith: () => ipcRenderer.invoke('launch-with'),
     stop: () => ipcRenderer.invoke('stop'),
