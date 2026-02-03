@@ -10,8 +10,8 @@ The function's primary modding value is as a **UI render hook point** — it run
 ## Notes
 - Health is read from `Lara + ENTITY_HEALTH` (Int16), clamped to 0–1000
 - Display timer is set to 40 (0x28) ticks whenever health changes, then counts down
-- When health decreases, an unknown function is called via the exe dispatch table (offset 0x60) with params `(0, 0x4000, 0x4000, 2, 0x1000, 1)` — likely a damage flash effect
-- A flag byte in the exe dispatch table (offset 0x7e4, bit 0) controls an overlay mode — when set and HP ≤ 250, the bar flashes via BinaryTick
+- When health decreases, an unknown function is called (likely a damage flash or screen effect)
+- A rendering mode flag (bit 0) controls an overlay mode — when set and HP ≤ 250, the bar flashes via BinaryTick. Same flag checked in DrawHealth
 - `LaraGunType == 4` bypasses the hide logic — the bar stays visible regardless of the timer (purpose of this weapon type exception is unclear)
 - The bar is hidden when: HP > 0, timer has expired, gun type is not 4, and the overlay flag condition isn't forcing visibility
 - DrawHealth receives `hp / 10` (0–100 range); when flashing at critical HP on even ticks, it receives 0
