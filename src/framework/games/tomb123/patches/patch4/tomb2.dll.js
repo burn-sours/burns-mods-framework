@@ -60,7 +60,7 @@ module.exports = {
         RenderLara: { Address: "0x16b30", Params: ['pointer'], Return: 'void' },
         UpdateLaraAppearance: { Address: "0xa6300", Params: [], Return: 'void' },
         LoadLevel: { Address: "0x24210", Params: ['int', 'int', 'pointer', 'pointer'], Return: 'pointer' },
-        LaraInLevel: { Address: "0x559b0", Params: [], Return: 'void' },
+        InitializeLevelAI: { Address: "0x559b0", Params: [], Return: 'void' },
         SoundEffect: { Address: "0x96e30", Params: ['int', 'pointer', 'int'], Return: 'int' },
         RenderUI: { Address: "0x35360", Params: [], Return: 'void' },
         Menu: { Address: "0x37580", Params: ['int'], Return: 'pointer' },

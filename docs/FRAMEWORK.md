@@ -422,7 +422,7 @@ mod.init(function() {
     }
 });
 
-mod.hook('LaraInLevel')
+mod.hook('InitializeLevelAI')
     .onLeave(function(returnValue) {
         try {
             game._lara = game.readVar(game.module, 'Lara');

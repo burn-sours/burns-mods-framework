@@ -8,7 +8,7 @@ module.exports = {
         RenderLara: { Address: "0x2f430", Params: ['pointer'], Return: 'void' },
         ApplySettings: { Address: "0xf35f0", Params: ['pointer', 'pointer'], Return: 'void' },
         LoadedLevel: { Address: "0x100600", Params: ['pointer'], Return: 'void' },
-        LaraInLevel: { Address: "0x87e90", Params: ['int'], Return: 'void' },
+        InitializeLevelAI: { Address: "0x87e90", Params: ['int'], Return: 'void' },
         SoundEffect: { Address: "0xd43f0", Params: ['int', 'pointer', 'int'], Return: 'int' },
         ProcessGrenade: { Address: "0x56b40", Params: ['int16'], Return: 'void' },
         ProcessHarpoon: { Address: "0x582c0", Params: ['int16'], Return: 'void' },
