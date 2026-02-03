@@ -5,6 +5,8 @@ const crypto = require('crypto');
 const { spawn } = require('child_process');
 const { ScriptGenerator } = require('./generator');
 
+const isLinux = process.platform === 'linux';
+
 class Client {
     constructor(mod) {
         this.mod = mod;
@@ -26,7 +28,7 @@ class Client {
 
             this.device = await frida.getLocalDevice();
 
-            if (exePath) {
+            if (exePath && !isLinux) {
                 const processes = await this.device.enumerateProcesses();
                 const already = processes.find(p => p.name === processName);
                 if (!already) {
@@ -48,7 +50,18 @@ class Client {
 
             this._setStatus('attaching');
 
-            this.session = await this.device.attach(pid);
+            try {
+                this.session = await this.device.attach(pid);
+            } catch (attachErr) {
+                if (isLinux && /denied|permission|ptrace/i.test(attachErr.message)) {
+                    throw new Error(
+                        'Permission denied — cannot attach to process.\n' +
+                        'Try running with sudo, or run:\n' +
+                        '  echo 0 | sudo tee /proc/sys/kernel/yama/ptrace_scope'
+                    );
+                }
+                throw attachErr;
+            }
             this.session.detached.connect((reason) => this._onDetached(reason));
 
             const patchData = await this._detectPatch();
@@ -129,7 +142,6 @@ class Client {
 
     async _detectPatch() {
         try {
-            // Frida runs in-process, so we need a helper script to resolve the exe path
             const pathScript = await this.session.createScript(`
                 rpc.exports = {
                     getExePath: function() {
@@ -138,8 +150,13 @@ class Client {
                 };
             `);
             await pathScript.load();
-            const exePath = await pathScript.exports.getExePath();
+            let exePath = await pathScript.exports.getExePath();
             await pathScript.unload();
+
+            // On Linux (Wine/Proton), translate Wine paths to native Linux paths
+            if (isLinux) {
+                exePath = this._winePathToLinux(exePath);
+            }
 
             const exeBuffer = fs.readFileSync(exePath);
             const hash = crypto.createHash('sha256').update(exeBuffer).digest('hex');
@@ -159,6 +176,26 @@ class Client {
         const defaultPatch = this.gameConfig.patches[this.gameConfig.defaultPatch];
         console.log(`[Client] Using default patch: ${defaultPatch.name}`);
         return defaultPatch;
+    }
+
+    /**
+     * Translate a Wine/Proton path to a native Linux path.
+     * Wine maps Z:\ to the Linux root filesystem /.
+     * e.g. Z:\home\user\.steam\...\tomb123.exe → /home/user/.steam/.../tomb123.exe
+     */
+    _winePathToLinux(winePath) {
+        let p = winePath.replace(/\\/g, '/');
+
+        // Z: drive = Linux root filesystem
+        const zMatch = p.match(/^[Zz]:(\/.*)/);
+        if (zMatch) return zMatch[1];
+
+        // Already a Linux path (some Frida/Wine combos return native paths)
+        if (p.startsWith('/')) return p;
+
+        // Other drive letters — can't reliably translate without WINEPREFIX
+        console.warn(`[Client] Cannot translate Wine path: ${winePath}`);
+        return winePath;
     }
 
     _onDetached(reason) {
