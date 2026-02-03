@@ -71,6 +71,16 @@ for (const { config, name } of games) {
                     assert.ok(patchDef.memory[config.executable], `missing memory data for ${config.executable}`);
                 });
 
+                it('executable has UI_RENDER_LAYER constant', () => {
+                    const exeData = patchDef.memory[config.executable];
+                    assert.ok(exeData, `missing memory data for ${config.executable}`);
+                    assert.ok(exeData.constants, `${config.executable} missing constants`);
+                    assert.ok('UI_RENDER_LAYER' in exeData.constants,
+                        `${config.executable} missing UI_RENDER_LAYER constant`);
+                    assert.equal(typeof exeData.constants.UI_RENDER_LAYER, 'number',
+                        `UI_RENDER_LAYER is not a number: ${exeData.constants.UI_RENDER_LAYER}`);
+                });
+
                 for (const [modName, modData] of Object.entries(patchDef.memory)) {
                     describe(`Module: ${modName}`, () => {
                         if (modData.constants) {
