@@ -4,9 +4,9 @@
   "main": "src/framework/main.js",
   "scripts": {
     "start": "electron .",
-    "build": "electron-builder -p never --win --linux",
-    "build:windows": "electron-builder -p never --win",
-    "build:linux": "electron-builder -p never --linux",
+    "build": "npm run build:windows && npm run build:linux",
+    "build:windows": "node scripts/copy-binding.js win32 && electron-builder -p never --win",
+    "build:linux": "node scripts/copy-binding.js linux && electron-builder -p never --linux",
     "test": "node --test tests/*.test.js",
     "postinstall": "node scripts/postinstall.js"
   },
