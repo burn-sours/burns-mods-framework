@@ -38,7 +38,7 @@ Called once after injection, when all modules are loaded and hooks are installed
 
 ```javascript
 mod.init(function() {
-    game._lara = game.getVarPtr(game.module, 'LaraBase').readPointer();
+    game._lara = game.getVarPtr(game.module, 'Lara').readPointer();
 });
 ```
 
@@ -183,13 +183,13 @@ Variables are defined in patch data files with a name, address, type, and option
 ```javascript
 // Read
 const level = game.readVar(game.module, 'LevelId');
-const base = game.readVar('tomb1.dll', 'LaraBase');
+const base = game.readVar('tomb1.dll', 'Lara');
 
 // Write
 game.writeVar(game.module, 'LaraOxygen', 1800);
 
 // Get raw pointer to a variable's address
-const ptr = game.getVarPtr(game.module, 'LaraBase');
+const ptr = game.getVarPtr(game.module, 'Lara');
 const lara = ptr.readPointer();
 
 // Read a block (returns ArrayBuffer)
@@ -253,7 +253,7 @@ The `game` object supports dynamic state. You can store any property on it to pe
 
 ```javascript
 // In a hook
-game._lara = game.getVarPtr(game.module, 'LaraBase').readPointer();
+game._lara = game.getVarPtr(game.module, 'Lara').readPointer();
 
 // In a loop - use NativePointer methods for struct field access
 const health = game._lara.add(ENTITY_HEALTH).readS16();
@@ -433,7 +433,7 @@ const mod = createMod('no-fall-damage', 'tomb123', ['tomb1.dll']);
 
 mod.init(function() {
     try {
-        game._lara = game.getVarPtr(game.module, 'LaraBase').readPointer();
+        game._lara = game.getVarPtr(game.module, 'Lara').readPointer();
     } catch(e) {
         game._lara = null;
     }
@@ -442,7 +442,7 @@ mod.init(function() {
 mod.hook('LaraInLevel')
     .onLeave(function(returnValue) {
         try {
-            game._lara = game.getVarPtr(game.module, 'LaraBase').readPointer();
+            game._lara = game.getVarPtr(game.module, 'Lara').readPointer();
         } catch(e) {
             game._lara = null;
         }
