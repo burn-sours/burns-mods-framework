@@ -8,7 +8,7 @@ Queries the current game version to select version-specific colors — each game
 In classic mode, the bar is drawn right-aligned using UiDrawWidth, with a 2-pixel border and a 5-pixel tall fill region. The fill width corresponds directly to the health value (0–100 pixels). Colors are interpolated based on the health value to create a gradient effect — each game version uses distinct color pairs for the gradient.
 
 ## Notes
-- `param_1` is the health value (0–100), passed from RenderUI as `hp / 10`
+- The health parameter is 0–100, passed from RenderUI as `hp / 10`
 - Game version determines the color palette: 0 = TR1, 1 = TR2, 2+ = TR3
 - A rendering mode flag selects classic (primitives) vs modern (delegated) — same flag checked in RenderUI
 - Bar position: right-aligned at `UiDrawWidth - 108`, border extends to `UiDrawWidth - 6`
