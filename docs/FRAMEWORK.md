@@ -228,10 +228,6 @@ All hooks from patch data are auto-registered as callable native functions. You 
 if (game.hasFunction(game.module, 'SoundEffect')) {
     game.callFunction(game.module, 'SoundEffect', 42, ptr(0), 0);
 }
-
-// Manually register a function not in patch data
-game.registerFunction('tomb1.dll', 'MyFunc', 0x12345, 'int', ['int', 'pointer']);
-game.callFunction('tomb1.dll', 'MyFunc', 1, ptr(0));
 ```
 
 ### Instruction Patching
