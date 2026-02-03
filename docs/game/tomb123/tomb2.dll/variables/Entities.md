@@ -35,7 +35,7 @@ Pointer to the entity array. Each entity is `ENTITY_SIZE` bytes.
 | `ENTITY_Y`            | Y position (Int32)                       |
 | `ENTITY_Z`            | Z position (Int32)                       |
 | `ENTITY_YAW`          | Y-axis rotation (heading)                |
-| `ENTITY_TILT`         | Tilt angle                               |
+| `ENTITY_PITCH`        | Pitch angle                              |
 | `ENTITY_ROLL`         | Roll angle                               |
 | `ENTITY_LAST_X`       | Previous X position                      |
 

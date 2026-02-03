@@ -26,6 +26,7 @@ Pointer to the entity array. Each entity is `ENTITY_SIZE` bytes.
 | `ENTITY_FLAGS`        | Entity flags bitfield                    |
 | `ENTITY_STATUS`       | Bitmask for runtime state (active, on list, triggered, consumed, falling, etc.) |
 | `ENTITY_BEHAVIOUR`    | Pointer to the AI data object that drives entity behaviour |
+| `ENTITY_TIMER`        | General-purpose timer                    |
 
 ### Position & Rotation
 
@@ -35,7 +36,7 @@ Pointer to the entity array. Each entity is `ENTITY_SIZE` bytes.
 | `ENTITY_Y`            | Y position (Int32)                       |
 | `ENTITY_Z`            | Z position (Int32)                       |
 | `ENTITY_YAW`          | Y-axis rotation (heading)                |
-| `ENTITY_TILT`         | Tilt angle                               |
+| `ENTITY_PITCH`        | Pitch angle                              |
 | `ENTITY_ROLL`         | Roll angle                               |
 | `ENTITY_LAST_X`       | Previous X position                      |
 
@@ -56,7 +57,6 @@ Pointer to the entity array. Each entity is `ENTITY_SIZE` bytes.
 | Constant              | Description                              |
 |-----------------------|------------------------------------------|
 | `ENTITY_HEALTH`       | Hit points                               |
-| `ENTITY_TIMER`        | General-purpose timer                    |
 | `ENTITY_BOX_INDEX`    | AI navigation box index                  |
 
 ### Bones & Mesh

@@ -26,7 +26,7 @@ module.exports = {
         ENTITY_Y: 0x5c,
         ENTITY_Z: 0x60,
         ENTITY_YAW: 0x66,
-        ENTITY_TILT: 0x68,
+        ENTITY_PITCH: 0x68,
         ENTITY_ROLL: 0x6a,
         ENTITY_LAST_X: 0x6c,
         ENTITY_ROOM: 0x1c,
