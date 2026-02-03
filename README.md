@@ -58,8 +58,13 @@ burns-mods-framework/
 
 ## Branches
 
-- **`main`** — Core framework, docs, and skeleton.
-- **`mod/<name>`** — Each mod gets its own branch.
+- **`main`** — Core framework, docs, and curated mods.
+- **`mod/<name>`** — Each mod gets its own branch. Best mods get merged to main.
+- **`framework/<name>`** — Framework/docs changes, merged to main via PR.
+
+### Releases
+
+Mod releases are published from their branch as **pre-releases** on the [Releases](https://github.com/burn-sours/burns-mods-framework/releases) page. Each release is tagged to its mod branch (e.g. `mod/unlimited-ammo/v1.0`).
 
 ## Knowledge
 
