@@ -8,9 +8,7 @@ Has an early-out optimisation — if the same draw mode and data are already act
 ## Notes
 - Called by DrawHealth before drawing the health bar
 - The second parameter is a pointer to a 48-byte block (12 × 4-byte values) — likely color or material properties. Pass null to use the engine's default data
-- Manages an internal render command list — each setup call appends an entry with viewport deltas, draw mode, and material state
-- The early-out check compares: draw mode, material data (48-byte memcmp), viewport dimensions, and a scale factor
-- Modders should call this before any DrawRect sequence to ensure the correct render state is active
+- The early-out compares: draw mode, material data, viewport dimensions, and a scale factor
 
 ## Details
 
