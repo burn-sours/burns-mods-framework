@@ -20,10 +20,10 @@ Pointer to Lara's entity data structure in memory. This is a direct pointer to L
 const lara = game.readVar(game.module, 'Lara');
 
 // Read Lara's position
-const x = game.memory.readS32(lara.add(game.constants.ENTITY_X));
-const y = game.memory.readS32(lara.add(game.constants.ENTITY_Y));
-const z = game.memory.readS32(lara.add(game.constants.ENTITY_Z));
+const x = lara.add(ENTITY_X).readS32();
+const y = lara.add(ENTITY_Y).readS32();
+const z = lara.add(ENTITY_Z).readS32();
 
 // Read Lara's health
-const health = game.memory.readS16(lara.add(game.constants.ENTITY_HEALTH));
+const health = lara.add(ENTITY_HEALTH).readS16();
 ```

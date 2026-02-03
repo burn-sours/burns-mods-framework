@@ -88,9 +88,9 @@ const entities = game.readVar(game.module, 'Entities');
 const count = game.readVar(game.module, 'EntitiesCount');
 
 // Read an entity's health
-const entityHealth = entities.add(index * game.constants.ENTITY_SIZE + game.constants.ENTITY_HEALTH).readS16();
+const entityHealth = entities.add(index * ENTITY_SIZE + ENTITY_HEALTH).readS16();
 
 // Read Lara's position using LaraId
 const laraId = game.readVar(game.module, 'LaraId');
-const laraX = entities.add(laraId * game.constants.ENTITY_SIZE + game.constants.ENTITY_X).readS32();
+const laraX = entities.add(laraId * ENTITY_SIZE + ENTITY_X).readS32();
 ```
