@@ -29,8 +29,8 @@ The function's primary modding value is as a **UI render hook point** — it run
 ```javascript
 // Hook to add custom UI rendering at the right point in the frame loop
 mod.hook('RenderUI')
-    .onEnter(function() {
-        // Draw custom UI here — runs every frame at render time
+    .onLeave(function() {
+        // Draw custom UI here — runs every frame after the health bar
     });
 ```
 
