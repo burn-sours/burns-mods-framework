@@ -1,5 +1,9 @@
 /** tomb123.exe - Patch 4.1 */
 module.exports = {
+    constants: {
+        UI_RENDER_LAYER: 0x39,
+    },
+
     variables: {
         ExitingGame: { Address: "0x2f35ec", Type: "Int8" },
         Level: { Address: "0x263CD0", Type: "Int32" },

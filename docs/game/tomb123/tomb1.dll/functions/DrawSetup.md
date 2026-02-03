@@ -22,7 +22,7 @@ Has an early-out optimisation — if the same render layer and data are already 
 
 | #   | Type      | Description                                                    |
 |-----|-----------|----------------------------------------------------------------|
-| 0   | `int`     | Render layer — determines where in the pipeline UI elements are drawn |
+| 0   | `int`     | Render layer — determines where in the pipeline UI elements are drawn. Use `UI_RENDER_LAYER` for standard UI drawing |
 | 1   | `pointer` | Material/color data (48 bytes, 12 values) or null for default |
 
 ## Usage
@@ -37,8 +37,8 @@ mod.hook('DrawSetup')
 
 ### Calling from mod code
 ```javascript
-// Set up draw state before drawing UI primitives
-game.callFunction(game.module, 'DrawSetup', layer, ptr(0));
+// Set up draw state for UI rendering using the standard render layer
+game.callFunction(game.module, 'DrawSetup', UI_RENDER_LAYER, ptr(0));
 
 // Then draw with DrawRect...
 ```

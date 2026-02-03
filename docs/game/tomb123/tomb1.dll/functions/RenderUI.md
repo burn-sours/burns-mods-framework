@@ -31,6 +31,9 @@ The function's primary modding value is as a **UI render hook point** — it run
 mod.hook('RenderUI')
     .onLeave(function() {
         // Draw custom UI here — runs every frame after the health bar
+        // Use DrawSetup with UI_RENDER_LAYER before drawing primitives
+        game.callFunction(game.module, 'DrawSetup', UI_RENDER_LAYER, ptr(0));
+        // Then use DrawRect for your custom elements
     });
 ```
 

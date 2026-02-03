@@ -37,10 +37,17 @@ class ScriptGenerator {
     }
 
     _emitConstants() {
-        const constants = this.gameConfig.constants;
-        if (!constants || Object.keys(constants).length === 0) return '';
+        const gameConstants = this.gameConfig.constants || {};
+
+        // Merge patch-level constants from the executable module
+        const exeData = this.patchData.memory[this.gameConfig.executable];
+        const patchConstants = (exeData && exeData.constants) || {};
+
+        const merged = { ...gameConstants, ...patchConstants };
+        if (Object.keys(merged).length === 0) return '';
+
         const lines = [];
-        for (const [name, value] of Object.entries(constants)) {
+        for (const [name, value] of Object.entries(merged)) {
             lines.push(`const ${name} = ${typeof value === 'number' ? '0x' + value.toString(16) : JSON.stringify(value)};`);
         }
         return lines.join('\n');

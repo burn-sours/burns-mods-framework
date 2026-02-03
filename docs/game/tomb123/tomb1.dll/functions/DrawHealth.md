@@ -69,7 +69,7 @@ function DrawHealth(health):
         return
 
     // classic rendering mode
-    DrawSetup(0x39, null)
+    DrawSetup(UI_RENDER_LAYER, null)
 
     // draw border
     DrawRect(borderLeft, 8, borderLeft, 16, borderColor, borderColor)       // left edge

@@ -73,6 +73,16 @@ for (const { config, name } of games) {
 
                 for (const [modName, modData] of Object.entries(patchDef.memory)) {
                     describe(`Module: ${modName}`, () => {
+                        if (modData.constants) {
+                            describe('constants', () => {
+                                for (const [constName, constValue] of Object.entries(modData.constants)) {
+                                    it(`${constName}: is a number`, () => {
+                                        assert.equal(typeof constValue, 'number', `${constName} is not a number: ${constValue}`);
+                                    });
+                                }
+                            });
+                        }
+
                         if (modData.variables) {
                             describe('variables', () => {
                                 for (const [varName, varDef] of Object.entries(modData.variables)) {
@@ -148,6 +158,8 @@ describe('Patch consistency', () => {
         });
 
         for (const modName of allModuleNames) {
+            // Collect all constant names across all patches for this module
+            const allConstNames = new Set();
             // Collect all variable names across all patches for this module
             const allVarNames = new Set();
             const allHookNames = new Set();
@@ -155,6 +167,11 @@ describe('Patch consistency', () => {
             for (const patchName of patchNames) {
                 const modData = config.patches[patchName].memory[modName];
                 if (!modData) continue;
+                if (modData.constants) {
+                    for (const k of Object.keys(modData.constants)) {
+                        allConstNames.add(k);
+                    }
+                }
                 if (modData.variables) {
                     for (const [k, v] of Object.entries(modData.variables)) {
                         allVarNames.add(k);
@@ -165,6 +182,21 @@ describe('Patch consistency', () => {
                         allHookNames.add(k);
                     }
                 }
+            }
+
+            if (allConstNames.size > 0) {
+                describe(`${name} / ${modName}: constant consistency`, () => {
+                    for (const constName of allConstNames) {
+                        it(`${constName} exists in all patches`, () => {
+                            const missing = patchNames.filter(p => {
+                                const modData = config.patches[p].memory[modName];
+                                return !modData || !modData.constants || !(constName in modData.constants);
+                            });
+                            assert.equal(missing.length, 0,
+                                `constant "${constName}" missing from patches: ${missing.join(', ')}`);
+                        });
+                    }
+                });
             }
 
             if (allVarNames.size > 0) {
