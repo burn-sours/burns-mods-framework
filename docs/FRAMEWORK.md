@@ -263,7 +263,7 @@ error('Failed to read pointer');
 ### Utility
 
 ```javascript
-await game.delay(100);  // async delay (only usable in init)
+await game.delay(100);  // async delay
 ```
 
 ## Communication
