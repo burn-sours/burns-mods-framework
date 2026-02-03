@@ -6,7 +6,7 @@ Configures the rendering state for subsequent 2D draw calls (DrawRect, etc.). Mu
 Has an early-out optimisation — if the same draw mode and data are already active (and viewport dimensions haven't changed), it skips redundant setup. Otherwise, it records a new render command entry with the current viewport state, the draw mode, and the material data.
 
 ## Notes
-- Called by DrawHealth with mode `0x39` and null data before drawing the health bar
+- Called by DrawHealth before drawing the health bar
 - The second parameter is a pointer to a 48-byte block (12 × 4-byte values) — likely color or material properties. Pass null to use the engine's default data
 - Manages an internal render command list — each setup call appends an entry with viewport deltas, draw mode, and material state
 - The early-out check compares: draw mode, material data (48-byte memcmp), viewport dimensions, and a scale factor
@@ -24,7 +24,7 @@ Has an early-out optimisation — if the same draw mode and data are already act
 
 | #   | Type      | Description                                                    |
 |-----|-----------|----------------------------------------------------------------|
-| 0   | `int`     | Draw mode ID (e.g. `0x39` for standard UI drawing)            |
+| 0   | `int`     | Draw mode ID                                                   |
 | 1   | `pointer` | Material/color data (48 bytes, 12 values) or null for default |
 
 ## Usage
@@ -39,8 +39,8 @@ mod.hook('DrawSetup')
 
 ### Calling from mod code
 ```javascript
-// Set up standard UI draw state (same as health bar)
-game.callFunction(game.module, 'DrawSetup', 0x39, ptr(0));
+// Set up draw state before drawing UI primitives
+game.callFunction(game.module, 'DrawSetup', mode, ptr(0));
 
 // Then draw with DrawRect...
 ```
