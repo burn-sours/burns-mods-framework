@@ -11,6 +11,7 @@ Brief description of what this function does.
 
 | Field     | Value                          |
 |-----------|--------------------------------|
+| Usage     | `Hook`, `Call`, or `Hook & Call`|
 | Params    | `int, pointer, int`            |
 | Return    | `void`                         |
 
@@ -23,6 +24,13 @@ Brief description of what this function does.
 | 2   | `int`     | Description of third param     |
 
 ## Usage
+### Hooking
+```javascript
+game.hookFunction(game.module, 'Name', (args) => {
+    // args[0], args[1], args[2]
+});
+```
+
 ### Calling from mod code
 ```javascript
 const result = game.callFunction(game.module, 'Name', arg0, arg1, arg2);
