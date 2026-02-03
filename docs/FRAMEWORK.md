@@ -205,9 +205,6 @@ For working with addresses directly, outside the named variable system.
 const val = game.readMemory(addr, 'Int32');
 game.writeMemory(addr, 'Float', 1.5);
 
-// Pointer dereference
-const target = game.readPointer(addr);
-
 // Allocate memory
 const buf = game.alloc(256);
 const str = game.allocString('hello');
