@@ -80,6 +80,7 @@ module.exports = {
         AddText: { Address: "0x7e570", Params: ['int', 'int', 'int', 'pointer'], Return: 'pointer' },
         DrawSetup: { Address: "0x51cc0", Params: ['int', 'pointer'], Return: 'void' },
         DrawRect: { Address: "0x52b50", Params: ['int', 'int', 'int', 'int', 'uint64', 'uint64'], Return: 'void' },
+        DrawQuad: { Address: "0x52a50", Params: ['int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'float', 'float', 'float', 'float', 'int'], Return: 'void' },
         DrawHealth: { Address: "0x64f90", Params: ['int'], Return: 'void' },
         RoomChange: { Address: "0x1f010", Params: ['int', 'int'], Return: 'void' },
         GetRelYawPitch: { Address: "0x68e70", Params: ['int', 'int', 'int', 'pointer'], Return: 'void' },

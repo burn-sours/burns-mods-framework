@@ -68,6 +68,7 @@ module.exports = {
         AddText: { Address: "0xae090", Params: ['int', 'int', 'int', 'pointer'], Return: 'pointer' },
         DrawSetup: { Address: "0x80830", Params: ['int', 'pointer'], Return: 'void' },
         DrawRect: { Address: "0x816c0", Params: ['int', 'int', 'int', 'int', 'uint64', 'uint64'], Return: 'void' },
+        DrawQuad: { Address: "0x815c0", Params: ['int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'float', 'float', 'float', 'float', 'int'], Return: 'void' },
         DrawHealth: { Address: "0x93860", Params: ['int'], Return: 'void' },
         RenderSkidoo: { Address: "0x6cde0", Params: ['pointer'], Return: 'void' },
         RenderBoat: { Address: "0x167e0", Params: ['pointer'], Return: 'void' },

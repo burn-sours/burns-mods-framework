@@ -70,6 +70,7 @@ module.exports = {
         AddText: { Address: "0xfad80", Params: ['int', 'int', 'int', 'pointer'], Return: 'pointer' },
         DrawSetup: { Address: "0xc8480", Params: ['int', 'pointer'], Return: 'void' },
         DrawRect: { Address: "0xc9350", Params: ['int', 'int', 'int', 'int', 'uint64', 'uint64'], Return: 'void' },
+        DrawQuad: { Address: "0xc9250", Params: ['int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'float', 'float', 'float', 'float', 'int'], Return: 'void' },
         DrawHealth: { Address: "0xe0400", Params: ['int'], Return: 'void' },
         RoomChange: { Address: "0x516a0", Params: ['int', 'int'], Return: 'void' },
         RenderEntity: { Address: "0x29350", Params: ['pointer'], Return: 'void' },

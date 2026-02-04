@@ -79,6 +79,7 @@ module.exports = {
         RenderText: { Address: "0xe5ea0", Params: ['int', 'int', 'int', 'pointer', 'int'], Return: 'pointer' },
         DrawSetup: { Address: "0xadff0", Params: ['int', 'pointer'], Return: 'void' },
         DrawRect: { Address: "0xaeb10", Params: ['float', 'float', 'float', 'float', 'uint64', 'uint64'], Return: 'void' },
+        DrawQuad: { Address: "0xaea60", Params: ['int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'float', 'float', 'float', 'float', 'int'], Return: 'void' },
         RoomChange: { Address: "0x3edf0", Params: ['int', 'int'], Return: 'void' },
         RenderEntity: { Address: "0x2e4c0", Params: ['pointer'], Return: 'void' },
         GetRelYawPitch: { Address: "0xd0b70", Params: ['int', 'int', 'int', 'pointer'], Return: 'void' },
