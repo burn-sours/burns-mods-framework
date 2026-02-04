@@ -1,4 +1,4 @@
-# Function: GetRangeH
+# Function: TraceRangeX
 
 ## Description
 Traces a horizontal ray along the X axis from a source position to a target position, stepping sector by sector. At each sector boundary, it checks whether the interpolated position is in open space (between floor and ceiling). If an obstruction is found, the target position is updated in-place to the point where the ray was blocked.
@@ -13,7 +13,7 @@ Y and Z coordinates are linearly interpolated along the X axis as the ray steps 
 - At each step, checks two points: the current sector boundary and the adjacent sector boundary
 - Uses GetSector, CalculateFloorHeight, and CalculateCeilingHeight internally
 - Tracks room transitions as the ray crosses sector boundaries
-- Part of the spatial range-checking system alongside GetRangeV (which traces along the Z axis)
+- Part of the spatial range-checking system alongside TraceRangeZ (which traces along the Z axis)
 
 ## Details
 
@@ -41,7 +41,7 @@ Y and Z coordinates are linearly interpolated along the X axis as the ray steps 
 ## Usage
 ### Hooking
 ```javascript
-mod.hook('GetRangeH')
+mod.hook('TraceRangeX')
     .onEnter(function(source, target) {
         // source: pointer to [x, y, z] Int32 values + UInt16 room ID
         // target: pointer to [x, y, z] Int32 values + UInt16 room ID
@@ -66,7 +66,7 @@ target.add(4).writeS32(tgtY);
 target.add(8).writeS32(tgtZ);
 target.add(12).writeU16(tgtRoomId);
 
-const result = game.callFunction(game.module, 'GetRangeH', source, target);
+const result = game.callFunction(game.module, 'TraceRangeX', source, target);
 
 if (result !== 1) {
     // target was updated to where the ray was blocked
@@ -79,7 +79,7 @@ if (result !== 1) {
 
 ## Pseudocode
 ```
-function GetRangeH(source, target):
+function TraceRangeX(source, target):
     xDiff = target.x - source.x
 
     if xDiff == 0:

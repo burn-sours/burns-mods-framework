@@ -8,7 +8,7 @@ If no target exists, clears all aiming state immediately. Otherwise, calculates 
 ## Notes
 - The source position is Lara's world position with a vertical offset applied (gun height)
 - The target's 3D position is resolved from the entity pointed to by LaraAimingEnemy
-- Range checks use GetRangeH and GetRangeV — the one covering the greater distance axis runs first
+- Range checks use TraceRangeX and TraceRangeZ — the one covering the greater distance axis runs first
 - Line of sight is checked via GetLOS after resolving the target's sector with GetSector
 - The screen boundaries parameter contains 12 consecutive Int16 angle values: 3 zones × (yaw min, yaw max, pitch min, pitch max)
   - Zone 0 (indices 0–3): inner lock-on zone — if target is within this, aiming locks on
@@ -75,11 +75,11 @@ function CheckAim(aimBoundaries):
     horizontalDist = abs(targetPos.x - source.x)
 
     if horizontalDist < verticalDist:
-        hResult = GetRangeH(source, targetPos)
-        vResult = GetRangeV(source, targetPos)
+        hResult = TraceRangeX(source, targetPos)
+        vResult = TraceRangeZ(source, targetPos)
     else:
-        vResult = GetRangeV(source, targetPos)
-        hResult = GetRangeH(source, targetPos)
+        vResult = TraceRangeZ(source, targetPos)
+        hResult = TraceRangeX(source, targetPos)
 
     if hResult == 0:
         // Out of range
