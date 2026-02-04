@@ -153,5 +153,5 @@ function EntityWolf(entityId):
     // Movement
     adjust ENTITY_PITCH toward headTilt * 4 (clamped ±0x222)
     adjust behaviour yaw toward headYaw (clamped ±0x38E, ±0x4000)
-    processMovement(entityId, turnDelta, headTilt)
+    ProcessEntityMovement(entityId, turnDelta, headTilt)
 ```
