@@ -8,6 +8,7 @@ Simulates Lara's hair physics each frame. Processes a chain of 6 hair segments, 
 - Param 1 selects the hair variant/braid mesh data to simulate
 - Hair consists of 6 linked segments, each with position (x, y, z), velocity, and rotation angles (yaw, pitch)
 - Initialization path runs once on the first frame: positions all segments along the bone chain using matrix rotations, then resets sway/wind counters
+- Kinematic fallback: when Lara has a cinematic flag set and the state check returns 0, physics simulation is skipped entirely. Hair segments are rigidly positioned using Lara's head/torso bone rotation matrix and the stored per-segment yaw/pitch angles — no gravity, collisions, or sway. This prevents hair from clipping or flailing during cutscenes
 - Gravity is applied as 3/4 of the previous frame's velocity per axis
 - Floor collision: uses GetSector + CalculateFloorHeight to prevent segments from going below the floor. If a segment penetrates the floor by less than 256 units, it's clamped; otherwise it snaps back to the previous position
 - Body collision: checks each segment against collision spheres (from Lara's skeleton). If a segment is inside a sphere, it's pushed outward to the sphere surface using integer square root distance calculation
@@ -50,8 +51,13 @@ mod.hook('SimulateLaraHair')
 function SimulateLaraHair(physicsMode, hairVariant):
     state = checkLaraState()
 
-    if state == 0 and Lara has specific flag set:
-        handleSpecialHairCase(hairVariant)
+    if state == 0 and Lara has cinematic flag set:
+        // kinematic fallback — skip physics, rigidly position hair
+        copy Lara's head/torso bone rotation matrix
+        for each of 6 segments:
+            apply stored segment yaw/pitch rotation
+            apply bone tree translation for hairVariant
+            segment.position = matrix world position + Lara world position
         return
 
     computeCollisionSpheres()
