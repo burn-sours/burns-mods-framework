@@ -17,7 +17,7 @@ Controls boulder objects with three operational phases: rolling with gravity, wa
   - Calls `ProcessTriggers` on the current sector every frame
   - **Landing**: when boulder is within 256 units of the floor, snaps Y to floor, clears gravity flag and fall speed
   - **Wall collision**: projects a point ahead using the entity's yaw with sine/cosine lookups. If the floor at that point drops below the boulder's Y, the boulder stops — reverts X/Z to saved positions, clears bit 1, sets bit 2 (transitions to reset phase), snaps Y to floor, clears speeds
-- **Reset phase**: uses the same trigger count / timer toggle logic as `EntityBarricade`. When target resolves to 0:
+- **Reset phase**: uses the trigger count / timer toggle logic to determine when to reset. When target resolves to 0:
   - Restores original X, Y, Z and room from `ENTITY_BEHAVIOUR` data
   - Resets animation to the model's default first animation
   - Clears status bits 1 and 2 (fully inactive)
@@ -85,7 +85,7 @@ function EntityBoulder(entityId):
     return  // inactive
 
 RESETTING:
-    // Same trigger/timer toggle as EntityBarricade
+    // Trigger/timer toggle
     target = (~(entity[ENTITY_FLAGS] >> 14)) & 1
     if ENTITY_FLAGS bits 9–13 all set:
         // Timer-based toggle (see EntityBarricade)

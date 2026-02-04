@@ -1,12 +1,12 @@
 # Function: EntityDartEmitter
 
 ## Description
-Controls dart emitter trap objects. Uses the same trigger/timer toggle as `EntityBarricade` to cycle between idle and firing states. On the firing frame, spawns a dart entity offset from the emitter based on its facing direction, allocates a projectile for collision tracking, and plays a sound effect. In demo mode, the projectile is immediately destroyed and replaced with randomised spark effects.
+Controls dart emitter trap objects. Uses a trigger/timer toggle to cycle between idle and firing states. On the firing frame, spawns a dart entity offset from the emitter based on its facing direction, allocates a projectile for collision tracking, and plays a sound effect. In demo mode, the projectile is immediately destroyed and replaced with randomised spark effects.
 
 ## Notes
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
 - Called with the entity's index into the entity array, not a pointer
-- **Trigger toggle**: same `ENTITY_FLAGS` bits 9–14 / `ENTITY_TIMER` logic as `EntityBarricade`
+- **Trigger toggle**: uses `ENTITY_FLAGS` bits 9–14 and `ENTITY_TIMER` to determine activation state
 - **State behaviour**:
   - Target on + current state 0: sets target state 1 (begin firing animation), animates, returns early
   - Target off + current state 1: sets target state 0 (return to idle)
@@ -58,7 +58,7 @@ game.callFunction(game.module, 'EntityDartEmitter', dartEmitterEntityIndex);
 function EntityDartEmitter(entityId):
     entity = entities[entityId]
 
-    // Same trigger/timer toggle as EntityBarricade
+    // Trigger/timer toggle
     target = (~(entity[ENTITY_FLAGS] >> 14)) & 1
     if ENTITY_FLAGS bits 9–13 all set:
         ...resolve target using ENTITY_TIMER...
