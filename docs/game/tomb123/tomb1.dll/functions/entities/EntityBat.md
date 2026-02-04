@@ -88,7 +88,7 @@ function EntityBat(entityId):
             snap to floor
         else:
             targetState = 4 (falling)
-            ENTITY_STATUS |= 0x08 (gravity)
+            set ENTITY_STATUS gravity flag
             entity[ENTITY_XZ_SPEED] = 0
 
     // Alive
@@ -105,11 +105,11 @@ function EntityBat(entityId):
             angleToTarget = ATAN2(deltaZ, deltaX)
             angleDiff = angleToTarget - entity[ENTITY_YAW]
 
-            turnRate = 0xE38
+            turnRate = FAST_TURN_RATE
             // Tighten turn if target is behind and close
-            scaledSpeed = (entity[ENTITY_XZ_SPEED] * 0x4000) / 0xE38
+            scaledSpeed = (entity[ENTITY_XZ_SPEED] * QUARTER_TURN) / FAST_TURN_RATE
             if target is behind (~rear arc) AND distance < scaledSpeed²:
-                turnRate = 0x71C
+                turnRate = SLOW_TURN_RATE
 
             // Clamp and apply turn
             turnAmount = clamp(angleDiff, -turnRate, turnRate)

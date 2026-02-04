@@ -7,10 +7,10 @@ AI behaviour for the bear enemy. A versatile ground enemy that alternates betwee
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
 - Called with the entity's index into the entity array, not a pointer
 - Uses a behaviour flag to track whether the bear is standing upright — affects which attacks and transitions are available
-- Touch bitmask for attacks: 0x2406C
+- Touch bitmask for attacks: specific body-part touch mask
 - If the bear is hit by Lara (`ENTITY_STATUS` bit 4), sets the standing flag — being shot provokes it to rear up
 - On death: slowly turns toward Lara, transitions through rearing up to a standing death — can still deal a death swipe on contact before fully dying
-- Head yaw tracking toward Lara, clamped ±0x38E per frame
+- Head yaw tracking toward Lara, clamped per frame
 - No pitch tilt — passes 0 to `ProcessEntityMovement`
 
 ### States
@@ -42,9 +42,9 @@ AI behaviour for the bear enemy. A versatile ground enemy that alternates betwee
 
 | Context        | Rate   |
 |----------------|--------|
-| Walking        | 0x16C  |
-| Charging       | 0x222  |
-| Death          | 0xB6   |
+| Walking        | slow      |
+| Charging       | medium    |
+| Death          | very slow |
 
 ## Details
 
