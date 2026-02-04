@@ -4,9 +4,9 @@
 Restores the game world state from a previously recorded buffer, reversing the work of RecordWorldState. Rebuilds inventory, flip map state, entity positions/states, Lara's full state, and mesh model pointers. Handles special geometry adjustments for push blocks, moving blocks, and thor hammer entities during restoration.
 
 ## Notes
-- Param 0 selects the restore mode: 0 = full backup restore (from WorldStateBackupPointer at offset 0x6DD), non-zero = replay restore (from worldStateRestorePointer, requires "DEMO" signature at the start)
+- Param 0 selects the restore mode: 0 = full backup restore (from the backup buffer, starting partway through where inventory data was written), non-zero = replay restore (from the restore pointer, requires a "DEMO" signature at the start)
 - In replay mode (non-zero), restores RNG seed and camera state; in backup mode (0) these are skipped
-- If replay mode buffer doesn't have the "DEMO" signature (0x4F4D4544), the function aborts early
+- If the replay mode buffer doesn't have the "DEMO" signature, the function aborts early
 - Inventory restoration is complex: weapons consolidate their ammo pickups (e.g. picking up a shotgun absorbs all loose shotgun shells into ammo count), alternate model IDs are resolved, and New Game Plus restricts medipacks in certain levels/difficulties
 - Entity restoration selectively reads position, animation, flags, and AI data based on per-type flags in the entity type table — same flags used by RecordWorldState
 - Push blocks, moving blocks, and thor hammer handle entities trigger floor height adjustments and pathfinding box updates during restore
@@ -45,14 +45,13 @@ mod.hook('RestoreWorldState')
 ```
 function RestoreWorldState(mode):
     if mode == 0:
-        restoreStatePointer = &WorldStateBackupPointer
-        restoreStateOffset = 0x6DD
+        source = backup buffer (skip past inventory header)
     else:
-        restoreStatePointer = worldStateRestorePointer
+        source = restore buffer
         if signature != "DEMO":
             abort (clear flag and return)
         restore RNG seed
-        restoreStateOffset = 0x0C
+        advance past header
 
     // restore game version/patch info
     restore levelId and related state
@@ -68,25 +67,25 @@ function RestoreWorldState(mode):
 
             // weapon consolidation logic:
             if item is shotgun:
-                absorb all loose shotgun shells → ammo count (+12 each)
+                absorb all loose shotgun shells into ammo count
                 add shotgun to inventory
                 update entity model IDs
             if item is magnums:
-                absorb all loose magnum clips → ammo count (+50 each)
+                absorb all loose magnum clips into ammo count
                 add magnums to inventory
                 update entity model IDs
             if item is uzis:
-                absorb all loose uzi clips → ammo count (+100 each)
+                absorb all loose uzi clips into ammo count
                 add uzis to inventory
                 update entity model IDs
 
             // ammo without weapon:
-            if item is shotgun shells and no shotgun: add shells to inventory
-            if item is magnum clips and no magnums: add clips to inventory
-            if item is uzi clips and no uzis: add clips to inventory
+            if item is ammo type and weapon not owned:
+                add ammo pickup to inventory as standalone item
 
             // ammo with weapon already owned:
-            if item is ammo and weapon exists: add directly to ammo count
+            if item is ammo type and weapon exists:
+                add ammo value directly to weapon's ammo count
 
             // new game plus medpack restrictions:
             if New Game Plus active:
@@ -98,9 +97,9 @@ function RestoreWorldState(mode):
     // restore flip map state
     if stored flip map flag != 0:
         flipMap()
-    restore FlipMapFlags (5 values)
+    restore flip map flags
     restore flip effect status
-    restore flip effect flags (256 bytes, block copy)
+    restore flip effect flags (block copy)
 
     // restore camera trigger flags
     for each camera:
@@ -112,18 +111,18 @@ function RestoreWorldState(mode):
 
         // pre-restore: undo push block floor modifications
         if entity is pushBlock and not fully active:
-            raise floor at entity position (+4 quarter-blocks)
+            raise floor at entity position
             unblock pathfinding box
 
         // pre-restore: undo moving block floor modifications
         if entity is movingBlock:
-            raise floor at entity position (+8 quarter-blocks)
+            raise floor at entity position
             unblock pathfinding box
 
         // pre-restore: thor hammer handle collision
         if entity is thorHammerHandle and animation state == 3:
-            offset position by rotation direction
-            adjust collision floor height (+0x800)
+            offset position by facing direction
+            raise collision floor height
             restore original position
 
         if typeFlags has SAVE_POSITION:
@@ -152,7 +151,7 @@ function RestoreWorldState(mode):
 
             // post-restore: slot entity trigger handling
             if entity is slot type and partially active:
-                adjust entity type ID (+4)
+                advance entity type ID to next variant
 
             // post-restore: mutant spawn
             if entity is mutantSpawn and killed:
@@ -163,34 +162,34 @@ function RestoreWorldState(mode):
                 remove from room entity linked list
 
         // post-restore: moving block floor lowering
-        if entity is movingBlock and animation state != 2:
-            lower floor at entity position (-8 quarter-blocks)
+        if entity is movingBlock and not in final state:
+            lower floor at entity position
             block pathfinding box
 
         // post-restore: thor hammer handle collision
         if entity is thorHammerHandle and animation state == 3:
-            offset position by rotation direction
-            adjust collision floor height (-0x800)
+            offset position by facing direction
+            lower collision floor height
             restore original position
 
         // post-restore: weapon drop entities
-        if entity is scion holder and health <= 0 and has scion:
+        if entity is scion holder and dead and has scion:
             drop linked entities
-        if entity is uzi holder and health <= 0 and no uzis:
+        if entity is uzi holder and dead and no uzis:
             drop linked entities
-        if entity is magnum holder and health <= 0 and no magnums:
+        if entity is magnum holder and dead and no magnums:
             drop linked entities
-        if entity is shotgun holder and health <= 0 and no shotgun:
+        if entity is shotgun holder and dead and no shotgun:
             drop linked entities
 
         // post-restore: push block floor lowering
         if entity is pushBlock and inactive:
-            lower floor at entity position (-4 quarter-blocks)
+            lower floor at entity position
             block pathfinding box
 
-        // post-restore: save/restore collision data
+        // post-restore: extended entity data
         if typeFlags has SAVE_FULL:
-            restore extended collision/trigger data (16 bytes)
+            restore extended collision/trigger data
 
         // run entity initialization if init function exists
         if entity has init function:
@@ -201,7 +200,7 @@ function RestoreWorldState(mode):
     // restore Lara state
     block copy Lara entity data
     clear aiming/target state
-    restore 15 mesh model pointers (offsets relative to mesh base)
+    restore mesh model pointers (offsets relative to mesh base, one per mesh slot)
     restore frame pointer offsets
 
     // handle Lara's projectile (render flag check)

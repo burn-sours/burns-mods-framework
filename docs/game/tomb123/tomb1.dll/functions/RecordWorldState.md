@@ -4,7 +4,7 @@
 Snapshots the current game world state into a buffer for later restoration. Runs every frame, and is also reused by the save file mechanism. Captures level ID, inventory counts, flip map state, flip effect state, camera flags, entity state (position, rotation, flags, animation), Lara's full state (entity data + mesh model pointers), and camera data.
 
 ## Notes
-- Param 0 selects the recording mode: 0 = full backup (to WorldStateBackupPointer), non-zero = replay/restore-point snapshot (to a separate restore pointer with additional camera state)
+- Param 0 selects the recording mode: 0 = full backup (to the backup buffer), non-zero = replay/restore-point snapshot (to a separate restore buffer with additional camera state)
 - Mode 0 clears the destination buffer before writing; mode non-zero writes a "DEMO" signature and includes RNG seeds and full camera state
 - Entity data is recorded selectively based on per-type flags in the entity type table — not all entities are stored the same way
 - Lara's state includes entity data plus mesh model offsets stored relative to the mesh pointer base (converted to half-word offsets)
