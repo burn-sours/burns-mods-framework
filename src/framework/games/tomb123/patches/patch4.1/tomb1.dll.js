@@ -99,6 +99,7 @@ module.exports = {
         EntityBreakable: { Address: "0x40d80", Params: ['int'], Return: 'void' },
         EntityDartEmitter: { Address: "0x42630", Params: ['int'], Return: 'void' },
         EntityDoor: { Address: "0x30c10", Params: ['int'], Return: 'void' },
+        EntityFallingCeiling: { Address: "0x41b00", Params: ['int'], Return: 'void' },
         EntityWolf: { Address: "0x49780", Params: ['int'], Return: 'void' },
         EntityBat: { Address: "0x10e0", Params: ['int'], Return: 'void' },
         EntityBear: { Address: "0x1410", Params: ['int'], Return: 'void' },
