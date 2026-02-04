@@ -1,7 +1,7 @@
 # Function: WorldStateRecordReplay
 
 ## Description
-State machine that runs every game loop tick, handling demo recording and playback. During recording, snapshots the world state then writes player input keys into the demo buffer each frame. During playback, restores the world state then reads input keys back from the buffer each frame, driving the game as if the player were providing input.
+State machine that handles demo recording and playback. Called every game loop iteration; does nothing when idle. During recording, snapshots the world state then writes player input keys into the demo buffer each frame. During playback, restores the world state then reads input keys back from the buffer each frame, driving the game as if the player were providing input.
 
 ## Notes
 - Operates as a state machine driven by an internal demo mode flag (states: idle, start recording, recording, stop recording, start playback, playing back)
@@ -24,7 +24,7 @@ State machine that runs every game loop tick, handling demo recording and playba
 ```javascript
 mod.hook('WorldStateRecordReplay')
     .onEnter(function() {
-        // Called every game loop tick — demo state machine
+        // Called every game loop iteration — demo state machine
     })
     .onLeave(function(returnValue) {
         // returnValue: null (void)
