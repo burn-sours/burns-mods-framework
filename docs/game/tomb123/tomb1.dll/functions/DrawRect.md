@@ -77,6 +77,6 @@ function DrawRect(x, y, x2, y2, colorA, colorB):
             topLeft=colorB, topRight=colorB, bottomLeft=colorA, bottomRight=colorA
 
     // Render with exclusive right/bottom edges
-    renderQuad(left, top, right+1, top, right+1, bottom+1, left, bottom+1,
+    RenderQuad(left, top, right+1, top, right+1, bottom+1, left, bottom+1,
                bottomRight, bottomLeft, topRight, topLeft, 0x80)
 ```
