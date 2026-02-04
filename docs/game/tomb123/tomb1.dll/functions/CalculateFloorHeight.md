@@ -1,20 +1,19 @@
 # Function: CalculateFloorHeight
 
 ## Description
-Calculates the floor height at a given world position. Takes a sector pointer (from GetTileData) and X/Y/Z coordinates. Traverses floor portal chains to find the correct sector, reads the base floor height, applies slope adjustments, and processes trigger entities that may modify the height.
+Calculates the floor height at a given world position. Takes a sector pointer (from GetTileData) and X/Y/Z coordinates. Traverses floor portal chains to resolve the correct sector, reads the base floor height from the sector data, applies floor slope adjustments based on position within the sector, and processes entity trigger callbacks that may further modify the height.
 
-Also sets global side-effect variables: `slopeType` (0 = flat, 1 = gentle slope, 2 = steep slope) and `currentTrigger` (pointer to the first trigger entry in the floor data, if any).
+Also sets two global side-effect variables: a slope type flag (0 = flat, 1 = gentle slope, 2 = steep slope) and a current trigger pointer (the first trigger entry found in the floor data, if any).
 
 ## Notes
-- Param 0 (sector) comes from GetTileData. Sector data is 0xc (12) bytes per entry
-- Floor height is read from sector byte offset 9 as a signed byte, scaled by 256 (× 0x100) to world units
-- Floor portal room ID is at sector byte offset 8 — traversed until 0xFF (no more portals)
-- Floor slope (floor data type 2) interpolates height based on X/Z position within the 1024-unit sector grid (`& 0x3ff`). Slope gradients are packed in one word: low byte = X gradient (signed), high byte = Z gradient (signed)
-- A global flag (`DAT_1800fd690`) controls whether steep slopes are skipped — when set, slopes with either gradient abs ≥ 3 are ignored
-- `slopeType` is set to 1 when both gradients have abs < 3 (gentle), or 2 when either gradient has abs ≥ 3 (steep)
-- Trigger entities (floor data type 4) look up the entity's model type to call a callback function via a function pointer table — these callbacks can further modify the floor height
-- Type 5 floor data entries are tracked as kill triggers via `currentTrigger`
-- Y parameter is only passed through to entity trigger callbacks — not used directly in the height calculation
+- Sector pointer comes from GetTileData. Each sector entry is 12 bytes
+- Base floor height is stored as a signed byte in the sector, scaled by 256 to world units
+- Portal traversal walks through connected rooms until no further portal exists
+- Floor slopes interpolate height based on the X/Z position within the 1024-unit sector grid. Gradients are packed as two signed bytes (X and Z) in one word
+- A global flag controls whether steep slopes (gradient magnitude ≥ 3) are skipped
+- Slope type is classified as gentle (both gradients abs < 3) or steep (either ≥ 3)
+- Entity triggers look up the entity's model type to call a height callback — these can modify the returned height
+- Y parameter is only passed through to entity trigger callbacks, not used in the height calculation itself
 
 ## Details
 
@@ -64,62 +63,49 @@ const floorHeight = game.callFunction(game.module, 'CalculateFloorHeight', secto
 ## Pseudocode
 ```
 function CalculateFloorHeight(sector, x, y, z):
-    // traverse floor portals to find correct sector
-    portalRoomId = sector[FLOOR_PORTAL]  // byte offset 8
+    // traverse floor portals to resolve the correct sector
     slopeType = 0
+    while sector has a floor portal:
+        follow portal to connected room
+        look up new sector from X/Z position in that room
 
-    while portalRoomId != 0xFF:
-        room = Rooms + portalRoomId * ROOM_SIZE
-        sectorIndex = ((z - room.zOrigin) >> 10) + ((x - room.xOrigin) >> 10) * room.zLength
-        sector = room.sectorData + sectorIndex * 12
-        portalRoomId = sector[FLOOR_PORTAL]
-
-    // read base floor height (signed byte at offset 9, scaled to world units)
-    height = sector[FLOOR_HEIGHT_BYTE] * 256
+    // read base floor height from sector (signed byte × 256)
+    height = sector.floorHeightByte * 256
     currentTrigger = null
 
     // process floor data entries
-    if sector.floorDataIndex != 0:
-        entry = floorData + sector.floorDataIndex * 2
+    if sector has floor data:
+        for each entry:
+            if portal entry:
+                skip
 
-        for each floor data entry:
-            type = entry & 0xFF
+            if floor slope entry:
+                extract X and Z gradients (two signed bytes)
 
-            case type 1 (portal):
-                skip (advance 2 words)
+                // skip if steep slope flag is active and slope is too steep
+                if steepSlopeFlag and (abs(zGrad) >= 3 or abs(xGrad) >= 3):
+                    skip
 
-            case type 2 (floor slope):
-                xGradient = entry.data low byte (signed)
-                zGradient = entry.data high byte (signed)
-
-                // check if steep slopes should be skipped
-                if steepSlopeFlag set and (abs(zGradient) >= 3 or abs(xGradient) >= 3):
-                    skip slope adjustment
-
-                // classify slope steepness
-                if abs(zGradient) < 3 and abs(xGradient) < 3:
+                // classify slope
+                if both gradients abs < 3:
                     slopeType = 1  // gentle
                 else:
                     slopeType = 2  // steep
 
-                // interpolate height based on position within sector
-                zAdjust = interpolate(z & 0x3FF, zGradient)
-                xAdjust = interpolate(x & 0x3FF, xGradient)
-                height = height + zAdjust + xAdjust
-                skip (advance 2 words)
+                // interpolate height from position within sector
+                height += interpolate(z position in sector, zGrad)
+                height += interpolate(x position in sector, xGrad)
 
-            case type 3 (ceiling slope):
-                skip (advance 2 words)
+            if ceiling slope entry:
+                skip
 
-            case type 4 (trigger):
-                if first trigger: store currentTrigger
-                for each trigger entry:
-                    if entity trigger (mask 0x3C00 == 0):
-                        entity = Entities + (entry & 0x3FF) * ENTITY_SIZE
-                        call entity's height callback(entity, x, y, z)
-                        // callback may modify height
+            if trigger entry:
+                if first trigger found: store as currentTrigger
+                for each entity in trigger list:
+                    call entity's floor height callback(entity, x, y, z)
+                    // callback may modify height
 
-            case type 5 (kill trigger):
+            if kill trigger entry:
                 store as currentTrigger
 
     return height
