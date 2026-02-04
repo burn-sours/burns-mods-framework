@@ -1,7 +1,7 @@
 # Function: EntityBarricade
 
 ## Description
-Controls barricade/door objects that toggle between two states based on trigger activation and an optional timer delay. Reads the entity's activation flag to determine a default state, then checks the trigger count and timer to decide whether to flip it. Processes animation and handles room transitions.
+Controls barricade objects that toggle between two states based on trigger activation and an optional timer delay. Reads the entity's activation flag to determine a default state, then checks the trigger count and timer to decide whether to flip it. Processes animation and handles room transitions.
 
 ## Notes
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
