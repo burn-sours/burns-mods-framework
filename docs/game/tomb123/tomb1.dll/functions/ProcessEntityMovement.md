@@ -13,7 +13,7 @@ Handles per-frame movement for an enemy entity. Calls `ProcessEntityAnimation` i
 - Performs sector-boundary-aware movement: tests whether the entity can cross into adjacent sectors and adjusts position if blocked, using `ENTITY_YAW` to determine preferred direction when choices exist
 - Applies `turnDelta` to `ENTITY_YAW` and adjusts `ENTITY_PITCH` toward `tiltDelta × 8`, clamped ±0x222 per frame
 - Checks for entity-to-entity collisions in the same room — if another active entity with XZ speed is within collision radius (based on model data), reverts to the old position and returns 1
-- For entities with a step height (set in behaviour data): moves vertically toward a target Y, clamped by step height per frame, checks floor and ceiling, and calculates pitch from the vertical/horizontal speed ratio via `ATAN2`
+- For entities with a step height (set in behaviour data): moves vertically toward a target Y, clamped by step height per frame, checks floor and ceiling, and calculates pitch from the vertical/horizontal speed ratio via `Atan2`
 - For entities without step height: snaps to the floor with a max descent rate of 0x40 per frame
 - Triggers a room change if the entity moved into a different room
 
@@ -116,7 +116,7 @@ function ProcessEntityMovement(entityId, turnDelta, tiltDelta):
         move entity[ENTITY_Y] toward target, clamped by step height
         check floor and ceiling at new position
         if blocked: revert X/Z, use max step
-        calculate ENTITY_PITCH from ATAN2(xzSpeed, -verticalDelta)
+        calculate ENTITY_PITCH from Atan2(xzSpeed, -verticalDelta)
     else:
         snap entity[ENTITY_Y] to floor (max descent 0x40 per frame)
 

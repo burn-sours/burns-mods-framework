@@ -3,12 +3,12 @@
 ## Description
 Computes the yaw and pitch angles from a 3D coordinate difference. Takes three axis deltas and writes two angle values (yaw and pitch) to the output pointer.
 
-Yaw is calculated from the two horizontal components using ATAN2. Pitch is calculated by first computing the horizontal distance (integer square root of the sum of squared horizontal components), then using ATAN2 of the horizontal distance against the vertical component, with a sign correction applied.
+Yaw is calculated from the two horizontal components using `Atan2`. Pitch is calculated by first computing the horizontal distance (integer square root of the sum of squared horizontal components), then using `Atan2` of the horizontal distance against the vertical component, with a sign correction applied.
 
 ## Notes
 - Output is two consecutive Int16 angle values at the result pointer: yaw at offset 0, pitch at offset 2
 - Params 0 and 2 are the horizontal components (X and Z), param 1 is the vertical component (Y)
-- Uses the engine's ATAN2 function for both angle calculations
+- Uses the engine's `Atan2` function for both angle calculations
 - The integer square root uses a classic bit-by-bit algorithm — shifts the input values right in groups of 2 bits if any component overflows a short, to prevent integer overflow during squaring
 - Sign correction on pitch: if the vertical difference and computed pitch have the same sign, the pitch is negated — this ensures the angle is oriented correctly relative to the vertical axis
 
@@ -52,7 +52,7 @@ const pitch = result.add(2).readS16();
 ```
 function GetRelYawPitch(xDiff, yDiff, zDiff, result):
     // compute yaw from horizontal components
-    yaw = ATAN2(zDiff, xDiff)
+    yaw = Atan2(zDiff, xDiff)
     result[0] = yaw
 
     // scale down if any component overflows Int16 range
@@ -66,7 +66,7 @@ function GetRelYawPitch(xDiff, yDiff, zDiff, result):
     horizontalDist = isqrt(sumSquares)
 
     // compute pitch from horizontal distance vs vertical component
-    pitch = ATAN2(horizontalDist, zDiff)
+    pitch = Atan2(horizontalDist, zDiff)
 
     // sign correction: negate if vertical diff and pitch have same sign
     if (zDiff > 0 and pitch > 0) or (zDiff < 0 and pitch < 0):

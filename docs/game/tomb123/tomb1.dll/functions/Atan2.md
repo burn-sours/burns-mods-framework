@@ -1,4 +1,4 @@
-# Function: ATAN2
+# Function: Atan2
 
 ## Description
 Computes the angle from a 2D delta (deltaZ, deltaX) using a lookup table. Returns the angle as a fixed-point value in the engine's angle format (0–65535 = full rotation). Equivalent to a standard atan2 but using integer math and a precomputed table.
@@ -35,12 +35,12 @@ Computes the angle from a 2D delta (deltaZ, deltaX) using a lookup table. Return
 ## Usage
 ### Calling from mod code
 ```javascript
-const angle = game.callFunction(game.module, 'ATAN2', deltaZ, deltaX);
+const angle = game.callFunction(game.module, 'Atan2', deltaZ, deltaX);
 ```
 
 ## Pseudocode
 ```
-function ATAN2(deltaZ, deltaX):
+function Atan2(deltaZ, deltaX):
     if deltaZ == 0 and deltaX == 0:
         return 0
 

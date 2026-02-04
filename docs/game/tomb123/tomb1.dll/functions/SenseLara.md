@@ -8,7 +8,7 @@ Gathers AI tracking data for an enemy entity relative to Lara. Resolves pathfind
 - Resolves the entity's and Lara's box indices from their sector data (using room geometry and position), writing both to their respective `ENTITY_BOX_INDEX` fields
 - Looks up zone values for both boxes — if entity and Lara share the same zone value, the enemy can pathfind to Lara; different values mean no reachable path
 - Marks Lara's zone as blocked (bit 14) if the entity's box overlap data or behaviour mask flags prevent traversal
-- Calculates the angle from entity to Lara using `ATAN2`, with a directional offset derived from the entity's `ENTITY_MODEL` data and a trig lookup table
+- Calculates the angle from entity to Lara using `Atan2`, with a directional offset derived from the entity's `ENTITY_MODEL` data and a trig lookup table
 - Squared distance is capped at max int (0x7FFFFFFF) when XZ deltas exceed safe range
 - Returns early with an empty output if the entity has no behaviour data
 
@@ -106,7 +106,7 @@ function SenseLara(entity, output):
     xDiff = lara[ENTITY_X] - entity[ENTITY_X]  // adjusted by model offset
     zDiff = lara[ENTITY_Z] - entity[ENTITY_Z]  // adjusted by model offset
 
-    angleToLara = ATAN2(zDiff, xDiff)
+    angleToLara = Atan2(zDiff, xDiff)
 
     // Squared distance (capped at max int if deltas overflow)
     if abs(xDiff) > 32000 OR abs(zDiff) > 32000:

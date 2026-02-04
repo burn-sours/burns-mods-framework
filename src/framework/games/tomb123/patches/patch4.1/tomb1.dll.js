@@ -128,7 +128,7 @@ module.exports = {
         ShootLara: { Address: "0x31f60", Params: ['pointer', 'int', 'pointer', 'int'], Return: 'int' },
         AimProjectileAtLara: { Address: "0x48390", Params: ['pointer'], Return: 'void' },
         GetEntityBox: { Address: "0x4ca70", Params: ['pointer'], Return: 'pointer' },
-        ATAN2: { Address: "0x68640", Params: ['int', 'int'], Return: 'int' },
+        Atan2: { Address: "0x68640", Params: ['int', 'int'], Return: 'int' },
         DestroyProjectile: { Address: "0x1f1f0", Params: ['int'], Return: 'void' },
         FlipMap: { Address: "0x4f690", Params: [], Return: 'void' },
         ProcessTriggers: { Address: "0x9ab0", Params: ['pointer', 'int'], Return: 'void' },

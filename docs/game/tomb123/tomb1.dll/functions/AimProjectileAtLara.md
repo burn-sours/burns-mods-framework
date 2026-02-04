@@ -7,7 +7,7 @@ Calculates the direction angles (pitch and yaw) for a projectile to aim at Lara,
 - Always targets Lara — reads position directly from the `Lara` pointer using entity offsets
 - Calls `GetEntityBox` on Lara to get her bounding box, then calculates a vertical target point roughly 3/4 up the box height — projectiles aim at Lara's upper body, not her feet
 - Horizontal distance is computed via integer square root of the XZ distance squared
-- Uses `ATAN2` to convert deltas into engine angle units for both pitch and yaw
+- Uses `Atan2` to convert deltas into engine angle units for both pitch and yaw
 - Pitch is stored negated (positive pitch = aiming downward in engine convention)
 - Random spread is applied to both angles using the engine's LCG random number generator (`RngSeed`), giving a small ±deviation each time
 - The projectile pointer refers to an entry in the `Projectiles` array — each projectile is `PROJECTILE_SIZE` bytes
@@ -70,8 +70,8 @@ function AimProjectileAtLara(projectile):
     horizontalDist = intSqrt(xDiff * xDiff + zDiff * zDiff)
 
     // Calculate pitch and yaw angles
-    pitch = -ATAN2(horizontalDist, verticalTarget)
-    yaw = ATAN2(zDiff, xDiff)
+    pitch = -Atan2(horizontalDist, verticalTarget)
+    yaw = Atan2(zDiff, xDiff)
 
     // Write angles to projectile
     projectile.pitch = pitch

@@ -6,7 +6,7 @@ AI behaviour for Skater Boy — a dual-uzi gunman on a skateboard with unique te
 ## Notes
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
 - Called with the entity's index into the entity array, not a pointer
-- **Terrain tilt**: each frame, probes the floor height at two points along the entity's facing direction (forward and backward). If a probed height is within 0x200 of the entity's current Y, it's used; otherwise the current Y is kept. The height difference between front and back is converted to a tilt angle via ATAN2 lookup tables. This angle drives the entity's lean
+- **Terrain tilt**: each frame, probes the floor height at two points along the entity's facing direction (forward and backward). If a probed height is within 0x200 of the entity's current Y, it's used; otherwise the current Y is kept. The height difference between front and back is converted to a tilt angle via `Atan2` lookup tables. This angle drives the entity's lean
 - **Tilt stored at entity field 0x64** (not `ENTITY_PITCH`) — adjusted toward terrain tilt at ±0x100 per frame, even when dead
 - Fixed turn rate: `TurnTo(entity, 0x2D8)` — always the same, no per-state adjustment
 - `UpdateEnemyMood` called with passive flag — cautious behaviour
@@ -150,7 +150,7 @@ function EntitySkaterBoy(entityId):
 
     // Calculate tilt angle from height difference
     heightDiff = frontY - backY  // signed
-    terrainTilt = ATAN2(heightDiff)  // absolute value of result
+    terrainTilt = Atan2(heightDiff)  // absolute value of result
 
     // --- Dead ---
     if entity[ENTITY_HEALTH] <= 0:
