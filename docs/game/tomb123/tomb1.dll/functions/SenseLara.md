@@ -1,4 +1,4 @@
-# Function: GetEnemyAIData
+# Function: SenseLara
 
 ## Description
 Gathers AI tracking data for an enemy entity relative to Lara. Resolves pathfinding zones, calculates distance, facing angles, and line-of-approach information, then writes the results into an output structure (`AI_TRACKING_SIZE` bytes). Called by enemy behaviour functions to make decisions about pursuit, attack, and awareness.
@@ -45,7 +45,7 @@ The output buffer is `AI_TRACKING_SIZE` (0x16) bytes with the following fields:
 ### Hooking
 ```javascript
 // Monitor AI data calculations for all enemies
-mod.hook('GetEnemyAIData')
+mod.hook('SenseLara')
     .onLeave(function(returnValue, entityPtr, outputPtr) {
         const entityZone = outputPtr.readS16();
         const laraZone = outputPtr.add(2).readS16();
@@ -60,14 +60,14 @@ mod.hook('GetEnemyAIData')
 const entities = game.readVar(game.module, 'Entities');
 const enemyPtr = entities.add(enemyIndex * ENTITY_SIZE);
 const aiData = game.alloc(AI_TRACKING_SIZE);
-game.callFunction(game.module, 'GetEnemyAIData', enemyPtr, aiData);
+game.callFunction(game.module, 'SenseLara', enemyPtr, aiData);
 const distSq = aiData.add(4).readS32();
 const isFacing = aiData.add(8).readS32();
 ```
 
 ## Pseudocode
 ```
-function GetEnemyAIData(entity, output):
+function SenseLara(entity, output):
     lara = readVar('Lara')
     behaviour = entity[ENTITY_BEHAVIOUR]
 

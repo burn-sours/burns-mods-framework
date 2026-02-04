@@ -120,7 +120,7 @@ module.exports = {
         EntityBehaviourTorso: { Address: "0x2eff0", Params: ['int'], Return: 'void' },
         EntityBehaviourAtlanteanProjectile: { Address: "0x47b00", Params: ['int'], Return: 'void' },
         AdjustEntityCollision: { Address: "0x2eef0", Params: ['pointer', 'int'], Return: 'void' },
-        GetEnemyAIData: { Address: "0x1b30", Params: ['pointer', 'pointer'], Return: 'void' },
+        SenseLara: { Address: "0x1b30", Params: ['pointer', 'pointer'], Return: 'void' },
         ProcessEntityAnimation: { Address: "0x8e60", Params: ['pointer'], Return: 'void' },
         ShootLara: { Address: "0x31f60", Params: ['pointer', 'int', 'pointer', 'int'], Return: 'int' },
         AimProjectileAtLara: { Address: "0x48390", Params: ['pointer'], Return: 'void' },
