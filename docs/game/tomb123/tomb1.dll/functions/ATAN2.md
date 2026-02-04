@@ -14,7 +14,7 @@ Computes the angle from a 2D delta (deltaZ, deltaX) using a lookup table. Return
 
 | Field     | Value                          |
 |-----------|--------------------------------|
-| Usage     | `Hook & Call`                  |
+| Usage     | `Call`                         |
 | Params    | `int, int`                     |
 | Return    | `int`                          |
 
@@ -33,18 +33,6 @@ Computes the angle from a 2D delta (deltaZ, deltaX) using a lookup table. Return
 | `0–65535` | Angle in the engine's fixed-point format (full rotation) |
 
 ## Usage
-### Hooking
-```javascript
-mod.hook('ATAN2')
-    .onEnter(function(deltaZ, deltaX) {
-        // deltaZ: forward axis delta
-        // deltaX: lateral axis delta
-    })
-    .onLeave(function(returnValue, deltaZ, deltaX) {
-        // returnValue: angle (0–65535)
-    });
-```
-
 ### Calling from mod code
 ```javascript
 const angle = mod.call('ATAN2', deltaZ, deltaX);
