@@ -4,18 +4,14 @@
 Simulates Lara's hair physics each frame. Processes a chain of 6 hair segments, applying gravity, floor collisions, body sphere collisions, and environmental effects (underwater sway, wind). On the first call, initializes all segment positions from the bone tree and resets physics state.
 
 ## Notes
-- Param 0 controls physics mode: 0 = full simulation with floor collision checks, non-zero = skip floor checks (floor set to max height)
-- Param 1 selects the hair variant/braid mesh data to simulate
-- Hair consists of 6 linked segments, each with position (x, y, z), velocity, and rotation angles (yaw, pitch)
-- Initialization path runs once on the first frame: positions all segments along the bone chain using matrix rotations, then resets sway/wind counters
-- Kinematic fallback: when Lara has a cinematic flag set and the state check returns 0, physics simulation is skipped and SnapLaraHair is called instead — rigidly positions hair segments using Lara's head/torso bone rotation matrix and stored per-segment yaw/pitch angles. No gravity, collisions, or sway. Prevents hair clipping during cutscenes
-- Gravity is applied as 3/4 of the previous frame's velocity per axis
-- Floor collision: uses GetSector + CalculateFloorHeight to prevent segments from going below the floor. If a segment penetrates the floor by less than 256 units, it's clamped; otherwise it snaps back to the previous position
-- Body collision: checks each segment against collision spheres (from Lara's skeleton). If a segment is inside a sphere, it's pushed outward to the sphere surface using integer square root distance calculation
-- Underwater behaviour (state 2): adds random oscillation to hair movement using the RNG seed, creating a flowing underwater sway effect
-- Wind: when in rooms with specific flags (water surface or wind), a drift value is applied to segment Z positions
-- Yaw and pitch between consecutive segments are computed using an ATAN2 lookup table
-- References the LaraHairLeftX variable region for storing segment positions
+- Param 0: physics mode — 0 = full simulation with floor checks, non-zero = skip floor checks
+- Param 1: hair variant index — selects which braid mesh data to use
+- 6 linked segments, each with position, velocity, and yaw/pitch angles
+- First frame initializes segment positions from the bone chain, then resets physics state
+- Cinematic fallback: calls SnapLaraHair instead when Lara has a cinematic flag set — rigid positioning, no physics
+- Uses GetSector + CalculateFloorHeight for floor collision, collision spheres for body collision
+- Underwater (state 2): random sway via RNG. Wind rooms: drift applied to Z axis
+- References the LaraHairLeftX variable region for segment storage
 
 ## Details
 
