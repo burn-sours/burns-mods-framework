@@ -39,19 +39,11 @@ Useful as a fast native alternative to Frida's JavaScript-level memory copy when
 ## Usage
 ### Calling from mod code
 ```javascript
-// Clone an entity's data block (e.g. backup before modifying)
-const src = game.readVar(game.module, 'Entities');
-const size = 0x120; // entity struct size
+// Copy a known-size block from one address to another
+const size = 0x30; // e.g. LaraCircleShadow block size
+const src = game.getVarPtr(game.module, 'LaraCircleShadow');
 const dest = Memory.alloc(size);
 game.callFunction(game.module, 'Clone', dest, src, size);
-```
-
-```javascript
-// Clone a larger structure (e.g. room data)
-const roomPtr = game.readVar(game.module, 'Rooms');
-const roomSize = 0x1000;
-const backup = Memory.alloc(roomSize);
-game.callFunction(game.module, 'Clone', backup, roomPtr, roomSize);
 ```
 
 ## Pseudocode
