@@ -22,7 +22,7 @@ The returned pointer can be used to modify the text entry's properties directly 
 | TEXT_FLAGS      | Int32   | Flags (e.g. `0x1001`)          |
 | TEXT_X          | Float   | X position                     |
 | TEXT_Y          | Float   | Y position                     |
-| TEXT_COLOR      | UInt16  | Color (BGR format, e.g. `0x1111`) |
+| TEXT_COLOR      | UInt16  | Color (exact format TBD, e.g. `0x1111`) |
 | TEXT_Z_ORDER    | UInt16  | Z order / render layer         |
 | TEXT_STRING     | Pointer | Text string pointer            |
 | TEXT_FONT_SIZE  | Int32   | Font size (e.g. `11000`)       |
