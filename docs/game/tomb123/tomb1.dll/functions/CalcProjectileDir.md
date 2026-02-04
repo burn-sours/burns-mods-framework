@@ -29,10 +29,9 @@ Calculates the direction angles (pitch and yaw) for a projectile to aim at Lara,
 ## Usage
 ### Hooking
 ```javascript
-// Skip the function to prevent enemies from aiming projectiles
+// Log when an enemy fires a projectile at Lara
 mod.hook('CalcProjectileDir')
-    .onEnter(function(args) {
-        // args[0] = projectile pointer
+    .onEnter(function(projectilePtr) {
         log('Enemy firing projectile');
     });
 ```
