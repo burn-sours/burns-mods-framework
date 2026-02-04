@@ -1,7 +1,7 @@
 # Function: EntityFallingSword
 
 ## Description
-Controls the Sword of Damocles trap — a ceiling-mounted sword that hovers and spins until Lara walks beneath it. On activation, locks onto Lara's position, calculates a fixed trajectory, and falls with accelerating gravity. On floor impact, creates sparks, plays an impact sound, removes itself from active processing, and sets a global tracking flag.
+Controls the Sword of Damocles trap — a ceiling-mounted sword that hovers and spins until Lara walks beneath it. On activation, locks onto Lara's position, calculates a fixed trajectory, and falls with accelerating gravity. On floor impact, creates sparks, plays an impact sound, and removes itself from active processing.
 
 ## Notes
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
@@ -31,7 +31,6 @@ Controls the Sword of Damocles trap — a ceiling-mounted sword that hovers and 
   3. Clears flag bits 1 and 3, sets bit 2 (landed)
   4. Removes entity from active processing list
   5. `CreateImpactSparks` at sword position with current rotation
-  6. Sets bit 1 in a global per-entity tracking array (indexed as 48 − entityId) — likely marks the sword as landed for the level's contact damage system
 
 ## Details
 
@@ -119,7 +118,4 @@ function EntityFallingSword(entityId):
 
             removeFromProcessingList(entityId)
             CreateImpactSparks(entity.x, entity.y, entity.z, entity.rotation)
-
-            // Mark sword as landed in global tracking
-            globalEntityFlags[48 - entityId] |= 2
 ```
