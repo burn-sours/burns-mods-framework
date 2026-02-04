@@ -13,7 +13,7 @@ Returns the alternate model ID for a given model ID. Every inventory-related ite
 
 | Field     | Value                          |
 |-----------|--------------------------------|
-| Usage     | `Hook & Call`                  |
+| Usage     | `Call`                         |
 | Params    | `int`                          |
 | Return    | `int`                          |
 
@@ -31,19 +31,6 @@ Returns the alternate model ID for a given model ID. Every inventory-related ite
 | `-1`  | No alternate exists for this model ID      |
 
 ## Usage
-### Hooking
-```javascript
-mod.hook('GetAlternateId')
-    .onEnter(function(modelId) {
-        log('Converting model ID:', modelId);
-    })
-    .onLeave(function(returnValue, modelId) {
-        if (returnValue !== -1) {
-            log('Model', modelId, '→ alternate', returnValue);
-        }
-    });
-```
-
 ### Calling from mod code
 ```javascript
 // Get the alternate model ID for a given item
