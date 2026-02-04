@@ -1,7 +1,7 @@
 # Function: RecordWorldState
 
 ## Description
-Snapshots the current game world state into a buffer for later restoration. Runs every frame as part of the interpolation system, and is also reused by the save file mechanism. Captures level ID, inventory counts, flip map state, flip effect state, camera flags, entity state (position, rotation, flags, animation), Lara's full state (entity data + mesh model pointers), and camera data.
+Snapshots the current game world state into a buffer for later restoration. Runs every frame, and is also reused by the save file mechanism. Captures level ID, inventory counts, flip map state, flip effect state, camera flags, entity state (position, rotation, flags, animation), Lara's full state (entity data + mesh model pointers), and camera data.
 
 ## Notes
 - Param 0 selects the recording mode: 0 = full backup (to WorldStateBackupPointer), non-zero = replay/restore-point snapshot (to a separate restore pointer with additional camera state)
