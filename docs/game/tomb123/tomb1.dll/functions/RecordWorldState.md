@@ -4,7 +4,7 @@
 Snapshots the current game world state into a buffer for later restoration. Runs every frame, and is also reused by the save file mechanism. Captures level ID, inventory counts, flip map state, flip effect state, camera flags, entity state (position, rotation, flags, animation), Lara's full state (entity data + mesh model pointers), and camera data.
 
 ## Notes
-- Param 0 selects the recording mode: 0 = full backup (to the backup buffer), non-zero = replay/restore-point snapshot (to a separate restore buffer with additional camera state)
+- Param 0 selects the recording mode: 0 = save game (to the backup buffer), non-zero = demo system (to the demo state buffer with additional camera state)
 - Mode 0 clears the destination buffer before writing; mode non-zero writes a "DEMO" signature and includes RNG seeds and full camera state
 - Entity data is recorded selectively based on per-type flags in the entity type table — not all entities are stored the same way
 - Lara's state includes entity data plus mesh model offsets stored relative to the mesh pointer base (converted to half-word offsets)
@@ -22,14 +22,14 @@ Snapshots the current game world state into a buffer for later restoration. Runs
 
 | #   | Type  | Description                                                |
 |-----|-------|------------------------------------------------------------|
-| 0   | `int` | Recording mode — 0 = full backup, non-zero = replay snapshot with camera state |
+| 0   | `int` | Recording mode — 0 = save game, non-zero = demo system (includes camera state) |
 
 ## Usage
 ### Hooking
 ```javascript
 mod.hook('RecordWorldState')
     .onEnter(function(mode) {
-        // mode: 0 = full backup, non-zero = replay snapshot
+        // mode: 0 = save game, non-zero = demo system
     })
     .onLeave(function(returnValue, mode) {
         // returnValue: null (void)
@@ -45,10 +45,10 @@ function RecordWorldState(mode):
     store inventory counts (keys, puzzle items, pickups)
 
     if mode == 0:
-        dest = WorldStateBackupPointer
+        dest = save game backup buffer
         clear destination buffer
     else:
-        dest = worldStateRestorePointer
+        dest = demo state buffer
         write "DEMO" signature
         store RNG seeds
 
@@ -87,7 +87,7 @@ function RecordWorldState(mode):
     store frame pointer offsets
     store additional Lara state values
 
-    // camera state (replay mode only)
+    // camera state (demo mode only)
     if mode != 0:
         store current camera position + room
         store previous camera position + room

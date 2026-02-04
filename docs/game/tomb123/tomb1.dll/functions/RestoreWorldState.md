@@ -4,9 +4,9 @@
 Restores the game world state from a previously recorded buffer, reversing the work of RecordWorldState. Rebuilds inventory, flip map state, entity positions/states, Lara's full state, and mesh model pointers. Handles special geometry adjustments for push blocks, moving blocks, and thor hammer entities during restoration.
 
 ## Notes
-- Param 0 selects the restore mode: 0 = full backup restore (from the backup buffer, starting partway through where inventory data was written), non-zero = replay restore (from the restore pointer, requires a "DEMO" signature at the start)
-- In replay mode (non-zero), restores RNG seed and camera state; in backup mode (0) these are skipped
-- If the replay mode buffer doesn't have the "DEMO" signature, the function aborts early
+- Param 0 selects the restore mode: 0 = save game restore (from the backup buffer, starting past the inventory header), non-zero = demo restore (from the demo state buffer, requires a "DEMO" signature at the start)
+- In demo mode (non-zero), restores RNG seed and camera state; in save game mode (0) these are skipped
+- If the demo state buffer doesn't have the "DEMO" signature, the function aborts early
 - Inventory restoration is complex: weapons consolidate their ammo pickups (e.g. picking up a shotgun absorbs all loose shotgun shells into ammo count), alternate model IDs are resolved, and New Game Plus restricts medipacks in certain levels/difficulties
 - Entity restoration selectively reads position, animation, flags, and AI data based on per-type flags in the entity type table — same flags used by RecordWorldState
 - Push blocks, moving blocks, and thor hammer handle entities trigger floor height adjustments and pathfinding box updates during restore
@@ -26,14 +26,14 @@ Restores the game world state from a previously recorded buffer, reversing the w
 
 | #   | Type  | Description                                                |
 |-----|-------|------------------------------------------------------------|
-| 0   | `int` | Restore mode — 0 = full backup restore, non-zero = replay restore with camera state |
+| 0   | `int` | Restore mode — 0 = save game restore, non-zero = demo restore (includes camera state) |
 
 ## Usage
 ### Hooking
 ```javascript
 mod.hook('RestoreWorldState')
     .onEnter(function(mode) {
-        // mode: 0 = full backup restore, non-zero = replay restore
+        // mode: 0 = save game restore, non-zero = demo restore
     })
     .onLeave(function(returnValue, mode) {
         // returnValue: null (void)
@@ -45,9 +45,9 @@ mod.hook('RestoreWorldState')
 ```
 function RestoreWorldState(mode):
     if mode == 0:
-        source = backup buffer (skip past inventory header)
+        source = save game backup buffer (skip past inventory header)
     else:
-        source = restore buffer
+        source = demo state buffer
         if signature != "DEMO":
             abort (clear flag and return)
         restore RNG seed
@@ -212,7 +212,7 @@ function RestoreWorldState(mode):
 
     restore additional Lara state values
 
-    // camera state (replay mode only)
+    // camera state (demo mode only)
     if mode != 0:
         restore current camera position + room
         restore previous camera position + room
