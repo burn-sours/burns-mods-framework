@@ -10,7 +10,7 @@ Processes sector trigger data when Lara or a heavy entity steps on a triggered s
 - Entity activation uses a 5-bit mask system on `ENTITY_FLAGS` — trigger mode controls whether the mask bits are toggled, cleared, or set. When all 5 mask bits (0x3E00) are set, the entity fully activates
 - Timer values from the trigger data are written to `ENTITY_TIMER`, scaled by 30 (×0x1E) unless the timer is 1 (instant)
 - Death triggers (type 5 in the first byte) fire immediately when Lara's Y position matches her base position, calling a separate death handler
-- Secret collection (command type 10) tracks found secrets per-level via a bitfield, plays achievement sounds, and updates achievement stats grouped by level ranges
+- Secret collection (command type 10) tracks found secrets per-level via a bitfield, plays the secret chime, and updates achievement stats grouped by level ranges
 
 ### Trigger Types
 
@@ -167,7 +167,7 @@ function ProcessTriggers(trigger, isHeavyTrigger):
             case 10 (secret):
                 if secret not already found:
                     mark secret as found in bitfield
-                    play achievement sound
+                    play secret chime
                     increment per-level secret counter
                     update achievement stats by level group
 
