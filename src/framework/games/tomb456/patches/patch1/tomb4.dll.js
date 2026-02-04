@@ -87,7 +87,7 @@ module.exports = {
         GetRangeH: { Address: "0x14680", Params: ['pointer', 'pointer'], Return: 'int' },
         GetRangeV: { Address: "0x142c0", Params: ['pointer', 'pointer'], Return: 'int' },
         CheckAim: { Address: "0x5bc20", Params: ['pointer'], Return: 'void' },
-        DealDmg: { Address: "0x98220", Params: ['pointer', 'int', 'int'], Return: 'void' },
+        OnDamage: { Address: "0x98220", Params: ['pointer', 'int', 'int'], Return: 'void' },
         ModernGfx: { Address: "0x30c10", Params: ['int', 'int', 'int', 'int', 'int', 'int', 'int'], Return: 'void' },
         GetEntityBox: { Address: "0xa0980", Params: ['pointer'], Return: 'pointer' },
         RemoveEntity: { Address: "0x3e770", Params: ['int'], Return: 'void' },

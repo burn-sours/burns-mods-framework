@@ -74,7 +74,7 @@ module.exports = {
         GetRangeH: { Address: "0x4f900", Params: ['pointer', 'pointer'], Return: 'int' },
         GetRangeV: { Address: "0x4f540", Params: ['pointer', 'pointer'], Return: 'int' },
         CheckAim: { Address: "0x26520", Params: ['pointer'], Return: 'void' },
-        DealDmg: { Address: "0x436e0", Params: ['pointer', 'int', 'int'], Return: 'void' },
+        OnDamage: { Address: "0x436e0", Params: ['pointer', 'int', 'int'], Return: 'void' },
         AttachLaraHair: { Address: "0x4c8c0", Params: ['int', 'int'], Return: 'void' },
         RecordWorldState: { Address: "0x37ef0", Params: ['int'], Return: 'void' },
         RestoreWorldState: { Address: "0x38670", Params: ['int'], Return: 'void' },
