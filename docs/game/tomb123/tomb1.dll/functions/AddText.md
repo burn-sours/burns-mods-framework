@@ -49,7 +49,7 @@ mod.hook('AddText', (args) => {
 
 ### Calling from mod code
 ```javascript
-const text = Memory.allocUtf8String('Hello World');
+const text = game.allocString('Hello World');
 const entry = game.callFunction(game.module, 'AddText', x, y, z, text);
 ```
 
