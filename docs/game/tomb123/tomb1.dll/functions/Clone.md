@@ -40,7 +40,7 @@ Useful as a fast native alternative to Frida's JavaScript-level memory copy when
 ### Calling from mod code
 ```javascript
 // Clone an entity's data block (e.g. backup before modifying)
-const src = game.readVar(game.module, 'Entities').readPointer();
+const src = game.readVar(game.module, 'Entities');
 const size = 0x120; // entity struct size
 const dest = Memory.alloc(size);
 game.callFunction(game.module, 'Clone', dest, src, size);
@@ -48,7 +48,7 @@ game.callFunction(game.module, 'Clone', dest, src, size);
 
 ```javascript
 // Clone a larger structure (e.g. room data)
-const roomPtr = game.readVar(game.module, 'Rooms').readPointer();
+const roomPtr = game.readVar(game.module, 'Rooms');
 const roomSize = 0x1000;
 const backup = Memory.alloc(roomSize);
 game.callFunction(game.module, 'Clone', backup, roomPtr, roomSize);
