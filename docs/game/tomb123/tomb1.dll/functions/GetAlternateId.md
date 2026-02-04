@@ -45,11 +45,28 @@ const result = game.callFunction(game.module, 'GetAlternateId', 0x10);
 ## Pseudocode
 ```
 function GetAlternateId(modelId):
-    // Lookup table of bidirectional pairs
-    // Each inventory item type has an original and alternate model ID
-    // The function maps original → alternate and alternate → original
-
-    match modelId against known pairs:
-        if found: return the paired alternate ID
+    switch modelId:
+        72  ↔ 82          // Pair 1
+        84  ↔ 99          // Pistols
+        85  ↔ 100         // Shotgun
+        86  ↔ 101         // Magnums
+        87  ↔ 102         // Uzis
+        89  ↔ 104         // Shotgun Shells
+        90  ↔ 105         // Magnum Clips
+        91  ↔ 106         // Uzi Clips
+        93  ↔ 108         // Small Medipack
+        94  ↔ 109         // Large Medipack
+        110 ↔ 114         // Puzzle 1
+        111 ↔ 115         // Puzzle 2
+        112 ↔ 116         // Puzzle 3
+        113 ↔ 117         // Puzzle 4
+        126 ↔ 127         // Lead Bar
+        129 ↔ 133         // Key 1
+        130 ↔ 134         // Key 2
+        131 ↔ 135         // Key 3
+        132 ↔ 136         // Key 4
+        141 ↔ 148         // Scion 1
+        142 ↔ 149         // Scion 2
+        143, 144, 145, 146 → 150  // Scion 3 (one-way)
         default: return -1
 ```
