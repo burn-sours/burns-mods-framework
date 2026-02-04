@@ -35,7 +35,7 @@ If no target exists, clears all aiming state immediately. Otherwise, calculates 
 ### Hooking
 ```javascript
 mod.hook('CheckAim')
-    .onLeave(function(returnValue, screenBoundaries) {
+    .onLeave(function(returnValue, aimBoundaries) {
         // Check aiming state after evaluation
         const left = game.readVar(game.module, 'LaraAimingLeft');
         const right = game.readVar(game.module, 'LaraAimingRight');
@@ -47,7 +47,7 @@ mod.hook('CheckAim')
 
 ## Pseudocode
 ```
-function CheckAim(screenBoundaries):
+function CheckAim(aimBoundaries):
     if LaraAimingEnemy == null:
         LaraAimingLeft = 0
         LaraAimingRight = 0
