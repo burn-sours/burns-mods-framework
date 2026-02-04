@@ -130,7 +130,7 @@ module.exports = {
         FlipMap: { Address: "0x4f690", Params: [], Return: 'void' },
         ProcessTriggers: { Address: "0x9ab0", Params: ['pointer', 'int'], Return: 'void' },
         DropEnemyItems: { Address: "0x32810", Params: ['pointer'], Return: 'void' },
-        ShowEntityOnScreen: { Address: "0x4be50", Params: ['int', 'pointer'], Return: 'void' },
+        DrawEntityOnScreen: { Address: "0x4be50", Params: ['int', 'pointer'], Return: 'void' },
         AddItemToInventory: { Address: "0x1dd80", Params: ['int'], Return: 'int' },
         RemoveItemFromInventory: { Address: "0x1e520", Params: ['int'], Return: 'int' },
         GetAlternateId: { Address: "0x1db40", Params: ['int'], Return: 'int' },

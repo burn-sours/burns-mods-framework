@@ -1,4 +1,4 @@
-# Function: ShowEntityOnScreen
+# Function: DrawEntityOnScreen
 
 ## Description
 Adds a pickup item to the on-screen pickup display. This is the spinning item display shown in the corner of the screen when Lara picks something up. Supports up to 12 simultaneous pickup displays. Projects the pickup's 3D world position to screen coordinates, sets up the model's animation frame, and prepares the display entry for rendering.
@@ -30,7 +30,7 @@ Adds a pickup item to the on-screen pickup display. This is the spinning item di
 ## Usage
 ### Hooking
 ```javascript
-mod.hook('ShowEntityOnScreen')
+mod.hook('DrawEntityOnScreen')
     .onEnter(function(modelId, entityPtr) {
         log('Pickup display:', modelId, entityPtr.isNull() ? '(from Lara)' : '(from entity)');
     });
@@ -39,12 +39,12 @@ mod.hook('ShowEntityOnScreen')
 ### Calling from mod code
 ```javascript
 // Show a shotgun pickup display using Lara's position
-game.callFunction(game.module, 'ShowEntityOnScreen', 0x55, ptr(0));
+game.callFunction(game.module, 'DrawEntityOnScreen', 0x55, ptr(0));
 ```
 
 ## Pseudocode
 ```
-function ShowEntityOnScreen(modelId, entity):
+function DrawEntityOnScreen(modelId, entity):
     if pickupDisplaysCount == 12:
         return
 
