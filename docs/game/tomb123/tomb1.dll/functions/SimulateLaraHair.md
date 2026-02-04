@@ -56,7 +56,7 @@ function SimulateLaraHair(physicsMode, hairVariant):
 
     // determine hair attachment offset based on Lara's outfit
     attachOffset = getHairAttachPoint()
-    getBonePosition(Lara, attachOffset, boneId)
+    GetBonePosition(Lara, attachOffset, boneId)
 
     hairRoot = attachOffset position
     boneTree = meshTreePointer + hairVariant bone offset

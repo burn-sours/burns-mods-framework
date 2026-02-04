@@ -129,7 +129,7 @@ function EntityBat(entityId):
                     targetState = 2 (fly)
                     clear mood
                 else:
-                    get bite bone position, apply damage to Lara
+                    GetBonePosition(entity, pos, boneIndex), apply damage to Lara
                     damage = -2 (or -5 on NG+)
                     set Lara ENTITY_STATUS bit 4
 

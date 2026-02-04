@@ -128,7 +128,7 @@ function EntityWolf(entityId):
             headTilt = 3
             headYaw = turnDelta
             if contact detected (touch bits & WOLF_TOUCH_MASK):
-                get bite bone position, apply damage to Lara
+                GetBonePosition(entity, pos, boneIndex), apply damage to Lara
                 damage = -50 (or -80 on NG+)
                 set Lara ENTITY_STATUS bit 4
                 queue state 3 (run)
@@ -145,7 +145,7 @@ function EntityWolf(entityId):
 
         case 12 (pounce):
             if contact + facing:
-                get pounce bone position, apply damage
+                GetBonePosition(entity, pos, boneIndex), apply damage
                 damage = -100 (or -200 on NG+)
                 set Lara ENTITY_STATUS bit 4
                 queue state 9

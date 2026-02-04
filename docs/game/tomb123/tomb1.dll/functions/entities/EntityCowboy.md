@@ -10,7 +10,7 @@ AI behaviour for the Cowboy — a human gunman with a powerful ranged attack tha
 - Turn rate is **dynamic**: stored in an AI data field, updated per state (0x222 for walk, 0x444 for run). `TurnTo` reads this value each frame
 - Always checks visibility (`checkTargetVisibility`) and updates combat state every frame while alive — not conditional on being alerted like Pierre
 - **Shot counter** in AI data: reset to 0 when entering aim state, incremented each frame in shoot state. Frame 0 = hitscan, frame 6 = projectile or hitscan
-- When Lara is out of sight on the 6th frame: calculates a bone position and creates a projectile via the projectile spawning function, adjusting its angle by the head tracking yaw. Sets the entity weapon state to 4
+- When Lara is out of sight on the 6th frame: uses `GetBonePosition` to get the muzzle position and creates a projectile, adjusting its angle by the head tracking yaw. Sets the entity weapon state to 4
 - When Lara IS in sight on the 6th frame: fires a second `ShootLara` hitscan with a different weapon data set
 - On death: calls `DropEnemyItems` to drop carried items, then sets death animation (state 5)
 - On death (normal/easy NG+ only): triggers a game event with params (11, 100)
@@ -60,7 +60,7 @@ AI behaviour for the Cowboy — a human gunman with a powerful ranged attack tha
 - Frame 0: hitscan via `ShootLara` with weapon data 1
 - Frame 6:
   - Can see Lara → hitscan via `ShootLara` with weapon data 2
-  - Can't see Lara → spawns projectile from bone position, adjusts angle by head yaw
+  - Can't see Lara → spawns projectile from `GetBonePosition` muzzle, adjusts angle by head yaw
 - Counter increments each frame
 - If escape mood → queue 3 (run)
 
@@ -78,7 +78,7 @@ AI behaviour for the Cowboy — a human gunman with a powerful ranged attack tha
 - Both the frame-0 and frame-6 hitscan shots deal the same damage
 
 **Projectile (frame 6, can't see Lara):**
-- Spawns a projectile from a bone position with weapon data
+- Spawns a projectile from `GetBonePosition` muzzle with weapon data
 - Sets entity weapon state to 4
 - Projectile angle adjusted by head tracking yaw
 
@@ -229,7 +229,7 @@ function EntityCowboy(entityId):
                         if Lara dead: set tracking flag
                 else:
                     // Blind fire — spawn projectile
-                    bonePos = getAttackOrigin(entity, weaponData2.boneOffset)
+                    GetBonePosition(entity, bonePos, weaponData2.boneIndex)
                     projectileId = spawnProjectile(bonePos, entity.yaw, entity.room)
                     entity.weaponState = 4
                     if projectileId != -1:

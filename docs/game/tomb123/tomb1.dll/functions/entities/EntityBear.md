@@ -156,7 +156,7 @@ function EntityBear(entityId):
 
         case 6 (standing bite):
             if contact (0x2406C):
-                get bone position, damage Lara: -200 (or -400 NG+)
+                GetBonePosition(entity, pos, boneIndex), damage Lara: -200 (or -400 NG+)
                 set Lara ENTITY_STATUS bit 4
                 queue state 1
 

@@ -21,7 +21,7 @@ AI behaviour shared by all lion-type enemies: lion, lioness, and panther. A grou
 | 4     | Claw  | Swipe attack on contact                              |
 | 5     | Death | Model-specific random death animation                |
 | 6     | Roar  | Roar animation (queued state)                        |
-| 7     | Bite  | Bite attack using bone position for hit detection    |
+| 7     | Bite  | Bite attack using `GetBonePosition` for hit detection |
 
 ### Damage
 
@@ -140,7 +140,7 @@ function EntityLion(entityId):
 
         case 7 (bite):
             if no queued AND contact (0x380066):
-                get bone position, damage Lara:
+                GetBonePosition(entity, pos, boneIndex), damage Lara:
                     normal: -250
                     NG+ lioness: -300, NG+ others: -350
                 set Lara ENTITY_STATUS bit 4

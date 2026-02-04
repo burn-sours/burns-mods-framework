@@ -9,7 +9,7 @@ AI behaviour for the land rat. A small ground enemy that runs toward Lara and bi
 - The second parameter is typed as `pointer` for 64-bit width but represents a Y coordinate value used in water height queries
 - When activated (status flags pending), the Y reference is zeroed before continuing
 - Touch bitmask for attacks: specific body-part touch mask
-- Bite (state 2) uses bone position to create a hit effect at the head
+- Bite (state 2) uses `GetBonePosition` to create a hit effect at the head
 - Head yaw tracking via AI data joint (with per-frame and total rotation limits)
 - `UpdateEnemyMood` called with aggressive flag set
 - While alive: after movement, gradually adjusts entity Y toward water height when water is present. If no water found, transitions to a different animation set
@@ -23,7 +23,7 @@ AI behaviour for the land rat. A small ground enemy that runs toward Lara and bi
 | State | Name          | Description                                                  |
 |-------|---------------|--------------------------------------------------------------|
 | 1     | Run           | Standard movement; transitions to bite on facing + contact   |
-| 2     | Bite          | Attack state; damages Lara via head bone position            |
+| 2     | Bite          | Attack state; damages Lara via `GetBonePosition` head lookup |
 | 3     | Death (water) | Water death animation; head centers                          |
 | 5     | Death (land)  | Land death; entity placed on floor                           |
 
@@ -132,7 +132,7 @@ function EntityRatDry(entityId, waterY):
 
         case 2 (bite):
             if bite not yet delivered and facing and contact detected:
-                get bone position (head)
+                GetBonePosition(entity, pos, boneIndex)
                 create damage effect at head position
                 if normal or low NG+ difficulty:
                     Lara health -= 20

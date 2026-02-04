@@ -10,7 +10,7 @@ AI behaviour for the water rat. Swims underwater with passive mood, pursuing Lar
 - When activated (status flags pending), the Y reference is zeroed before continuing
 - `UpdateEnemyMood` called with passive flag (0), unlike the land rat which uses aggressive (1)
 - Touch bitmask for attacks: specific body-part touch mask (same as land rat)
-- Both bite states use bone position to create a hit effect at the head
+- Both bite states use `GetBonePosition` to create a hit effect at the head
 - Head yaw tracking via AI data joint (with per-frame and total rotation limits)
 - State 2 (water bite) queues state 3 (swim) after biting — returns to swimming
 - State 4 (close bite) queues state 1 (idle) after biting — stays near target
@@ -147,7 +147,7 @@ function EntityRatWet(entityId, surfaceY):
 
         case 2 (water bite):
             if bite not delivered and facing and contact detected:
-                get bone position (head)
+                GetBonePosition(entity, pos, boneIndex)
                 create damage effect at head position
                 if normal or low NG+ difficulty:
                     Lara health -= 20
@@ -168,7 +168,7 @@ function EntityRatWet(entityId, surfaceY):
 
         case 4 (close bite):
             if bite not delivered and facing and contact detected:
-                get bone position (head)
+                GetBonePosition(entity, pos, boneIndex)
                 create damage effect at head position
                 if normal or low NG+ difficulty:
                     Lara health -= 20

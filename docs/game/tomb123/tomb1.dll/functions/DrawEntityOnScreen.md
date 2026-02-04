@@ -5,7 +5,7 @@ Adds a pickup item to the on-screen pickup display. This is the spinning item di
 
 ## Notes
 - Maximum of 12 pickup displays at once — silently does nothing if the limit is reached
-- If entity pointer is null, uses Lara's bone position (bone 10) as the pickup origin and sets up a fresh display from the model ID
+- If entity pointer is null, uses `GetBonePosition` on Lara (bone 10) as the pickup origin and sets up a fresh display from the model ID
 - If entity pointer is provided, copies the full entity data block into the display slot
 - Projects the pickup's world position to screen space using the camera transform matrix, FOV, and resolution
 - Each display entry has a timer (starts at 120 ticks) controlling how long it stays on screen
@@ -56,7 +56,7 @@ function DrawEntityOnScreen(modelId, entity):
 
     if entity == null:
         // No entity — use Lara's hand position
-        position = getBonePosition(Lara, bone: 10)
+        position = GetBonePosition(Lara, bone: 10)
         display[slot].entityId = -1
         display[slot].modelId = modelId
         display[slot].animId = modelAnims[modelId]

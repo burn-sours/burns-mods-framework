@@ -9,7 +9,7 @@ AI behaviour for the water crocodile. Swims underwater with multiple movement st
 - On death: enters state 7 (death animation). On a specific level, if the entity index is within specific entity indices for that level, sets a tracking flag — likely related to a level-specific event
 - In state 4 (fast turn), bypasses `TurnTo` and directly increments the entity's neck/head angle at a fast rate per frame to spin toward Lara quickly
 - Touch bitmask for swim contact: specific body-part touch mask
-- Bite (state 5) uses bone position to create a hit effect at the head, same as the land variant
+- Bite (state 5) uses `GetBonePosition` to create a hit effect at the head, same as the land variant
 - Head yaw tracking via AI data joint (with per-frame and total rotation limits)
 - `UpdateEnemyMood` called with aggressive flag set
 - At the end of each frame, checks a room environment flag (water bit). If set, the room has become non-water — transitions to a land animation set and modifies AI zone data. If not set, continues normal underwater movement via `ProcessEntityMovement`
@@ -23,7 +23,7 @@ AI behaviour for the water crocodile. Swims underwater with multiple movement st
 | 2     | Swim      | Standard swimming pursuit; re-evaluates based on mood and contact           |
 | 3     | Swim fast | Faster pursuit/stalking swim; transitions on mood change or contact         |
 | 4     | Fast turn | Direct fast rotation to face Lara; transitions to swim fast when facing |
-| 5     | Bite      | Attack state; damages Lara via head bone position                          |
+| 5     | Bite      | Attack state; damages Lara via `GetBonePosition` head lookup               |
 | 7     | Death     | Death animation; may set level-specific tracking flag                      |
 
 ### State Transitions
@@ -177,7 +177,7 @@ function EntityCrocodileWet(entityId):
 
         case 5 (bite):
             if bite not yet delivered:
-                get bone position (head)
+                GetBonePosition(entity, pos, boneIndex)
                 create damage effect at head position
                 if normal or low NG+ difficulty:
                     Lara health -= 100

@@ -46,7 +46,7 @@ function RenderLara(lara):
     // bone-based culling check (conditional)
     if culling conditions met:
         for each bone (0–14):
-            getBonePosition(lara, position, boneIndex)
+            GetBonePosition(lara, position, boneIndex)
             if bone is within camera culling radius:
                 return  // too close to cull boundary, skip render
 

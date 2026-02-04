@@ -11,7 +11,7 @@ AI behaviour for the land crocodile. Walks on land using standard AI, biting Lar
 - Alive: walks on land with standard AI; checks for water beneath — if water appears (room flip), transitions to a ground animation at the floor and updates AI zone data; otherwise keeps entity near the water surface (0x100 units above)
 - Dead with water: body moves toward the water surface at 0x20 per frame, AI deactivated on arrival
 - Dead without water: land death animation, entity placed on floor via `GetSector` + `CalculateFloorHeight`
-- Bite damage uses a bone position lookup to create a hit effect at the head
+- Bite damage uses `GetBonePosition` to create a hit effect at the head
 - Head yaw tracking via AI data joint (with per-frame and total rotation limits)
 - `UpdateEnemyMood` called with aggressive flag set
 - Contact check uses `ENTITY_TOUCH_BITS` (non-zero = touching)
@@ -21,7 +21,7 @@ AI behaviour for the land crocodile. Walks on land using standard AI, biting Lar
 | State | Name          | Description                                                        |
 |-------|---------------|--------------------------------------------------------------------|
 | 1     | Idle          | Default state; transitions to bite on facing + contact             |
-| 2     | Bite          | Attack state; damages Lara via head bone position, returns to idle |
+| 2     | Bite          | Attack state; damages Lara via `GetBonePosition` head lookup, returns to idle |
 | 3     | Death (water) | Water death; body drifts to water surface                          |
 | 7     | Death (land)  | Fallback land death if water is absent                             |
 
@@ -130,7 +130,7 @@ function EntityCrocodileDry(entityId, waterY):
 
         case 2 (bite):
             if facing and contact and bite not yet delivered:
-                get bone position (head)
+                GetBonePosition(entity, pos, boneIndex)
                 create damage effect at head position
                 if normal or low NG+ difficulty:
                     Lara health -= 100

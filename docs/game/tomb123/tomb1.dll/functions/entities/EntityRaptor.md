@@ -133,21 +133,21 @@ function EntityRaptor(entityId):
         case 4 (claw attack):
             headTilt = turnDelta
             if no queued AND facing AND contact (0xFF7C00):
-                get bone position, damage Lara: -100 (or -200 NG+)
+                GetBonePosition(entity, pos, boneIndex), damage Lara: -100 (or -200 NG+)
                 set Lara ENTITY_STATUS bit 4
                 queue state 1
 
         case 7 (running bite):
             headTilt = turnDelta
             if no queued AND facing AND contact (0xFF7C00):
-                get bone position, damage Lara: -100 (or -200 NG+)
+                GetBonePosition(entity, pos, boneIndex), damage Lara: -100 (or -200 NG+)
                 set Lara ENTITY_STATUS bit 4
                 queue state 3 (continue running)
 
         case 8 (bite):
             headTilt = turnDelta
             if no queued AND contact (0xFF7C00):
-                get bone position, damage Lara: -100 (or -200 NG+)
+                GetBonePosition(entity, pos, boneIndex), damage Lara: -100 (or -200 NG+)
                 set Lara ENTITY_STATUS bit 4
                 queue state 1
 

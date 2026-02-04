@@ -130,7 +130,7 @@ function EntityGorilla(entityId):
 
         case 4 (swipe):
             if no queued AND contact (0xFF00):
-                get bone position, damage Lara: -200 (or -350 NG+)
+                GetBonePosition(entity, pos, boneIndex), damage Lara: -200 (or -350 NG+)
                 set Lara ENTITY_STATUS bit 4
                 queue state 1
 

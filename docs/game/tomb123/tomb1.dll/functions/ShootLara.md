@@ -69,13 +69,13 @@ function ShootLara(entity, distToTarget, muzzleData, aimAngleOffset):
         isHit = false
 
     // Get muzzle world position from enemy bone
-    muzzlePos = getBonePosition(entity, muzzleData.offsets, muzzleData.boneIndex)
+    muzzlePos = GetBonePosition(entity, muzzleData.offsets, muzzleData.boneIndex)
 
     if isHit:
         // Pick random bone on Lara as impact point
         advance RngSeed
         randomBone = (RngSeed sample * 14) / MAX_SAMPLE
-        targetPos = getBonePosition(Lara, randomBone)
+        targetPos = GetBonePosition(Lara, randomBone)
 
         // Create blood/hit effect at Lara's impact point
         createHitEffect(targetPos, Lara.speed, Lara.yaw)
@@ -103,7 +103,7 @@ function ShootLara(entity, distToTarget, muzzleData, aimAngleOffset):
             applyMuzzleFlash(entity, baseFlash)
 
         // Create impact sparks at 3/4 muzzle offset position
-        sparkPos = getBonePosition(entity, muzzleData.offsets * 3/4, muzzleData.boneIndex)
+        sparkPos = GetBonePosition(entity, muzzleData.offsets * 3/4, muzzleData.boneIndex)
         createSparks(sparkPos)
 
         // Adjust projectile angle
