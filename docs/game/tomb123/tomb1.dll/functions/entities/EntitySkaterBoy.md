@@ -1,7 +1,7 @@
 # Function: EntitySkaterBoy
 
 ## Description
-AI behaviour for Skater Boy — a dual-pistol gunman on a skateboard with unique terrain-tilt physics and a health-triggered environment effect. Calculates the slope of the terrain each frame using floor probes ahead and behind, then tilts the entity to match the surface. Uses a fixed turn rate (0x2D8) instead of dynamic rates. Fires both pistols simultaneously with state-dependent damage — standing shots deal significantly more than skating shots. When health drops below a threshold, triggers a flip effect (environment change). Drops items on death.
+AI behaviour for Skater Boy — a dual-uzi gunman on a skateboard with unique terrain-tilt physics and a health-triggered environment effect. Calculates the slope of the terrain each frame using floor probes ahead and behind, then tilts the entity to match the surface. Uses a fixed turn rate (0x2D8) instead of dynamic rates. Fires both uzis simultaneously with state-dependent damage — standing shots deal significantly more than skating shots. When health drops below a threshold, triggers a flip effect (environment change). Drops items on death.
 
 ## Notes
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
@@ -11,7 +11,7 @@ AI behaviour for Skater Boy — a dual-pistol gunman on a skateboard with unique
 - Fixed turn rate: `TurnTo(entity, 0x2D8)` — always the same, no per-state adjustment
 - `UpdateEnemyMood` called with passive flag — cautious behaviour
 - Always checks visibility and updates combat state every frame while alive
-- **Dual pistols**: fires two `ShootLara` calls per frame with different weapon data, with a dual-weapon flag set between shots
+- **Dual uzis**: fires two `ShootLara` calls per frame with different weapon data, with a dual-weapon flag set between shots
 - **State-dependent damage**: standing shots (states 1/4 from idle) deal more damage than skating shots (state 4 while skating)
 - **Shot counter** in AI data: reset to 0 when entering idle (state 0) or skate (state 2). States 1 and 4 only fire when counter is 0, then set it to 1
 - **Health-triggered flip effect**: when health drops below 120 and effect hasn't been triggered yet, executes an environment change command via `sprintf` and a game function call. This likely triggers an arena modification (ramp flip, door opening, etc.)
@@ -26,10 +26,10 @@ AI behaviour for Skater Boy — a dual-pistol gunman on a skateboard with unique
 | State | Name   | Description                                                              |
 |-------|--------|--------------------------------------------------------------------------|
 | 0     | Idle   | Hub state; resets shot counter, routes to shoot or skate                 |
-| 1     | Shoot  | Fires dual pistols (from idle); higher damage than state 4              |
+| 1     | Shoot  | Fires dual uzis (from idle); higher damage than state 4                 |
 | 2     | Skate  | Movement state; random tricks, transitions to idle or shoot              |
 | 3     | Trick  | Display animation while skating; random chance to resume skating         |
-| 4     | Shoot  | Fires dual pistols (while skating); lower damage than state 1           |
+| 4     | Shoot  | Fires dual uzis (while skating); lower damage than state 1              |
 | 5     | Death  | Death animation; drops carried items                                     |
 
 ### State Transitions
@@ -41,7 +41,7 @@ AI behaviour for Skater Boy — a dual-pistol gunman on a skateboard with unique
 - Otherwise → 2 (skate)
 
 **State 1 (shoot from idle):**
-- If shot counter == 0 AND can see Lara: fire dual pistols, set counter = 1
+- If shot counter == 0 AND can see Lara: fire dual uzis, set counter = 1
 - If escaping or very close (< 0x100000) → queue 2 (skate)
 
 **State 2 (skate):**
@@ -60,7 +60,7 @@ AI behaviour for Skater Boy — a dual-pistol gunman on a skateboard with unique
 
 ### Damage
 
-**Dual pistols — per pistol, per shot:**
+**Dual uzis — per uzi, per shot:**
 
 | Condition                     | Damage |
 |-------------------------------|--------|
@@ -69,7 +69,7 @@ AI behaviour for Skater Boy — a dual-pistol gunman on a skateboard with unique
 | Hard NG+, skating (state 4)  | -60    |
 | Hard NG+, standing (state 1) | -100   |
 
-- Total per frame (both pistols): -80/-100 skating, -100/-200 standing
+- Total per frame (both uzis): -80/-100 skating, -100/-200 standing
 - Each hit sets bit 4 of Lara's `ENTITY_STATUS`
 - If Lara dies from a shot under specific NG+ conditions, sets a tracking flag
 
@@ -200,7 +200,7 @@ function EntitySkaterBoy(entityId):
         case 1 (shoot from idle):  // falls through to shared shoot logic
         case 4 (shoot while skating):
             if shotCounter == 0 and canTarget:
-                // First pistol
+                // First uzi
                 hit1 = ShootLara(entity, distance, weaponData1, headAngle)
                 if hit1:
                     if currentState == 1:
@@ -217,10 +217,10 @@ function EntitySkaterBoy(entityId):
 
                 set dual-weapon flag = 1
 
-                // Second pistol
+                // Second uzi
                 hit2 = ShootLara(entity, distance, weaponData2, headAngle)
                 if hit2:
-                    // Same state-dependent damage as first pistol
+                    // Same state-dependent damage as first uzi
                     ...
                     set Lara ENTITY_STATUS bit 4
 
