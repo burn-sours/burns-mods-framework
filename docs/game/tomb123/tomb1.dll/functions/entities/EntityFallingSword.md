@@ -36,7 +36,7 @@ Controls the Sword of Damocles trap — a ceiling-mounted sword that hovers and 
 
 | Field     | Value                          |
 |-----------|--------------------------------|
-| Usage     | `Hook`                         |
+| Usage     | `Hook & Call`                  |
 | Params    | `int`                          |
 | Return    | `void`                         |
 
@@ -54,6 +54,12 @@ mod.hook('EntityFallingSword')
     .onEnter(function(entityId) {
         log('Falling sword tick, entity:', entityId);
     });
+```
+
+### Calling from mod code
+```javascript
+// Manually tick a falling sword's behaviour
+game.callFunction(game.module, 'EntityFallingSword', swordEntityIndex);
 ```
 
 ## Pseudocode
