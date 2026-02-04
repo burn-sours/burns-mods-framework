@@ -1,7 +1,7 @@
 # Function: CreateImpactSparks
 
 ## Description
-Spawns a ring of 32 spark particles at a given world position, radiating outward from a specified yaw direction. Used for the falling sword impact effect in the Tomb of Tihocan (Damocles room) when a sword hits the floor. Only spawns sparks if the position is within range of Lara (±16384 units on X and Z axes).
+Spawns a ring of 32 spark particles at a given world position, radiating outward from a specified yaw direction. Used for the falling sword impact effect when a Damocles sword hits the floor. Only spawns sparks if the position is within range of Lara (±16384 units on X and Z axes).
 
 ## Notes
 - Proximity check: skips entirely if the impact position is more than 16384 units from Lara on either the X or Z axis
