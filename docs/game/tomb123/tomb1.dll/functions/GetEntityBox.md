@@ -56,18 +56,43 @@ const maxX = boxPtr.add(2).readS16();
 ## Pseudocode
 ```
 function GetEntityBox(entity):
-    // Get animation frame bounds for entity's current state
-    frameBoundsStart, frameBoundsEnd, interpolationInfo = getAnimationFrameBounds(entity)
-    interpolationFactor = interpolationInfo[0]
+    // Resolve current animation frame data
+    animId = entity.animId
+    
+    if animId == -1:
+        // No animation — use model's base frame data
+        frameStep = 1
+        frameStart = modelFrames[entity.modelId]
+        frameEnd = frameStart
+        interpolation = 0
+    else:
+        // Look up animation entry
+        anim = animations[animId]
+        frameStep = anim.frameStep
+        frameDataBase = anim.frameDataPtr
+        boundsSize = (models[entity.modelId].boneCount * 2 + 10) * 2
 
-    if interpolationFactor == 0:
+        // Calculate which keyframe pair we're between
+        frameProgress = entity.animFrame - anim.startFrame
+        keyframeIndex = frameProgress / frameStep
+        interpolation = frameProgress % frameStep
+
+        frameStart = frameDataBase + (keyframeIndex * boundsSize)
+        frameEnd = frameStart + boundsSize
+
+        // Adjust frame step if near end of animation
+        if anim.endFrame < (keyframeIndex + 1) * frameStep:
+            frameStep = anim.endFrame - ((keyframeIndex + 1) * frameStep) + frameStep
+
+    if interpolation == 0:
         // Exactly on a keyframe — return bounds directly
-        return frameBoundsStart
+        return frameStart
 
     // Between keyframes — interpolate each of the 6 bound values
+    // (minX, maxX, minY, maxY, minZ, maxZ)
     for i = 0 to 5:
-        staticBuffer[i] = frameBoundsStart[i] +
-            ((frameBoundsEnd[i] - frameBoundsStart[i]) * interpolationFactor) / interpolationInfo[0]
+        staticBuffer[i] = frameStart[i] +
+            ((frameEnd[i] - frameStart[i]) * interpolation) / frameStep
 
     return staticBuffer
 ```
