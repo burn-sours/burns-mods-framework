@@ -1,4 +1,4 @@
-# Function: CalcProjectileDir
+# Function: AimProjectileAtLara
 
 ## Description
 Calculates the direction angles (pitch and yaw) for a projectile to aim at Lara, then adds random spread. Used by enemy projectile logic (darts, fireballs, etc.) to orient a projectile toward Lara's position with slight inaccuracy.
@@ -30,7 +30,7 @@ Calculates the direction angles (pitch and yaw) for a projectile to aim at Lara,
 ### Hooking
 ```javascript
 // Log when an enemy fires a projectile at Lara
-mod.hook('CalcProjectileDir')
+mod.hook('AimProjectileAtLara')
     .onEnter(function(projectilePtr) {
         log('Enemy firing projectile');
     });
@@ -41,12 +41,12 @@ mod.hook('CalcProjectileDir')
 // Recalculate direction for a specific projectile to aim at Lara
 const projectiles = game.readVar(game.module, 'Projectiles');
 const projectilePtr = projectiles.add(index * PROJECTILE_SIZE);
-game.callFunction(game.module, 'CalcProjectileDir', projectilePtr);
+game.callFunction(game.module, 'AimProjectileAtLara', projectilePtr);
 ```
 
 ## Pseudocode
 ```
-function CalcProjectileDir(projectile):
+function AimProjectileAtLara(projectile):
     // Read Lara's position from entity data
     laraPtr = readVar('Lara')
     laraX = laraPtr.add(ENTITY_X).readS32()
