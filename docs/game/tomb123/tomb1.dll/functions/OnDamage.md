@@ -36,10 +36,13 @@ Checks the enemy's model type, the weapon used, and whether the damage is lethal
 ### Hooking
 ```javascript
 mod.hook('OnDamage')
-    .onEnter(function(enemy, weapon, dmg) {
-        const hp = enemy.add(ENTITY_HEALTH).readS16();
+    .onLeave(function(returnValue, enemy, weapon, dmg) {
+        // Note: enemy's HP has not been subtracted yet at this point —
+        // this event fires before the engine reduces health
+        const hpBefore = enemy.add(ENTITY_HEALTH).readS16();
         const model = enemy.add(ENTITY_MODEL).readS16();
-        log('Damage:', dmg, 'to model', model, 'hp:', hp, 'weapon:', weapon);
+        const hpAfter = hpBefore - dmg;
+        log('Damage:', dmg, 'to model', model, 'hp:', hpBefore, '→', hpAfter, 'weapon:', weapon);
     });
 ```
 
