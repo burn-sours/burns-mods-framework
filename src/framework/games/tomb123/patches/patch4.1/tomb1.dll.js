@@ -94,6 +94,7 @@ module.exports = {
         RestoreWorldState: { Address: "0x38f00", Params: ['int'], Return: 'void' },
         ProcessDemo: { Address: "0x4ac00", Params: [], Return: 'void' },
         CanInterpolateCamera: { Address: "0x68ba0", Params: [], Return: 'int' },
+        EntityBarricade: { Address: "0x311b0", Params: ['int'], Return: 'void' },
         EntityBreakable: { Address: "0x40d80", Params: ['int'], Return: 'void' },
         EntityWolf: { Address: "0x49780", Params: ['int'], Return: 'void' },
         EntityBat: { Address: "0x10e0", Params: ['int'], Return: 'void' },
