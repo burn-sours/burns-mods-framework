@@ -8,7 +8,6 @@ Returns the alternate model ID for a given model ID. Every inventory-related ite
 - All mappings are bidirectional pairs (A→B and B→A), with one exception: four IDs (143, 144, 145, 146) all map to 150 with no reverse
 - Returns `-1` when the given ID has no alternate
 - Covers all pickup types: weapons, ammo, medipacks, puzzle items, keys, quest items
-- The specific model ID values are game-internal and vary by level data
 
 ## Details
 
