@@ -7,10 +7,10 @@ AI behaviour for the wolf enemy. Runs each frame to drive the wolf's state machi
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
 - Called with the entity's index into the entity array, not a pointer
 - On first activation (status bits indicate pending): attempts AI activation, returns if it fails
-- When health drops to zero: if currently biting and Lara is in gravity mode, triggers a sound; picks a random death animation and enters death state (0xB)
+- When health drops to zero: if currently biting and Lara is in gravity mode, triggers a sound; picks a random death animation and enters death state (11)
 - Uses `SenseLara` to gather tracking data (distance, facing, zone reachability)
-- Head tracks toward Lara via `ENTITY_PITCH`, clamped to ±0x222 per frame
-- Behaviour turn rate varies by state: slower when prowling (0x16C), faster when running (0x38E)
+- Head tracks toward Lara via `ENTITY_PITCH`, clamped per frame
+- Behaviour turn rate varies by state: slower when prowling, faster when running
 
 ### States
 
@@ -23,8 +23,8 @@ AI behaviour for the wolf enemy. Runs each frame to drive the wolf's state machi
 | 6     | Bite       | Close-range bite attack; deals damage on contact               |
 | 8     | Howl       | Alert/howl; transitions to idle based on mood                  |
 | 9     | Transition | Decision state; routes to next behaviour based on mood/distance |
-| 0xB   | Death      | Random death animation, no further AI processing               |
-| 0xC   | Pounce     | Lunging attack; stronger damage than bite                      |
+| 11    | Death      | Random death animation, no further AI processing               |
+| 12    | Pounce     | Lunging attack; stronger damage than bite                      |
 
 ### Damage
 
@@ -33,7 +33,7 @@ AI behaviour for the wolf enemy. Runs each frame to drive the wolf's state machi
 | Bite   | -50    | -80           |
 | Pounce | -100   | -200          |
 
-- Both attacks require contact (touch bitmask 0x774F) and set bit 4 of Lara's `ENTITY_STATUS`
+- Both attacks require contact (specific body-part touch mask) and set bit 4 of Lara's `ENTITY_STATUS`
 
 ## Details
 
@@ -89,9 +89,9 @@ function EntityWolf(entityId):
     if entity[ENTITY_HEALTH] <= 0:
         if currentState == 6 (bite) AND Lara in gravity mode:
             play sound
-        if currentState != 0xB (death):
+        if currentState != 11 (death):
             pick random death animation
-            set currentState = 0xB
+            set currentState = 11
         skip to movement
 
     // AI sensing
@@ -105,12 +105,12 @@ function EntityWolf(entityId):
             targetState = queued or 2 (prowl)
 
         case 2 (prowl):
-            behaviour.targetYaw = 0x16C (slow turn)
+            behaviour.targetYaw = PROWL_TURN_RATE
             if mood passive: random chance → idle
             if mood aggressive: targetState = 5 (stalk)
 
         case 3 (run):
-            behaviour.targetYaw = 0x38E (fast turn)
+            behaviour.targetYaw = RUN_TURN_RATE
             headTilt = turnDelta
             if close + facing: targetState = 6 (bite)
             elif close + not facing: targetState = 9, queued = 5 (stalk)
@@ -118,16 +118,16 @@ function EntityWolf(entityId):
             elif mood passive: targetState = 9
 
         case 5 (stalk):
-            behaviour.targetYaw = 0x16C
+            behaviour.targetYaw = PROWL_TURN_RATE
             if mood escape: targetState = 3 (run)
-            if very close + facing: targetState = 0xC (pounce)
+            if very close + facing: targetState = 12 (pounce)
             if medium range + aggressive: random → target 9 + queued 7
             else: targetState = 3 (run)
 
         case 6 (bite):
             headTilt = 3
             headYaw = turnDelta
-            if contact (touch bits & 0x774F):
+            if contact detected (touch bits & WOLF_TOUCH_MASK):
                 get bite bone position, apply damage to Lara
                 damage = -50 (or -80 on NG+)
                 set Lara ENTITY_STATUS bit 4
@@ -141,9 +141,9 @@ function EntityWolf(entityId):
 
         case 9 (transition):
             use queued state, or:
-            escape → 3, close+facing → 0xC, aggressive → 5, passive → 1
+            escape → 3, close+facing → 12, aggressive → 5, passive → 1
 
-        case 0xC (pounce):
+        case 12 (pounce):
             if contact + facing:
                 get pounce bone position, apply damage
                 damage = -100 (or -200 on NG+)
@@ -151,7 +151,7 @@ function EntityWolf(entityId):
                 queue state 9
 
     // Movement
-    adjust ENTITY_PITCH toward headTilt * 4 (clamped ±0x222)
-    adjust behaviour yaw toward headYaw (clamped ±0x38E, ±0x4000)
+    adjust ENTITY_PITCH toward headTilt * 4 (with per-frame limits)
+    adjust behaviour yaw toward headYaw (with per-frame and total rotation limits)
     ProcessEntityMovement(entityId, turnDelta, headTilt)
 ```

@@ -6,7 +6,7 @@ AI behaviour for the bat enemy. A simple flying enemy that steers directly towar
 ## Notes
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
 - Called with the entity's index into the entity array, not a pointer
-- Steers toward the behaviour's target position using `ATAN2` to calculate the angle, with a base turn rate of 0xE38 per frame — tightens to 0x71C when the target is behind the bat and close
+- Steers toward the behaviour's target position using `ATAN2` to calculate the angle, with a fast base turn rate per frame — tightens to a slower rate when the target is behind the bat and close
 - On death: enters a falling state with gravity enabled (`ENTITY_STATUS` bit 3), `ENTITY_XZ_SPEED` cleared — snaps to the floor on landing
 - No pitch tilt — always passes 0 to `ProcessEntityMovement`
 
@@ -26,7 +26,7 @@ AI behaviour for the bat enemy. A simple flying enemy that steers directly towar
 |--------|--------|---------------|
 | Bite   | -2     | -5            |
 
-- Requires contact (touch bits at entity offset 0x08 non-zero) and sets bit 4 of Lara's `ENTITY_STATUS`
+- Requires contact (touch bits field non-zero) and sets bit 4 of Lara's `ENTITY_STATUS`
 
 ## Details
 
