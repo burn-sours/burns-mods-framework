@@ -1,10 +1,10 @@
 # Function: CalculateCeilingHeight
 
 ## Description
-Calculates the ceiling height at a given world position. Takes a sector pointer (from GetTileData) and X/Y/Z coordinates. Traverses ceiling portal chains to resolve the correct sector, reads the base ceiling height, applies ceiling slope adjustments, then traverses floor portals to find and process entity trigger callbacks that may further modify the height.
+Calculates the ceiling height at a given world position. Takes a sector pointer (from GetSector) and X/Y/Z coordinates. Traverses ceiling portal chains to resolve the correct sector, reads the base ceiling height, applies ceiling slope adjustments, then traverses floor portals to find and process entity trigger callbacks that may further modify the height.
 
 ## Notes
-- Sector pointer comes from GetTileData. Each sector entry is 12 bytes
+- Sector pointer comes from GetSector. Each sector entry is 12 bytes
 - Base ceiling height is stored as a signed byte in the sector, scaled by 256 to world units
 - Ceiling portals are separate from floor portals — stored at a different offset in the sector data
 - After resolving the ceiling height and slope, a second portal traversal follows floor portals to reach the sector's trigger data
@@ -26,7 +26,7 @@ Calculates the ceiling height at a given world position. Takes a sector pointer 
 
 | #   | Type      | Description                                              |
 |-----|-----------|----------------------------------------------------------|
-| 0   | `pointer` | Sector data pointer (from GetTileData)                   |
+| 0   | `pointer` | Sector data pointer (from GetSector)                     |
 | 1   | `int`     | X world position                                         |
 | 2   | `int`     | Y world position (vertical, passed to trigger callbacks) |
 | 3   | `int`     | Z world position                                         |
@@ -42,7 +42,7 @@ Calculates the ceiling height at a given world position. Takes a sector pointer 
 ```javascript
 mod.hook('CalculateCeilingHeight')
     .onEnter(function(sector, x, y, z) {
-        // sector: pointer to sector data from GetTileData
+        // sector: pointer to sector data from GetSector
         // x, y, z: world position
     })
     .onLeave(function(retval) {
@@ -55,7 +55,7 @@ mod.hook('CalculateCeilingHeight')
 // Get tile data first, then calculate ceiling height
 const roomId = game.alloc(2);
 roomId.writeU16(currentRoomId);
-const sector = game.callFunction(game.module, 'GetTileData', x, y, z, roomId);
+const sector = game.callFunction(game.module, 'GetSector', x, y, z, roomId);
 const ceilingHeight = game.callFunction(game.module, 'CalculateCeilingHeight', sector, x, y, z);
 ```
 

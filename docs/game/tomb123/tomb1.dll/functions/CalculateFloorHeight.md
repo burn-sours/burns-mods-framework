@@ -1,12 +1,12 @@
 # Function: CalculateFloorHeight
 
 ## Description
-Calculates the floor height at a given world position. Takes a sector pointer (from GetTileData) and X/Y/Z coordinates. Traverses floor portal chains to resolve the correct sector, reads the base floor height from the sector data, applies floor slope adjustments based on position within the sector, and processes entity trigger callbacks that may further modify the height.
+Calculates the floor height at a given world position. Takes a sector pointer (from GetSector) and X/Y/Z coordinates. Traverses floor portal chains to resolve the correct sector, reads the base floor height from the sector data, applies floor slope adjustments based on position within the sector, and processes entity trigger callbacks that may further modify the height.
 
 Also sets two global side-effect variables: a slope type flag (0 = flat, 1 = gentle slope, 2 = steep slope) and a current trigger pointer (the first trigger entry found in the floor data, if any).
 
 ## Notes
-- Sector pointer comes from GetTileData. Each sector entry is 12 bytes
+- Sector pointer comes from GetSector. Each sector entry is 12 bytes
 - Base floor height is stored as a signed byte in the sector, scaled by 256 to world units
 - Portal traversal walks through connected rooms until no further portal exists
 - Floor slopes interpolate height based on the X/Z position within the 1024-unit sector grid. Gradients are packed as two signed bytes (X and Z) in one word
@@ -27,7 +27,7 @@ Also sets two global side-effect variables: a slope type flag (0 = flat, 1 = gen
 
 | #   | Type      | Description                                              |
 |-----|-----------|----------------------------------------------------------|
-| 0   | `pointer` | Sector data pointer (from GetTileData)                   |
+| 0   | `pointer` | Sector data pointer (from GetSector)                     |
 | 1   | `int`     | X world position                                         |
 | 2   | `int`     | Y world position (vertical, passed to trigger callbacks) |
 | 3   | `int`     | Z world position                                         |
@@ -43,7 +43,7 @@ Also sets two global side-effect variables: a slope type flag (0 = flat, 1 = gen
 ```javascript
 mod.hook('CalculateFloorHeight')
     .onEnter(function(sector, x, y, z) {
-        // sector: pointer to sector data from GetTileData
+        // sector: pointer to sector data from GetSector
         // x, y, z: world position
     })
     .onLeave(function(retval) {
@@ -56,7 +56,7 @@ mod.hook('CalculateFloorHeight')
 // Get tile data first, then calculate floor height
 const roomId = game.alloc(2);
 roomId.writeU16(currentRoomId);
-const sector = game.callFunction(game.module, 'GetTileData', x, y, z, roomId);
+const sector = game.callFunction(game.module, 'GetSector', x, y, z, roomId);
 const floorHeight = game.callFunction(game.module, 'CalculateFloorHeight', sector, x, y, z);
 ```
 
