@@ -39,9 +39,7 @@ Useful as a fast native alternative to Frida's JavaScript-level memory copy when
 ## Usage
 ### Calling from mod code
 ```javascript
-// Copy a known-size block from one address to another
-const size = 0x30; // e.g. LaraCircleShadow block size
-const src = game.getVarPtr(game.module, 'LaraCircleShadow');
+// Copy a block of memory from src to dest
 const dest = Memory.alloc(size);
 game.callFunction(game.module, 'Clone', dest, src, size);
 ```
