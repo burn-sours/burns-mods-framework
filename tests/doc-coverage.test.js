@@ -6,6 +6,34 @@ const path = require('path');
 const gamesDir = path.join(__dirname, '..', 'src', 'framework', 'games');
 const docsDir = path.join(__dirname, '..', 'docs', 'game');
 
+/** Recursively find a file by name under a directory */
+function findFileRecursive(dir, filename) {
+    if (!fs.existsSync(dir)) return null;
+    const direct = path.join(dir, filename);
+    if (fs.existsSync(direct)) return direct;
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        if (entry.isDirectory()) {
+            const found = findFileRecursive(path.join(dir, entry.name), filename);
+            if (found) return found;
+        }
+    }
+    return null;
+}
+
+/** Recursively collect all .md filenames (without extension) under a directory */
+function collectMdFiles(dir) {
+    const results = [];
+    if (!fs.existsSync(dir)) return results;
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+        if (entry.isDirectory()) {
+            results.push(...collectMdFiles(path.join(dir, entry.name)));
+        } else if (entry.name.endsWith('.md')) {
+            results.push(entry.name.replace('.md', ''));
+        }
+    }
+    return results;
+}
+
 const tomb123 = require(path.join(gamesDir, 'tomb123', 'tomb123'));
 const tomb456 = require(path.join(gamesDir, 'tomb456', 'tomb456'));
 
@@ -55,8 +83,8 @@ for (const { config, name } of games) {
                 const funcsDocsDir = path.join(modDocsBase, 'functions');
                 for (const hookName of data.hooks) {
                     it(`${hookName}.md exists`, () => {
-                        const docPath = path.join(funcsDocsDir, `${hookName}.md`);
-                        assert.ok(fs.existsSync(docPath), `missing doc: docs/game/${name}/${modName}/functions/${hookName}.md`);
+                        const found = findFileRecursive(funcsDocsDir, `${hookName}.md`);
+                        assert.ok(found, `missing doc: docs/game/${name}/${modName}/functions/${hookName}.md (searched recursively)`);
                     });
                 }
             });
@@ -81,9 +109,7 @@ for (const { config, name } of games) {
 
             const funcsDocsDir = path.join(modDocsBase, 'functions');
             if (fs.existsSync(funcsDocsDir)) {
-                for (const file of fs.readdirSync(funcsDocsDir)) {
-                    if (!file.endsWith('.md')) continue;
-                    const hookName = file.replace('.md', '');
+                for (const hookName of collectMdFiles(funcsDocsDir)) {
                     it(`${modName}/functions/${hookName}.md is not stale`, () => {
                         assert.ok(data.hooks.has(hookName), `stale doc: docs/game/${name}/${modName}/functions/${hookName}.md — not in any patch`);
                     });
