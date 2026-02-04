@@ -1,14 +1,15 @@
 # Function: ShootAtlanteanBullet
 
 ## Description
-Creates an Atlantean bullet projectile at a given world position. Allocates a projectile slot, initializes it with bullet-specific properties (model 220, sound 173, speed 4096), and calls `AimProjectileAtLara` to orient it toward Lara with random spread.
+Creates an Atlantean bullet projectile at a given world position. Allocates a projectile slot, initializes it with bullet-specific properties (model 250, sound 172, speed 3584), and calls `AimProjectileAtLara` to orient it toward Lara with random spread.
 
 ## Notes
 - Allocates a projectile in the specified room — if no free projectile slot is available, does nothing
-- The `speed` parameter from the signature is not used in the function body — bullet speed is hardcoded to 4096
+- The `speed` parameter from the signature is not used in the function body — bullet speed is hardcoded to 3584
 - Sets the projectile yaw from the parameter (entity's facing direction) before `AimProjectileAtLara` recalculates both pitch and yaw toward Lara
 - Projectile stride is 0x44 bytes per entry in the `Projectiles` array
-- Bullet projectile uses model 220 and sound effect 173
+- Bullet projectile uses model 250 and sound effect 172
+- Slower than `ShootAtlanteanMeatball` (3584 vs 4096 speed)
 - Used by `EntityMutant` (state 11, rear aim flag) — the shard/bullet variant of the Atlantean ranged attack
 - Counterpart to `ShootAtlanteanMeatball` which uses a different model, sound, and speed
 
@@ -27,7 +28,7 @@ Creates an Atlantean bullet projectile at a given world position. Allocates a pr
 | 0   | `int`    | X world position                         |
 | 1   | `int`    | Y world position                         |
 | 2   | `int`    | Z world position                         |
-| 3   | `int64`  | Speed (unused — bullet speed is hardcoded to 4096) |
+| 3   | `int64`  | Speed (unused — bullet speed is hardcoded to 3584) |
 | 4   | `uint16` | Initial yaw (entity facing direction)    |
 | 5   | `int16`  | Room ID to allocate the projectile in    |
 | 6   | `uint16` | Source model ID (stored on the projectile) |
@@ -77,9 +78,9 @@ function ShootAtlanteanBullet(x, y, z, speed, yaw, roomId, sourceModelId):
     projectile.room = roomId
 
     // Bullet-specific properties
-    projectile.model = 220
-    projectile.sound = 173
-    projectile.speed = 4096    // hardcoded, ignores speed param
+    projectile.model = 250
+    projectile.sound = 172
+    projectile.speed = 3584    // hardcoded, ignores speed param
     projectile.pitch = 0
 
     // Aim at Lara with random spread

@@ -141,8 +141,8 @@ module.exports = {
         CalculateFloorHeight: { Address: "0x97e0", Params: ['pointer', 'int', 'int', 'int'], Return: 'int' },
         CalculateCeilingHeight: { Address: "0xa6f0", Params: ['pointer', 'int', 'int', 'int'], Return: 'int' },
         CreateImpactSparks: { Address: "0x41d90", Params: ['int', 'int', 'int', 'int'], Return: 'void' },
-        ShootAtlanteanBullet: { Address: "0x48560", Params: ['int', 'int', 'int', 'int64', 'uint16', 'int16', 'uint16'], Return: 'void' },
-        ShootAtlanteanMeatball: { Address: "0x484c0", Params: ['int', 'int', 'int', 'int64', 'uint16', 'int16', 'uint16'], Return: 'void' },
+        ShootAtlanteanMeatball: { Address: "0x48560", Params: ['int', 'int', 'int', 'int64', 'uint16', 'int16', 'uint16'], Return: 'void' },
+        ShootAtlanteanBullet: { Address: "0x484c0", Params: ['int', 'int', 'int', 'int64', 'uint16', 'int16', 'uint16'], Return: 'void' },
         GetBonePosition: { Address: "0x4c870", Params: ['pointer', 'pointer', 'int'], Return: 'void' },
     }
 };

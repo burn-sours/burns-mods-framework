@@ -1,14 +1,14 @@
 # Function: EntityCentaur
 
 ## Description
-AI behaviour for the Atlantean centaur — a ranged and melee enemy that fires `ShootAtlanteanBullet` projectiles and has a powerful stomping melee attack. Uses 6 states with a simple aim→shoot loop for ranged combat and a contact-based melee stomp. On death, explodes with a sound effect and deactivates.
+AI behaviour for the Atlantean centaur — a ranged and melee enemy that fires `ShootAtlanteanMeatball` projectiles and has a powerful stomping melee attack. Uses 6 states with a simple aim→shoot loop for ranged combat and a contact-based melee stomp. On death, explodes with a sound effect and deactivates.
 
 ## Notes
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
 - Called with the entity's index into the entity array, not a pointer
 - **Activation**: if status has both pending bits set (bits 1+2), attempts AI activation — if it fails, returns immediately
 - **Death behaviour**: if health ≤ 0, calls combat tracking (level 9) and sets death state (5) with a forced animation. Level 9: sets a global death tracking flag
-- **Ranged attack**: state 2 fires `ShootAtlanteanBullet` from a bone position via `GetBonePosition`. Copies the spawned projectile's angle data to the AI tracking field
+- **Ranged attack**: state 2 fires `ShootAtlanteanMeatball` from a bone position via `GetBonePosition`. Copies the spawned projectile's angle data to the AI tracking field
 - **Melee attack**: state 6 triggers on contact mask 0x30199, uses `GetBonePosition` for hit positioning, creates an impact effect
   - Damage: -200 normal, -300 NG+ hard
   - Sets Lara `ENTITY_STATUS` bit 4
@@ -24,7 +24,7 @@ AI behaviour for the Atlantean centaur — a ranged and melee enemy that fires `
 | State | Name   | Description                                                      |
 |-------|--------|------------------------------------------------------------------|
 | 1     | Idle   | Hub state; branches to aim, run, or uses queued state            |
-| 2     | Shoot  | Fires `ShootAtlanteanBullet` from `GetBonePosition`             |
+| 2     | Shoot  | Fires `ShootAtlanteanMeatball` from `GetBonePosition`           |
 | 3     | Run    | Pursuit; visibility-based transitions to aim or melee            |
 | 4     | Aim    | Transition state; checks visibility → shoot or idle              |
 | 5     | Death  | Death animation; level-specific tracking                         |
@@ -47,7 +47,7 @@ AI behaviour for the Atlantean centaur — a ranged and melee enemy that fires `
 - On first fire (queued == 0):
   - Sets queued to 4 (return to aim after shot)
   - `GetBonePosition` for muzzle position with weapon bone data
-  - Fires `ShootAtlanteanBullet` with entity's yaw, room, and model
+  - Fires `ShootAtlanteanMeatball` with entity's yaw, room, and model
   - If projectile spawned: copies projectile angle to AI tracking
 
 **State 3 (run):**
@@ -145,7 +145,7 @@ function EntityCentaur(entityId):
                 if not yet fired (queued == 0):
                     queued = 4
                     GetBonePosition(entity, weaponPos, weaponBoneIndex)
-                    projectileId = ShootAtlanteanBullet(pos.x, pos.y, pos.z,
+                    projectileId = ShootAtlanteanMeatball(pos.x, pos.y, pos.z,
                         entity.speed, entity.yaw, entity.room, entity.model)
                     if projectileId != -1:
                         copy projectile angle to AI tracking
