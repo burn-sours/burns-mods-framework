@@ -1,7 +1,7 @@
 # Function: EntityKold
 
 ## Description
-AI behaviour for Kold — a powerful single-weapon ranged enemy. Structurally similar to the Cowboy but significantly more dangerous: aggressive AI mood, a single high-damage shot with halved distance for improved accuracy, and a longer engagement range. The hardest-hitting single shot of any human gunman. Drops items on death and may trigger a level-specific game event.
+AI behaviour for Kold — a powerful shotgun-wielding enemy. Structurally similar to the Cowboy but significantly more dangerous: aggressive AI mood, a single high-damage shotgun blast with halved distance for tighter spread, and a longer engagement range. The hardest-hitting single shot of any human gunman. Drops items on death and may trigger a level-specific game event.
 
 ## Notes
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
@@ -9,8 +9,8 @@ AI behaviour for Kold — a powerful single-weapon ranged enemy. Structurally si
 - `UpdateEnemyMood` called with **aggressive flag (1)** — unlike Larson/Pierre/Cowboy/SkaterBoy who all use passive (0)
 - Turn rate is **dynamic**: stored in an AI data field, updated per state (0x222 for walk, 0x444 for run). `TurnTo` reads this value each frame
 - Always checks visibility and updates combat state every frame while alive
-- **Single weapon**: only one `ShootLara` call per shot — no dual-weapon flag
-- **Distance halved** for `ShootLara` — passes `distance / 2` instead of raw distance, effectively improving accuracy at range
+- **Shotgun**: only one `ShootLara` call per shot — no dual-weapon flag
+- **Distance halved** for `ShootLara` — passes `distance / 2` instead of raw distance, effectively tightening spread at range
 - **Shot counter** in AI data: reset to 0 when entering aim state (4), set to 1 after firing in shoot state (6). Only fires when counter is 0
 - **Longer engagement range**: walk/run distance thresholds are 0x1000001/0x1000000 (vs 0x900001/0x900000 for Cowboy/Larson)
 - On death: calls `DropEnemyItems` to drop carried items, then sets death animation (state 5)
@@ -28,7 +28,7 @@ AI behaviour for Kold — a powerful single-weapon ranged enemy. Structurally si
 | 3     | Run    | Fast pursuit (turn rate 0x444); torso tilts into turns                   |
 | 4     | Aim    | Resets shot counter; checks visibility to decide shoot or disengage      |
 | 5     | Death  | Death animation; drops carried items                                     |
-| 6     | Shoot  | Single powerful shot with halved distance for accuracy                   |
+| 6     | Shoot  | Single shotgun blast with halved distance for tighter spread             |
 
 ### State Transitions
 
@@ -70,7 +70,7 @@ AI behaviour for Kold — a powerful single-weapon ranged enemy. Structurally si
 | New Game Plus (hard)   | -250   |
 
 - Sets bit 4 of Lara's `ENTITY_STATUS`
-- Distance halved for ShootLara accuracy calculation
+- Distance halved for ShootLara spread calculation
 - If Lara dies from the shot under specific NG+ conditions, sets a tracking flag (0x80000000)
 
 ### Turn Rates
