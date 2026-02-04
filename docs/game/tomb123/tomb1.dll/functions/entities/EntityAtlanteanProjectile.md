@@ -5,6 +5,7 @@ Handles movement and collision for atlantean projectiles — both bullets (from 
 
 ## Notes
 - Called with the projectile's index into the projectile array, not a pointer
+- Projectile accessed at `Projectiles + projectileId * PROJECTILE_SIZE`
 - **Movement**: 3D velocity calculated from speed, pitch, and yaw using fixed-point sine/cosine lookups. Updates X, Y, Z positions each frame.
 - Uses `GetSector` for room transitions, `CalculateFloorHeight` and `CalculateCeilingHeight` to determine valid space
 - Hit detection against Lara with a 200-unit radius — only checked when projectile is between floor and ceiling
