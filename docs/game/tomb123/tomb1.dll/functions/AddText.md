@@ -17,18 +17,15 @@ The returned pointer can be used to modify the text entry's properties directly 
 
 ## Text Entry Structure
 
-| Offset | Constant       | Type    | Description                    |
-|--------|----------------|---------|--------------------------------|
-| 0x00   | TEXT_FLAGS      | Int32   | Flags (e.g. `0x1001`)          |
-| 0x0C   | TEXT_X          | Float   | X position                     |
-| 0x10   | TEXT_Y          | Float   | Y position                     |
-| 0x14   | —              | Int32   | Unknown (initialized to 0)     |
-| 0x38   | —              | Int64   | Unknown (initialized to 0)     |
-| 0x40   | TEXT_COLOR      | UInt16  | Color                          |
-| 0x42   | TEXT_Z_ORDER    | UInt16  | Z order / render layer         |
-| 0x44   | —              | Int32   | Unknown (initialized to 0)     |
-| 0x48   | TEXT_STRING     | Pointer | Text string pointer            |
-| 0x50   | TEXT_FONT_SIZE  | Int32   | Font size (e.g. `11000`)       |
+| Constant       | Type    | Description                    |
+|----------------|---------|--------------------------------|
+| TEXT_FLAGS      | Int32   | Flags (e.g. `0x1001`)          |
+| TEXT_X          | Float   | X position                     |
+| TEXT_Y          | Float   | Y position                     |
+| TEXT_COLOR      | UInt16  | Color                          |
+| TEXT_Z_ORDER    | UInt16  | Z order / render layer         |
+| TEXT_STRING     | Pointer | Text string pointer            |
+| TEXT_FONT_SIZE  | Int32   | Font size (e.g. `11000`)       |
 
 ## Details
 
