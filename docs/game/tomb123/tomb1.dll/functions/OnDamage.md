@@ -20,7 +20,7 @@ Checks the enemy's model type, the weapon used, and whether the damage is lethal
 
 | Field     | Value                          |
 |-----------|--------------------------------|
-| Usage     | `Hook & Call`                  |
+| Usage     | `Hook`                         |
 | Params    | `pointer, int, int`            |
 | Return    | `void`                         |
 
@@ -41,14 +41,6 @@ mod.hook('OnDamage')
         const model = enemy.add(ENTITY_MODEL).readS16();
         log('Damage:', dmg, 'to model', model, 'hp:', hp, 'weapon:', weapon);
     });
-```
-
-### Calling from mod code
-```javascript
-// Trigger the damage event handler for an entity
-const entities = game.readVar(game.module, 'Entities');
-const enemyPtr = entities.add(entityIndex * ENTITY_SIZE);
-game.callFunction(game.module, 'OnDamage', enemyPtr, weaponType, damageAmount);
 ```
 
 ## Pseudocode
