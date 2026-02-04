@@ -53,6 +53,13 @@ module.exports = {
         ENTITY_DROP_3: 0x3e,
         ENTITY_DROP_4: 0x40,
         ENTITY_PUSHBLOCK_BUSY: 0x3c,
+        TEXT_FLAGS: 0x00,
+        TEXT_X: 0x0c,
+        TEXT_Y: 0x10,
+        TEXT_COLOR: 0x40,
+        TEXT_Z_ORDER: 0x42,
+        TEXT_STRING: 0x48,
+        TEXT_FONT_SIZE: 0x50,
     },
     patches: {
         "patch4": {

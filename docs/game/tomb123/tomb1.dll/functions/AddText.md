@@ -13,23 +13,22 @@ The returned pointer can be used to modify the text entry's properties directly 
 - The pool search is unrolled — walks 4 slots at a time looking for inactive entries (active flag bit 0 == 0).
 - X and Y offsets are stored internally as floats.
 - A default font size value is applied from a global setting if it is not -1, otherwise defaults to `0x10000`.
-- The text content can be updated after creation using `game.updateString` on the text pointer at offset `0x48`.
+- The text content can be updated after creation using `game.updateString` on the text pointer at TEXT_STRING.
 
 ## Text Entry Structure
 
-| Offset | Type    | Description                              |
-|--------|---------|------------------------------------------|
-| 0x00   | Int32   | Flags (e.g. `4097` / `0x1001`)           |
-| 0x0C   | Float   | X position                               |
-| 0x10   | Float   | Y position                               |
-| 0x14   | Int32   | Unknown (initialized to 0)               |
-| 0x38   | Int64   | Unknown (initialized to 0)               |
-| 0x40   | Int32   | Color (e.g. `0x00011111`)                |
-| 0x44   | Int32   | Unknown (initialized to 0)               |
-| 0x48   | Pointer | Text string pointer                      |
-| 0x50   | Int32   | Font size (e.g. `11000`)                 |
-
-> **Note:** The z order parameter (param 2) is written as a UInt16 at offset `0x42`, which sits within the color field at `0x40`. Writing color as an Int32 at `0x40` will overwrite the z order value.
+| Offset | Constant       | Type    | Description                    |
+|--------|----------------|---------|--------------------------------|
+| 0x00   | TEXT_FLAGS      | Int32   | Flags (e.g. `0x1001`)          |
+| 0x0C   | TEXT_X          | Float   | X position                     |
+| 0x10   | TEXT_Y          | Float   | Y position                     |
+| 0x14   | —              | Int32   | Unknown (initialized to 0)     |
+| 0x38   | —              | Int64   | Unknown (initialized to 0)     |
+| 0x40   | TEXT_COLOR      | UInt16  | Color                          |
+| 0x42   | TEXT_Z_ORDER    | UInt16  | Z order / render layer         |
+| 0x44   | —              | Int32   | Unknown (initialized to 0)     |
+| 0x48   | TEXT_STRING     | Pointer | Text string pointer            |
+| 0x50   | TEXT_FONT_SIZE  | Int32   | Font size (e.g. `11000`)       |
 
 ## Details
 
@@ -71,14 +70,14 @@ mod.hook('AddText', (args) => {
 const entry = ptr(game.callFunction(game.module, 'AddText', 0, 0, UI_RENDER_LAYER, game.allocString('Hello')));
 
 // Modify properties on the returned entry
-entry.writeS32(4097);                // flags
-entry.add(0x50).writeS32(11000);     // font size
-entry.add(0x40).writeS32(0x00011111); // color
-entry.add(0xc).writeFloat(x);        // x position
-entry.add(0x10).writeFloat(y);       // y position
+entry.writeS32(0x1001);                              // TEXT_FLAGS
+entry.add(TEXT_FONT_SIZE).writeS32(11000);            // font size
+entry.add(TEXT_COLOR).writeU16(0x1111);               // color
+entry.add(TEXT_X).writeFloat(x);                      // x position
+entry.add(TEXT_Y).writeFloat(y);                      // y position
 
 // Update text content later
-game.updateString(entry.add(0x48).readPointer(), 'Updated text');
+game.updateString(entry.add(TEXT_STRING).readPointer(), 'Updated text');
 ```
 
 ## Pseudocode
@@ -90,20 +89,20 @@ function AddText(xOffset, yOffset, zOffset, text):
     // Search pool for a free slot (walks 4 at a time)
     for slotIndex = 0 to 63:
         slot = uiTextPool[slotIndex]
-        if slot is inactive (flags bit 0 == 0):
+        if slot is inactive (TEXT_FLAGS bit 0 == 0):
             // Copy text string into slot's dedicated buffer (512 bytes each)
             copy text -> textBuffer[slotIndex]
 
             slot.unknown_0x44 = 0
-            slot.textPointer = textBuffer[slotIndex]
+            slot[TEXT_STRING] = textBuffer[slotIndex]
             slot.unknown_0x14 = 0
-            slot.color_zOrder = zOffset (at +0x42 as uint16)
-            slot.flags = 1 (active)
+            slot[TEXT_Z_ORDER] = zOffset
+            slot[TEXT_FLAGS] = 1 (active)
             slot.unknown_0x08 = 0
-            slot.x = (float)xOffset
+            slot[TEXT_X] = (float)xOffset
             slot.unknown_0x38 = 0
-            slot.y = (float)yOffset
-            slot.fontSize = globalFontSize != -1 ? globalFontSize : 0x10000
+            slot[TEXT_Y] = (float)yOffset
+            slot[TEXT_FONT_SIZE] = globalFontSize != -1 ? globalFontSize : 0x10000
 
             UiTextsCount++
             return slot
