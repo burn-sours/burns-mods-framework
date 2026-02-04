@@ -65,7 +65,7 @@ function DrawEntityOnScreen(modelId, entity):
         display[slot].position = position
     else:
         // Copy full entity data into display slot
-        copyMemory(display[slot], entity, size: 0xe50)
+        copyMemory(display[slot], entity, size: ENTITY_SIZE)
 
     // Project world position to screen coordinates
     cameraTransform = setupCameraTransform(cameraStable)
