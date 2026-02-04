@@ -1,7 +1,7 @@
 # Function: EntityLavaFlow
 
 ## Description
-Controls lava flow objects that advance slowly in their facing direction each frame. Checks terrain ahead and deactivates when the floor height changes (wall or edge reached). Instantly kills Lara on contact.
+Controls lava flow objects that advance slowly in their facing direction each frame. Checks terrain ahead and deactivates when the floor height changes (wall or edge reached). Instantly kills Lara on contact and sets her on fire.
 
 ## Notes
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
@@ -13,7 +13,7 @@ Controls lava flow objects that advance slowly in their facing direction each fr
   - If the floor height ahead differs from the entity's Y position: deactivates (clears `ENTITY_STATUS` bit 1, sets bit 2) — the lava has reached a wall or terrain change
 - **Contact damage**: if a contact/collision field is non-zero (lava is touching Lara):
   - If Lara's health is above 0: triggers instant death
-  - Sets global state values related to the lava contact (flags, intensity, and entity reference)
+  - Sets Lara on fire (global fire state flags, intensity, and entity reference)
 - Does **not** call `ProcessEntityAnimation` — movement is purely direct position updates
 
 ## Details
@@ -85,6 +85,6 @@ function EntityLavaFlow(entityId):
         if Lara.health > 0:
             trigger instant death
 
-        // Set global lava contact state
-        set flags, intensity values, and entity reference
+        // Set Lara on fire
+        set fire state flags, intensity, and entity reference
 ```
