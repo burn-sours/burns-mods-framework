@@ -104,7 +104,7 @@ function EntityRaptor(entityId):
     // Alive
     SenseLara(entity, trackData)
     headYaw = trackData.turnAngle if facing
-    updateMood(entity, trackData, aggressive=true)
+    UpdateEnemyMood(entity, trackData, aggressive=true)
     turnDelta = turnToward(entity, behaviour.targetYaw)
 
     switch entity[ENTITY_CURRENT_STATE]:

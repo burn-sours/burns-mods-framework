@@ -121,6 +121,7 @@ module.exports = {
         EntityAtlanteanProjectile: { Address: "0x47b00", Params: ['int'], Return: 'void' },
         AdjustEntityCollision: { Address: "0x2eef0", Params: ['pointer', 'int'], Return: 'void' },
         SenseLara: { Address: "0x1b30", Params: ['pointer', 'pointer'], Return: 'void' },
+        UpdateEnemyMood: { Address: "0x2280", Params: ['pointer', 'pointer', 'int'], Return: 'void' },
         ProcessEntityAnimation: { Address: "0x8e60", Params: ['pointer'], Return: 'void' },
         ProcessEntityMovement: { Address: "0x2d80", Params: ['int', 'int', 'int'], Return: 'int' },
         ProcessLaraAnimation: { Address: "0x27f70", Params: ['pointer'], Return: 'void' },

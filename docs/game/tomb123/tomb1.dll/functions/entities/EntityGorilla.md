@@ -101,7 +101,7 @@ function EntityGorilla(entityId):
     // Alive
     SenseLara(entity, trackData)
     headYaw = trackData.turnAngle if facing
-    updateMood(entity, trackData, aggressive=false)
+    UpdateEnemyMood(entity, trackData, aggressive=false)
     turnDelta = turnToward(entity, behaviour.targetYaw)
 
     // Aggro trigger

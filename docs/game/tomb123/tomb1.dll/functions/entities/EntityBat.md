@@ -94,7 +94,7 @@ function EntityBat(entityId):
     // Alive
     else:
         SenseLara(entity, trackData)
-        updateMood(entity, trackData)
+        UpdateEnemyMood(entity, trackData)
 
         // Steering toward target position
         if behaviour != null AND entity[ENTITY_XZ_SPEED] != 0:

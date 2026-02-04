@@ -97,7 +97,7 @@ function EntityWolf(entityId):
     // AI sensing
     trackData = SenseLara(entity)
     headYaw = trackData.turnAngle if facing Lara
-    updateMood(entity, trackData)
+    UpdateEnemyMood(entity, trackData)
     turnDelta = turnToward(entity, behaviour.targetYaw)
 
     switch entity[ENTITY_CURRENT_STATE]:

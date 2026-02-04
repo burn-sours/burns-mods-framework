@@ -105,7 +105,7 @@ function EntityTrex(entityId):
     SenseLara(entity, trackData)
     visualUpdate(entity, hitData, health)
     headYaw = trackData.turnAngle if facing
-    updateMood(entity, trackData, aggressive=true)
+    UpdateEnemyMood(entity, trackData, aggressive=true)
     turnDelta = turnToward(entity, behaviour.targetYaw)
 
     // Contact damage every frame (any touch)

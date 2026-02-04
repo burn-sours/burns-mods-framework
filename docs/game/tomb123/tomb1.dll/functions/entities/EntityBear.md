@@ -122,7 +122,7 @@ function EntityBear(entityId):
     // Alive — AI processing
     SenseLara(entity, trackData)
     headYaw = trackData.turnAngle if facing
-    updateMood(entity, trackData, aggressive=true)
+    UpdateEnemyMood(entity, trackData, aggressive=true)
     turnDelta = turnToward(entity, behaviour.targetYaw)
     if entity hit by Lara: set standing flag
 
