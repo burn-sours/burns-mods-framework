@@ -9,7 +9,7 @@ Controls switch/lever objects. Forces the trigger activation count to maximum on
 - **Activation count forced**: unlike other trigger-toggled objects, the switch explicitly sets `ENTITY_FLAGS` bits 9–13 to all 1s every frame — the activation count is always maxed, so the timer path is always used
 - **Timer toggle**: same timer logic — countdown, -1 means toggled, 0 means steady state
 - **Toggle action** (when target resolves to 0): sets target state 1 and resets `ENTITY_TIMER` to 0
-- **Level 19 special**: in room 25, if a tracking condition has not been met, plays sound effect 80 at volume 100
+- **Level 19 special**: in room 25, if the level-end sequence has not already been triggered, plays sound effect 80 — this is the lever that ends the level
 - Calls `ProcessEntityAnimation` every frame
 
 ## Details
@@ -79,8 +79,8 @@ function EntitySwitch(entityId):
         entity[ENTITY_TARGET_STATE] = 1
         entity[ENTITY_TIMER] = 0  // reset timer
 
-    // Level 19, room 25: play sound if tracking condition not met
-    if level == 19 AND entity[ENTITY_ROOM] == 25 AND condition not met:
+    // Level 19, room 25: level-ending lever sound
+    if level == 19 AND entity[ENTITY_ROOM] == 25 AND level-end not yet triggered:
         playSoundEffect(80, 100)
 
     ProcessEntityAnimation(entity)
