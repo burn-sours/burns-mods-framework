@@ -4,6 +4,7 @@
 AI behaviour for the wolf enemy. Runs each frame to drive the wolf's state machine — sleep, prowl, stalk, run, attack, howl, and death. The wolf has two attack types: a bite and a pounce, with damage scaled up on New Game Plus.
 
 ## Notes
+- Only runs from the game loop when the entity is on the active processing list with status bit 0 set (GameLoop → ProcessEntities → EntityWolf)
 - Called with the entity's index into the entity array, not a pointer
 - On first activation (status bits indicate pending): attempts AI activation, returns if it fails
 - When health drops to zero: if currently biting and Lara is in gravity mode, triggers a sound; picks a random death animation and enters death state (0xB)
