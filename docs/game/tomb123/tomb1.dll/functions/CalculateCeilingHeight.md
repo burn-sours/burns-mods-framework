@@ -45,8 +45,8 @@ mod.hook('CalculateCeilingHeight')
         // sector: pointer to sector data from GetSector
         // x, y, z: world position
     })
-    .onLeave(function(retval) {
-        // retval: calculated ceiling height
+    .onLeave(function(returnValue) {
+        // returnValue: calculated ceiling height
     });
 ```
 
