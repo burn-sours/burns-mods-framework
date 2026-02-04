@@ -54,12 +54,10 @@ The returned pointer can be used to modify the text entry's properties directly 
 ## Usage
 ### Hooking
 ```javascript
-mod.hook('AddText', (args) => {
-    // args[0] = x offset
-    // args[1] = y offset
-    // args[2] = z order
-    // args[3] = text string pointer
-});
+mod.hook('AddText')
+    .onEnter(function(x, y, z, text) {
+        log('AddText:', x, y, z, text.readUtf8String());
+    });
 ```
 
 ### Calling from mod code
