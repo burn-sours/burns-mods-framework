@@ -8,7 +8,6 @@ Resolves which sector a 3D world position belongs to. Takes X/Y/Z coordinates an
 - Each sector entry is 12 bytes. Sector index is computed from X/Z position relative to the room's origin, clamped to room boundaries
 - Horizontal portal resolution reads floor data entries looking for portal types that redirect to adjacent rooms
 - Vertical resolution: if Y is below the floor height, follows floor portals downward; if Y is above the ceiling height, follows ceiling portals upward
-- The returned pointer is passed directly to CalculateFloorHeight and CalculateCeilingHeight as their first parameter
 
 ## Details
 
