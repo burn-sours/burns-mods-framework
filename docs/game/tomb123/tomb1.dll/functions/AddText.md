@@ -13,7 +13,7 @@ The returned pointer can be used to modify the text entry's properties directly 
 - The pool search is unrolled — walks 4 slots at a time looking for inactive entries (active flag bit 0 == 0).
 - X and Y offsets are stored internally as floats.
 - A default font size value is applied from a global setting if it is not -1, otherwise defaults to `0x10000`.
-- The text content can be updated after creation using `game.updateString` on the text pointer at TEXT_STRING.
+- The text content can be updated after creation by writing to the text buffer via `entry.add(TEXT_STRING).readPointer().writeUtf8String()`.
 
 ## Text Entry Structure
 
@@ -74,7 +74,7 @@ entry.add(TEXT_X).writeFloat(x);                      // x position
 entry.add(TEXT_Y).writeFloat(y);                      // y position
 
 // Update text content later
-game.updateString(entry.add(TEXT_STRING).readPointer(), 'Updated text');
+entry.add(TEXT_STRING).readPointer().writeUtf8String('Updated text');
 ```
 
 ## Pseudocode
