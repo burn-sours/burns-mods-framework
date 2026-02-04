@@ -45,7 +45,7 @@ mod.hook('OnDamage')
 
 ### Calling from mod code
 ```javascript
-// Deal damage to an entity
+// Trigger the damage event handler for an entity
 const entities = game.readVar(game.module, 'Entities');
 const enemyPtr = entities.add(entityIndex * ENTITY_SIZE);
 game.callFunction(game.module, 'OnDamage', enemyPtr, weaponType, damageAmount);
