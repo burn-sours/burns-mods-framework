@@ -1,7 +1,7 @@
 # Function: EntityLarson
 
 ## Description
-AI behaviour for Larson — a recurring human enemy with a ranged pistol attack. Uses `ShootLara` for gunfire with a visibility check determining when to aim and shoot. Navigates with walk and run states using dynamic turn rates stored in AI data. Heavy use of queued state transitions through an idle hub state. Has level-specific logic: boosted combat values on level 4, and triggers a game event on death in level 0xC.
+AI behaviour for Larson — a recurring human enemy with a ranged pistol attack. Uses `ShootLara` for gunfire with a visibility check determining when to aim and shoot. Navigates with walk and run states using dynamic turn rates stored in AI data. Heavy use of queued state transitions through an idle hub state. Has level-specific logic: boosted combat values on level 4, and triggers a game event on death in level 12.
 
 ## Notes
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
@@ -12,7 +12,7 @@ AI behaviour for Larson — a recurring human enemy with a ranged pistol attack.
 - A combat state tracking function is called each frame with health values and targeting status — purpose not fully identified
 - On death: calls combat tracking function, then sets death animation (state 5)
 - Level 4: entity health and a base combat value are both boosted by 10%
-- Level 0xC (on death, normal/easy NG+ only): calls a game event function via function pointer with params (10, 100) — likely triggers a level-specific event when Larson dies
+- Level 12 (on death, normal/easy NG+ only): calls a game event function via function pointer with params (10, 100) — likely triggers a level-specific event when Larson dies
 - **Torso tracking** via `ENTITY_PITCH`: in run state, torso tilts at half the turn delta (leans into turns). In other states, torso centers back to 0. Clamped ±0x222 per frame
 - Head yaw tracking via AI data joint (clamped ±0x38E per frame, ±0x4000 total)
 - Shoot state uses `ShootLara` — a patch-level function that performs hit detection with projectile data
@@ -152,7 +152,7 @@ function EntityLarson(entityId):
         if currentState != 5 (death):
             set death animation (base + 0xF)
             set state = 5
-            if levelId == 0xC and normal/easy NG+:
+            if levelId == 12 and normal/easy NG+:
                 triggerGameEvent(10, 100)  // level-specific event
         skip to torso/head tracking + movement
 

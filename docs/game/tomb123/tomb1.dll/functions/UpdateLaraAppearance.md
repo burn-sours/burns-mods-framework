@@ -12,7 +12,7 @@ After state setup, it runs Lara's entity behaviour function, processes hair atta
 - Each outfit can override which gun, pocket, and back models are displayed
 - Hair attachment runs once initially, then loops (30 or 60 times depending on a flag) for physics settling
 - `ENTITY_ANIM_ID` and `ENTITY_ANIM_FRAME` are restored from saved state when the mode flag is inactive
-- The function reads `LevelId` to handle special cases (e.g. title screen level 0, and level 0x12 in TR1)
+- The function reads `LevelId` to handle special cases (e.g. title screen level 0, and level 18 in TR1)
 
 ## Details
 

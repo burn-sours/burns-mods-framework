@@ -14,7 +14,7 @@ Post-level, the return value determines what happens next: level completion adva
 - Return value `0x100` means return to title/menu
 - Return value with `0x140` flag means level completed (level ID OR'd with `0x140`)
 - Return value `0x19` means a save was loaded (world state restored from backup)
-- Level 0x19 skips directly to asset loading without FMV or reset
+- Level 25 skips directly to asset loading without FMV or reset
 - Save data is copied forward from the previous level on certain level transitions
 
 ## Details

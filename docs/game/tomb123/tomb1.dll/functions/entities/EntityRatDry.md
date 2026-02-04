@@ -8,11 +8,11 @@ AI behaviour for the land rat. A small ground enemy that runs toward Lara and bi
 - Called with the entity's index into the entity array plus a Y reference for water surface detection
 - The second parameter is typed as `pointer` for 64-bit width but represents a Y coordinate value used in water height queries
 - When activated (status flags pending), the Y reference is zeroed before continuing
-- Touch bitmask for attacks: 0x300018F
+- Touch bitmask for attacks: specific body-part touch mask
 - Bite (state 2) uses bone position to create a hit effect at the head
-- Head yaw tracking via AI data joint (clamped ±0x38E per frame, ±0x4000 total)
+- Head yaw tracking via AI data joint (with per-frame and total rotation limits)
 - `UpdateEnemyMood` called with aggressive flag set
-- While alive: after movement, adjusts entity Y toward water height at ±0x20 per frame when water is present. If no water found, transitions to a different animation set
+- While alive: after movement, gradually adjusts entity Y toward water height when water is present. If no water found, transitions to a different animation set
 - On death (level 8 specifically): entity stays active with status flags preserved — likely for a level-specific visual (rats remain visible). On all other levels: AI deactivated, entity removed from processing list
 - Dead with no water: transitions to land death animation, placed on floor (state 5)
 - Dead with water: stays in water death state (state 3)
@@ -43,7 +43,7 @@ AI behaviour for the land rat. A small ground enemy that runs toward Lara and bi
 
 | Context | Rate  |
 |---------|-------|
-| Running | 0x222 |
+| Running | medium |
 
 ## Details
 
@@ -97,13 +97,13 @@ function EntityRatDry(entityId, waterY):
 
         // Head tracking toward center (0)
         if AI data head joint exists:
-            adjust joint toward 0 (±0x38E per frame, clamped ±0x4000)
+            adjust joint toward 0 (with per-frame and total rotation limits)
 
         ProcessEntityAnimation(entity)
 
         // Check if death animation completed (status flags)
         if entity status indicates completion:
-            set health marker = 0xC000
+            set internal health marker
             if levelId == 8:
                 keep entity active (preserve status flags)
             else:
@@ -113,7 +113,7 @@ function EntityRatDry(entityId, waterY):
         // Water check for death pose
         waterHeight = queryWaterSurfaceHeight(entityX, waterY, entityZ, entityRoom)
         if waterHeight == NO_HEIGHT:
-            set speed = 0x10
+            set speed to land movement value
             set land death animation
             entityY = floor height
             set state = 5 (land death)
@@ -123,15 +123,15 @@ function EntityRatDry(entityId, waterY):
     SenseLara(entity, trackData)
     headYaw = trackData.turnAngle if facing
     UpdateEnemyMood(entity, trackData, aggressive=true)
-    turnDelta = TurnTo(entity, 0x222)
+    turnDelta = TurnTo(entity, RUN_TURN_RATE)
 
     switch entity[ENTITY_CURRENT_STATE]:
         case 1 (run):
-            if facing and contact (0x300018F):
+            if facing and contact detected:
                 targetState = 2 (bite)
 
         case 2 (bite):
-            if bite not yet delivered and facing and contact (0x300018F):
+            if bite not yet delivered and facing and contact detected:
                 get bone position (head)
                 create damage effect at head position
                 if normal or low NG+ difficulty:
@@ -144,7 +144,7 @@ function EntityRatDry(entityId, waterY):
 
     // Head tracking
     if AI data head joint exists:
-        adjust joint toward headYaw (±0x38E per frame, clamped ±0x4000)
+        adjust joint toward headYaw (with per-frame and total rotation limits)
 
     // Water surface check
     waterHeight = queryWaterSurfaceHeight(entityX, ..., entityZ, entityRoom)
@@ -159,5 +159,5 @@ function EntityRatDry(entityId, waterY):
 
     // Adjust Y toward water surface if water present
     if savedY != NO_HEIGHT:
-        move entityY toward waterHeight at rate ±0x20 per frame
+        move entityY gradually toward waterHeight
 ```

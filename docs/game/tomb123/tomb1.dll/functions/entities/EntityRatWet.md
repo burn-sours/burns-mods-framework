@@ -9,14 +9,14 @@ AI behaviour for the water rat. Swims underwater with passive mood, pursuing Lar
 - The second parameter is typed as `pointer` for 64-bit width but represents a Y coordinate value used in water height queries
 - When activated (status flags pending), the Y reference is zeroed before continuing
 - `UpdateEnemyMood` called with passive flag (0), unlike the land rat which uses aggressive (1)
-- Touch bitmask for attacks: 0x300018F (same as land rat)
+- Touch bitmask for attacks: specific body-part touch mask (same as land rat)
 - Both bite states use bone position to create a hit effect at the head
-- Head yaw tracking via AI data joint (clamped ±0x38E per frame, ±0x4000 total)
+- Head yaw tracking via AI data joint (with per-frame and total rotation limits)
 - State 2 (water bite) queues state 3 (swim) after biting — returns to swimming
 - State 4 (close bite) queues state 1 (idle) after biting — stays near target
 - Swim state has random chance to enter passive state 6 via queued transition through idle
 - At end of each frame: checks water surface height. If water surface found, transitions to land animation set, sets entity Y to water height, and continues with land movement. If no water, stays in current swim mode
-- If Lara dies from a bite under certain game version conditions, sets tracking flag 0x40000
+- If Lara dies from a bite under certain game version conditions, sets a death/completion tracking flag
 
 ### States
 
@@ -33,7 +33,7 @@ AI behaviour for the water rat. Swims underwater with passive mood, pursuing Lar
 
 **State 1 (idle):**
 - If queued state set → use queued state as target
-- If not facing or far (distance > 0x1C638) → 3 (swim)
+- If not facing or far → 3 (swim)
 - If facing and close → 4 (close bite)
 
 **State 2 (water bite):**
@@ -41,7 +41,7 @@ AI behaviour for the water rat. Swims underwater with passive mood, pursuing Lar
 
 **State 3 (swim):**
 - Facing + contact → 1 (idle)
-- Facing + close (distance < 0x23FFFF) → 2 (water bite)
+- Facing + close → 2 (water bite)
 - Random chance while facing → 1 (idle) with queued 6 (passive)
 
 **State 4 (close bite):**
@@ -66,7 +66,7 @@ AI behaviour for the water rat. Swims underwater with passive mood, pursuing Lar
 
 | Context  | Rate  |
 |----------|-------|
-| Swimming | 0x444 |
+| Swimming | fast  |
 
 ## Details
 
@@ -134,19 +134,19 @@ function EntityRatWet(entityId, surfaceY):
     SenseLara(entity, trackData)
     headYaw = trackData.turnAngle if facing
     UpdateEnemyMood(entity, trackData, passive=true)
-    turnDelta = TurnTo(entity, 0x444)
+    turnDelta = TurnTo(entity, SWIM_TURN_RATE)
 
     switch entity[ENTITY_CURRENT_STATE]:
         case 1 (idle):
             if queued state set:
                 targetState = queued state
-            elif not facing or far (distance > 0x1C638):
+            elif not facing or far:
                 targetState = 3 (swim)
             else:
                 targetState = 4 (close bite)
 
         case 2 (water bite):
-            if bite not delivered and facing and contact (0x300018F):
+            if bite not delivered and facing and contact detected:
                 get bone position (head)
                 create damage effect at head position
                 if normal or low NG+ difficulty:
@@ -156,18 +156,18 @@ function EntityRatWet(entityId, surfaceY):
                 set Lara ENTITY_STATUS bit 4
                 queue state 3 (swim)
                 if Lara dead and specific game version:
-                    set tracking flag 0x40000
+                    set death tracking flag
 
         case 3 (swim):
-            if facing and contact (0x300018F):
+            if facing and contact detected:
                 targetState = 1 (idle)
-            elif facing and close (distance < 0x23FFFF):
+            elif facing and close:
                 targetState = 2 (water bite)
             elif facing and random chance:
                 targetState = 1, queue state 6 (passive)
 
         case 4 (close bite):
-            if bite not delivered and facing and contact (0x300018F):
+            if bite not delivered and facing and contact detected:
                 get bone position (head)
                 create damage effect at head position
                 if normal or low NG+ difficulty:
@@ -177,7 +177,7 @@ function EntityRatWet(entityId, surfaceY):
                 set Lara ENTITY_STATUS bit 4
                 queue state 1 (idle)
                 if Lara dead and specific game version:
-                    set tracking flag 0x40000
+                    set death tracking flag
 
         case 6 (passive):
             if mood not bored or random chance:
@@ -185,13 +185,13 @@ function EntityRatWet(entityId, surfaceY):
 
     // Head tracking
     if AI data head joint exists:
-        adjust joint toward headYaw (±0x38E per frame, clamped ±0x4000)
+        adjust joint toward headYaw (with per-frame and total rotation limits)
 
     // Water surface check
     waterHeight = queryWaterSurfaceHeight(entityX, surfaceY, entityZ, entityRoom)
     if waterHeight != NO_HEIGHT:
         // Water surface found — transition to land mode
-        set speed = 0x11
+        set speed to land movement value
         set land animation (dry rat base)
         set state from animation
         entityY = waterHeight

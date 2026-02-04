@@ -190,13 +190,13 @@ function EntityCrocodileWet(entityId):
 
     // Head tracking
     if AI data head joint exists:
-        adjust joint toward headYaw (±0x38E per frame, clamped ±0x4000)
+        adjust joint toward headYaw (with per-frame and total rotation limits)
 
     // Room environment check
-    roomFlags = rooms[entity room].byte_0x66
-    if roomFlags bit 0 is set:
+    roomFlags = rooms[entity room].environmentFlags
+    if room is non-water:
         // Room became non-water — transition to land mode
-        set speed = 0xB
+        set speed to land movement value
         set land animation (base from dry croc set)
         set state from animation
         update AI zone data for land mode

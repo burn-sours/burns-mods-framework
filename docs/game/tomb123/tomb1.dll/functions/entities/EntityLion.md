@@ -6,7 +6,7 @@ AI behaviour shared by all lion-type enemies: lion, lioness, and panther. A grou
 ## Notes
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
 - Called with the entity's index into the entity array, not a pointer
-- Handles three model types via `ENTITY_MODEL`: 0x0C (lioness), 0x0D (panther), 0x0E (lion) — each with different NG+ damage scaling and death animation sets
+- Handles three model types via `ENTITY_MODEL`: 12 (lioness), 13 (panther), 14 (lion) — each with different NG+ damage scaling and death animation sets
 - Touch bitmask for attacks: 0x380066
 - On death: picks a random death animation from a model-specific set, enters death state (5)
 - Head tilt via `ENTITY_PITCH` (clamped ±0x222), head yaw via behaviour (clamped ±0x38E)
@@ -30,16 +30,16 @@ AI behaviour shared by all lion-type enemies: lion, lioness, and panther. A grou
 | Model          | Normal | New Game Plus |
 |----------------|--------|---------------|
 | All            | -150   | —             |
-| Lioness (0x0C) | —      | -200          |
-| Panther (0x0D) | —      | -250          |
-| Lion (0x0E)    | —      | -220          |
+| Lioness (12)   | —      | -200          |
+| Panther (13)   | —      | -250          |
+| Lion (14)      | —      | -220          |
 
 **Bite (state 7):**
 
 | Model          | Normal | New Game Plus |
 |----------------|--------|---------------|
 | All            | -250   | —             |
-| Lioness (0x0C) | —      | -300          |
+| Lioness (12)   | —      | -300          |
 | Others         | —      | -350          |
 
 - Both attacks set bit 4 of Lara's `ENTITY_STATUS`
@@ -74,7 +74,7 @@ mod.hook('EntityLion')
         const entities = game.readVar(game.module, 'Entities');
         const entity = entities.add(entityId * ENTITY_SIZE);
         const model = entity.add(ENTITY_MODEL).readS16();
-        const names = { 0x0C: 'lioness', 0x0D: 'panther', 0x0E: 'lion' };
+        const names = { 12: 'lioness', 13: 'panther', 14: 'lion' };
         log('Ticking', names[model] || 'unknown', 'entity', entityId);
     });
 ```
