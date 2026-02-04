@@ -17,7 +17,6 @@ Draws a gradient rectangle on screen. Takes two corner coordinates and two color
 |-----------|--------------------------------------------|
 | Usage     | `Hook & Call`                              |
 | Params    | `int, int, int, int, uint64, uint64`       |
-| Return    | `void`                                     |
 
 ### Parameters
 
@@ -29,10 +28,6 @@ Draws a gradient rectangle on screen. Takes two corner coordinates and two color
 | 3   | `int`     | Y coordinate of second corner                |
 | 4   | `uint64`  | Gradient color value A (float)               |
 | 5   | `uint64`  | Gradient color value B (float)               |
-
-### Return Values
-
-None (`void`).
 
 ## Usage
 ### Hooking

@@ -16,7 +16,6 @@ Has an early-out optimisation — if the same render layer and data are already 
 |-----------|----------------|
 | Usage     | `Hook & Call`  |
 | Params    | `int, pointer` |
-| Return    | `void`         |
 
 ### Parameters
 

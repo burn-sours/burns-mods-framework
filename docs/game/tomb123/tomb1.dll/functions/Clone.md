@@ -20,7 +20,7 @@ Useful as a fast native alternative to Frida's JavaScript-level memory copy when
 |-----------|--------------------------------|
 | Usage     | `Call`                         |
 | Params    | `pointer, pointer, uint64`     |
-| Return    | `void`                         |
+| Return    | `pointer`                      |
 
 ### Parameters
 

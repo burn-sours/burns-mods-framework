@@ -20,7 +20,6 @@ After state setup, it runs Lara's entity behaviour function, processes hair atta
 |-----------|----------|
 | Usage     | `Hook`   |
 | Params    | *(none)* |
-| Return    | `void`   |
 
 ## Usage
 ### Hooking

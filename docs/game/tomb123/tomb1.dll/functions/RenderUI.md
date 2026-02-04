@@ -22,7 +22,6 @@ The function's primary modding value is as a **UI render hook point** — it run
 |-----------|-------------|
 | Usage     | `Hook`      |
 | Params    | _(none)_    |
-| Return    | `void`      |
 
 ## Usage
 ### Hooking

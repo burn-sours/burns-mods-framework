@@ -14,7 +14,6 @@ Resets the reference tick used by `TickFunction` for frame timing. Captures the 
 |-----------|------------|
 | Usage     | `Hook`     |
 | Params    | *(none)*   |
-| Return    | `void`     |
 
 ## Usage
 ### Hooking

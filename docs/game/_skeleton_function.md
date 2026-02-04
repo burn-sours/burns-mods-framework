@@ -13,7 +13,10 @@ Brief description of what this function does.
 |-----------|--------------------------------|
 | Usage     | `Hook`, `Call`, or `Hook & Call`|
 | Params    | `int, pointer, int`            |
-| Return    | `void`                         |
+
+<!-- Add Return row only when the function returns a meaningful value:
+| Return    | `int`                          |
+-->
 
 ### Parameters
 
@@ -23,12 +26,14 @@ Brief description of what this function does.
 | 1   | `pointer` | Description of second param    |
 | 2   | `int`     | Description of third param     |
 
+<!-- Add Return Values section only when the function returns a meaningful value:
 ### Return Values
 
 | Value | Description                    |
 |-------|--------------------------------|
 | `0`   | Description of return value    |
 | `1`   | Description of return value    |
+-->
 
 ## Usage
 ### Hooking

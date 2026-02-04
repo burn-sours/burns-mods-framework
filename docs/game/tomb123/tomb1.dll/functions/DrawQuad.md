@@ -18,7 +18,6 @@ Useful for modders who need direct control over quad rendering with per-vertex c
 |-----------|-----------------------------------------------------------------------------------------|
 | Usage     | `Hook & Call`                                                                           |
 | Params    | `int, int, int, int, int, int, int, int, float, float, float, float, int`              |
-| Return    | `void`                                                                                  |
 
 ### Parameters
 
@@ -37,10 +36,6 @@ Useful for modders who need direct control over quad rendering with per-vertex c
 | 10  | `float` | Color for vertex 1                 |
 | 11  | `float` | Color for vertex 2                 |
 | 12  | `int`   | Alpha (byte, e.g. `0x80` = 128)    |
-
-### Return Values
-
-None (`void`).
 
 ## Usage
 ### Hooking

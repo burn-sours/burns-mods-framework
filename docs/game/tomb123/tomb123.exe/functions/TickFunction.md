@@ -16,7 +16,6 @@ If a frame interpolation output pointer is provided, it calculates an interpolat
 |-----------|---------------|
 | Usage     | `Hook`        |
 | Params    | `pointer`     |
-| Return    | `void`        |
 
 ### Parameters
 

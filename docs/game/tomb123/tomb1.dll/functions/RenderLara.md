@@ -20,7 +20,6 @@ Each body part is iterated (up to 15 bones) and rendered with matrix interpolati
 |-----------|-------------|
 | Usage     | `Hook`      |
 | Params    | `pointer`   |
-| Return    | `void`      |
 
 ### Parameters
 
