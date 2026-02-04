@@ -40,7 +40,7 @@ Useful as a fast native alternative to Frida's JavaScript-level memory copy when
 ### Calling from mod code
 ```javascript
 // Copy a block of memory from src to dest
-const dest = Memory.alloc(size);
+const dest = game.alloc(size);
 game.callFunction(game.module, 'Clone', dest, src, size);
 ```
 
