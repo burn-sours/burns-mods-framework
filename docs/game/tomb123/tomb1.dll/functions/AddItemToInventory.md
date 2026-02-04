@@ -1,7 +1,7 @@
 # Function: AddItemToInventory
 
 ## Description
-Adds an item to Lara's inventory by model ID. Handles all item types: weapons, ammo, medipacks, puzzle items, keys, and quest items. Each model ID maps to a specific inventory slot and pickup behaviour.
+Adds an item to Lara's inventory by model ID. Handles all item types: weapons, ammo, medipacks, puzzle items, keys, lead bars, and scions. Each model ID maps to a specific inventory slot and pickup behaviour.
 
 Validates the model ID against the model data table, converts alternate IDs if needed, and then either increments an existing slot's quantity or adds a new item. Weapons have special handling — picking up a weapon consolidates any loose ammo pickups of that type into the weapon's ammo pool and updates world entity model IDs to the ammo variant.
 
