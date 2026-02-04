@@ -50,10 +50,10 @@ function UpdateLaraAppearance():
     call Lara's behaviour function via model dispatch table
 
     // hair simulation
-    AttachLaraHair(0, hairMode)
+    SimulateLaraHair(0, hairMode)
     iterations = 30 (or 60 if a flag is set)
     for i in 0..iterations:
-        AttachLaraHair(1, hairMode)
+        SimulateLaraHair(1, hairMode)
 
     // configure outfit models based on game version and outfit index
     outfitIndex = getOutfitIndex()

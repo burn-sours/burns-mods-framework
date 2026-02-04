@@ -89,7 +89,7 @@ module.exports = {
         TraceRangeZ: { Address: "0x50d60", Params: ['pointer', 'pointer'], Return: 'int' },
         CheckAim: { Address: "0x26b60", Params: ['pointer'], Return: 'void' },
         OnDamage: { Address: "0x44460", Params: ['pointer', 'int', 'int'], Return: 'void' },
-        AttachLaraHair: { Address: "0x4df40", Params: ['int', 'int'], Return: 'void' },
+        SimulateLaraHair: { Address: "0x4df40", Params: ['int', 'int'], Return: 'void' },
         RecordWorldState: { Address: "0x38780", Params: ['int'], Return: 'void' },
         RestoreWorldState: { Address: "0x38f00", Params: ['int'], Return: 'void' },
         WorldStateRecordReplay: { Address: "0x4ac00", Params: [], Return: 'void' },

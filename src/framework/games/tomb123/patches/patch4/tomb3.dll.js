@@ -80,7 +80,7 @@ module.exports = {
         TraceRangeZ: { Address: "0xc7480", Params: ['pointer', 'pointer'], Return: 'int' },
         CheckAim: { Address: "0x67ad0", Params: ['pointer'], Return: 'void' },
         OnDamage: { Address: "0xbbdd0", Params: ['pointer', 'int', 'int'], Return: 'void' },
-        AttachLaraHair: { Address: "0xc46b0", Params: ['int', 'int'], Return: 'void' },
+        SimulateLaraHair: { Address: "0xc46b0", Params: ['int', 'int'], Return: 'void' },
         ProcessGrenade: { Address: "0x62890", Params: ['int16'], Return: 'void' },
         ProcessRocket: { Address: "0x61750", Params: ['int16'], Return: 'void' },
         ProcessHarpoon: { Address: "0x60b40", Params: ['int16'], Return: 'void' },

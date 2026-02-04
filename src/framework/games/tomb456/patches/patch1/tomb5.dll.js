@@ -88,7 +88,7 @@ module.exports = {
         ModernGfx: { Address: "0x31eb0", Params: ['int', 'int', 'int', 'int', 'int', 'int', 'int'], Return: 'void' },
         GetEntityBox: { Address: "0x990b0", Params: ['pointer'], Return: 'pointer' },
         RemoveEntity: { Address: "0x44310", Params: ['int'], Return: 'void' },
-        AttachLaraHair: { Address: "0xe55f0", Params: ['int', 'int'], Return: 'void' },
+        SimulateLaraHair: { Address: "0xe55f0", Params: ['int', 'int'], Return: 'void' },
         ResetLaraHair: { Address: "0xe4df0", Params: [], Return: 'void' },
     }
 };
