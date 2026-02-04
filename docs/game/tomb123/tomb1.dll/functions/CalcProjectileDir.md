@@ -29,18 +29,11 @@ Calculates the direction angles (pitch and yaw) for a projectile to aim at Lara,
 ## Usage
 ### Hooking
 ```javascript
-// Make enemy projectiles perfectly accurate (remove spread)
+// Skip the function to prevent enemies from aiming projectiles
 mod.hook('CalcProjectileDir')
     .onEnter(function(args) {
-        // Store projectile pointer for onLeave
-        this._projectilePtr = args[0];
-    })
-    .onLeave(function(returnValue, projectilePtr) {
-        // Pitch and yaw were set with spread — recalculate without it
-        // Or simply read the angles to log where the projectile is aimed
-        const pitch = projectilePtr.add(0x0C).readS16();
-        const yaw = projectilePtr.add(0x0E).readS16();
-        log('Projectile aimed: pitch=' + pitch + ' yaw=' + yaw);
+        // args[0] = projectile pointer
+        log('Enemy firing projectile');
     });
 ```
 
