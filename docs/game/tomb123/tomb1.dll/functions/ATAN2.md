@@ -35,7 +35,7 @@ Computes the angle from a 2D delta (deltaZ, deltaX) using a lookup table. Return
 ## Usage
 ### Calling from mod code
 ```javascript
-const angle = mod.call('ATAN2', deltaZ, deltaX);
+const angle = game.callFunction(game.module, 'ATAN2', deltaZ, deltaX);
 ```
 
 ## Pseudocode
