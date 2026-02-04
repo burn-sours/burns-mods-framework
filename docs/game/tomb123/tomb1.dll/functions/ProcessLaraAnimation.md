@@ -4,17 +4,14 @@
 Lara-specific counterpart to `ProcessEntityAnimation`. Advances Lara's animation by one frame, handling state transitions, animation commands, speed calculation, and XZ movement. Contains additional logic for Lara that doesn't apply to other entities: jump speed overrides, weapon holstering, a special state change condition for a specific animation, and movement based on an adjusted yaw angle rather than entity yaw.
 
 ## Notes
-- Increments `ENTITY_ANIM_FRAME` by 1 each call (same as `ProcessEntityAnimation`)
-- Does **not** clear `ENTITY_STATUS` bit 4 or reset the unknown field at start (unlike `ProcessEntityAnimation`)
-- Has a special state change condition: besides the normal animation state change check, also triggers on a specific Lara animation (anim 0x5C with target state 3) when certain global flags are set — this allows state transitions that wouldn't normally fire
-- End-of-animation command differences from `ProcessEntityAnimation`:
-  - **Position shift** (command 1): applies the shift, then calls an additional Lara-specific function
-  - **Jump setup** (command 2): sets `ENTITY_Y_SPEED` and `ENTITY_XZ_SPEED`, enables gravity — but an external override variable can replace the Y speed value, allowing other code to modify Lara's jump height
-  - **Command 3**: clears `LaraGunType` to 0 (holster weapons) — not present in `ProcessEntityAnimation`
-  - **No command 4** (landing) handling at end-of-animation
-- Gravity mode speed calculation is more sophisticated than `ProcessEntityAnimation` — adjusts `ENTITY_XZ_SPEED` based on frame-to-frame acceleration differences, not just raw animation speed
-- XZ movement uses an adjusted yaw angle (a global variable) instead of `ENTITY_YAW`, and is skipped entirely when a specific render flag is set
-- Sound commands (type 5) pass a hardcoded reverb value instead of reading the room's water flag
+- Increments `ENTITY_ANIM_FRAME` by 1 each call
+- Has a special state change condition: besides the normal animation state change check, also triggers on a specific Lara animation (anim 0x5C with target state 3) when certain global flags are set — allows state transitions that wouldn't normally fire
+- End-of-animation commands:
+  - **Position shift** (command 1): applies the shift, then calls an additional Lara-specific handler
+  - **Jump setup** (command 2): sets `ENTITY_Y_SPEED` and `ENTITY_XZ_SPEED`, enables gravity — an external override variable can replace the Y speed, allowing other code to modify Lara's jump height
+  - **Holster** (command 3): clears `LaraGunType` to 0
+- Gravity mode adjusts `ENTITY_XZ_SPEED` based on frame-to-frame acceleration differences, maintaining horizontal momentum during jumps and falls
+- XZ movement uses an adjusted yaw angle (a global variable) instead of `ENTITY_YAW`, and is skipped when a specific render flag is set
 
 ## Details
 
