@@ -89,6 +89,7 @@ module.exports = {
         RecordWorldState: { Address: "0x61700", Params: ['int'], Return: 'void' },
         RestoreWorldState: { Address: "0x62020", Params: ['int'], Return: 'void' },
         WorldStateRecordReplay: { Address: "0x79c80", Params: [], Return: 'void' },
+        GetSector: { Address: "0xdb10", Params: ['int', 'int', 'int', 'pointer'], Return: 'pointer' },
         CalculateFloorHeight: { Address: "0xdf20", Params: ['pointer', 'int', 'int', 'int'], Return: 'int' },
         CalculateCeilingHeight: { Address: "0xf160", Params: ['pointer', 'int', 'int', 'int'], Return: 'int' },
         CanInterpolateCamera: { Address: "0x98080", Params: [], Return: 'int' },
