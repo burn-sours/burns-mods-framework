@@ -1,7 +1,7 @@
-# Function: WorldStateRecordReplay
+# Function: ProcessDemo
 
 ## Description
-State machine that handles demo recording and playback. Called every game loop iteration; does nothing when idle. During recording, snapshots the world state then writes player input keys into the demo buffer each frame. During playback, restores the world state then reads input keys back from the buffer each frame, driving the game as if the player were providing input.
+State machine that handles demo recording and playback. Called every game loop iteration; does nothing when idle. During recording, snapshots the world state then writes player input keys into the demo buffer each game loop iteration. During playback, restores the world state then reads input keys back from the buffer each iteration, driving the game as if the player were providing input.
 
 ## Notes
 - Operates as a state machine driven by an internal demo mode flag (states: idle, start recording, recording, stop recording, start playback, playing back)
@@ -22,7 +22,7 @@ State machine that handles demo recording and playback. Called every game loop i
 ## Usage
 ### Hooking
 ```javascript
-mod.hook('WorldStateRecordReplay')
+mod.hook('ProcessDemo')
     .onEnter(function() {
         // Called every game loop iteration — demo state machine
     })
@@ -33,7 +33,7 @@ mod.hook('WorldStateRecordReplay')
 
 ## Pseudocode
 ```
-function WorldStateRecordReplay():
+function ProcessDemo():
     demoMode = current demo state
 
     switch demoMode:

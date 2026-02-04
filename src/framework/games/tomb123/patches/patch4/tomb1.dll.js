@@ -78,7 +78,7 @@ module.exports = {
         SimulateLaraHair: { Address: "0x4c8c0", Params: ['int', 'int'], Return: 'void' },
         RecordWorldState: { Address: "0x37ef0", Params: ['int'], Return: 'void' },
         RestoreWorldState: { Address: "0x38670", Params: ['int'], Return: 'void' },
-        WorldStateRecordReplay: { Address: "0x49d50", Params: [], Return: 'void' },
+        ProcessDemo: { Address: "0x49d50", Params: [], Return: 'void' },
         GetSector: { Address: "0x9470", Params: ['int', 'int', 'int', 'pointer'], Return: 'pointer' },
         CalculateFloorHeight: { Address: "0x9880", Params: ['pointer', 'int', 'int', 'int'], Return: 'int' },
         CalculateCeilingHeight: { Address: "0xa7b0", Params: ['pointer', 'int', 'int', 'int'], Return: 'int' },

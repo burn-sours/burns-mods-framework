@@ -89,7 +89,7 @@ module.exports = {
         GetEntityBox: { Address: "0xc42d0", Params: ['pointer'], Return: 'pointer' },
         RecordWorldState: { Address: "0x9c890", Params: ['int'], Return: 'void' },
         RestoreWorldState: { Address: "0x9d360", Params: ['int'], Return: 'void' },
-        WorldStateRecordReplay: { Address: "0xc2630", Params: [], Return: 'void' },
+        ProcessDemo: { Address: "0xc2630", Params: [], Return: 'void' },
         GetSector: { Address: "0x220a0", Params: ['int', 'int', 'int', 'pointer'], Return: 'pointer' },
         CalculateFloorHeight: { Address: "0x225a0", Params: ['pointer', 'int', 'int', 'int'], Return: 'int' },
         CalculateCeilingHeight: { Address: "0x238e0", Params: ['pointer', 'int', 'int', 'int'], Return: 'int' },

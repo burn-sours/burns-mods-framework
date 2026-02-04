@@ -92,7 +92,7 @@ module.exports = {
         SimulateLaraHair: { Address: "0x4df40", Params: ['int', 'int'], Return: 'void' },
         RecordWorldState: { Address: "0x38780", Params: ['int'], Return: 'void' },
         RestoreWorldState: { Address: "0x38f00", Params: ['int'], Return: 'void' },
-        WorldStateRecordReplay: { Address: "0x4ac00", Params: [], Return: 'void' },
+        ProcessDemo: { Address: "0x4ac00", Params: [], Return: 'void' },
         CanInterpolateCamera: { Address: "0x68ba0", Params: [], Return: 'int' },
         EntityBehaviourBreakable: { Address: "0x40d80", Params: ['int'], Return: 'void' },
         EntityBehaviourWolf: { Address: "0x49780", Params: ['int'], Return: 'void' },
