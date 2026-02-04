@@ -8,11 +8,11 @@ AI behaviour for the land crocodile. Walks on land using standard AI, biting Lar
 - Called with the entity's index into the entity array plus a Y reference for water surface detection
 - The second parameter is typed as `pointer` for 64-bit width but represents a Y coordinate value used in water height queries — the query function needs a Y reference to determine which room layer to check in vertically stacked rooms
 - When activated (status flags pending), the Y reference is zeroed before continuing
-- Alive: walks on land with standard AI; checks for water beneath — if water appears (room flip), transitions to a ground animation at the floor and updates AI zone data; otherwise keeps entity at water surface offset (0x100)
+- Alive: walks on land with standard AI; checks for water beneath — if water appears (room flip), transitions to a ground animation at the floor and updates AI zone data; otherwise keeps entity near the water surface (0x100 units above)
 - Dead with water: body moves toward the water surface at 0x20 per frame, AI deactivated on arrival
 - Dead without water: land death animation, entity placed on floor via `GetSector` + `CalculateFloorHeight`
 - Bite damage uses a bone position lookup to create a hit effect at the head
-- Head yaw tracking via AI data joint (clamped ±0x38E per frame, ±0x4000 total)
+- Head yaw tracking via AI data joint (with per-frame and total rotation limits)
 - `UpdateEnemyMood` called with aggressive flag set
 - Contact check uses `ENTITY_TOUCH_BITS` (non-zero = touching)
 
@@ -35,14 +35,14 @@ AI behaviour for the land crocodile. Walks on land using standard AI, biting Lar
 | New Game Plus (hard)   | -180   |
 
 - Sets bit 4 of Lara's `ENTITY_STATUS`
-- Bite only triggers once per contact engagement (tracked via internal flag at entity offset 0x3A, reset when returning to idle)
+- Bite only triggers once per contact engagement (tracked via internal bite flag, reset when returning to idle)
 - If Lara dies from the bite under certain game version conditions, sets a tracking flag
 
 ### Turn Rate
 
 | Context | Rate  |
 |---------|-------|
-| Walking | 0x222 |
+| Walking | medium |
 
 ## Details
 
@@ -95,7 +95,7 @@ function EntityCrocodileDry(entityId, waterY):
     if entity[ENTITY_HEALTH] <= 0:
         if currentState != 3 (water death):
             set water death animation
-            set state = 3, health marker = 0xC000
+            set state = 3, set internal health marker
 
         waterHeight = queryWaterSurfaceHeight(entityX, waterY, entityZ, entityRoom)
 
@@ -107,7 +107,7 @@ function EntityCrocodileDry(entityId, waterY):
             verticalSpeed = 0
         else:
             if entity far from water surface:
-                move entityY toward waterHeight at rate 0x20
+                move entityY gradually toward waterHeight
             elif entity reached water surface:
                 entityY = waterHeight
                 deactivate AI (decrement active count, clear AI pointer)
@@ -120,7 +120,7 @@ function EntityCrocodileDry(entityId, waterY):
     SenseLara(entity, trackData)
     headYaw = trackData.turnAngle if facing
     UpdateEnemyMood(entity, trackData, aggressive=true)
-    TurnTo(entity, 0x222)
+    TurnTo(entity, WALK_TURN_RATE)
 
     switch entity[ENTITY_CURRENT_STATE]:
         case 1 (idle):
@@ -144,7 +144,7 @@ function EntityCrocodileDry(entityId, waterY):
 
     // Head tracking
     if AI data head joint exists:
-        adjust joint toward headYaw (±0x38E per frame, clamped ±0x4000)
+        adjust joint toward headYaw (with per-frame and total rotation limits)
 
     // Water surface check
     waterHeight = queryWaterSurfaceHeight(entityX, ..., entityZ, entityRoom)
@@ -154,7 +154,7 @@ function EntityCrocodileDry(entityId, waterY):
         verticalSpeed = 0
         update AI zone data for ground mode
     else:
-        keep entityY at waterHeight + 0x100 (near surface)
+        keep entityY near waterHeight (slightly below surface)
 
     ProcessEnemyMovement(entityId, 0, 0)
 ```

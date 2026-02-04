@@ -7,7 +7,7 @@ AI behaviour for the T-Rex. A massive predator that deals contact damage every f
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
 - Called with the entity's index into the entity array, not a pointer
 - Deals passive contact damage every frame if any touch bits are set — the amount depends on the current state (higher when running)
-- Uses a behaviour flag (offset 0x0E) to track attack readiness — set when Lara is at medium range, facing, and the mood isn't escape
+- Uses a behaviour flag to track attack readiness — set when Lara is at medium range, facing, and the mood isn't escape
 - The bite (state 7) uses a narrow touch bitmask (0x3000) — only the jaw triggers the grab
 - The grab-and-eat sequence (state 7 → 8): instantly kills Lara (-10000 health), teleports her to the T-Rex's position and room, forces a specific death animation (state 0x2E), and restores Lara's default model appearance
 - Head yaw tracks at half speed compared to other enemies (turn angle ÷ 2)

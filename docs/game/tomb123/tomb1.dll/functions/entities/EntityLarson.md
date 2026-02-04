@@ -1,31 +1,31 @@
 # Function: EntityLarson
 
 ## Description
-AI behaviour for Larson — a recurring human enemy with a ranged pistol attack. Uses `ShootLara` for gunfire with a visibility check determining when to aim and shoot. Navigates with walk and run states using dynamic turn rates stored in AI data. Heavy use of queued state transitions through an idle hub state. Has level-specific logic: boosted combat values on one level, and triggers a game event on death in another.
+AI behaviour for Larson — a recurring human enemy with a ranged pistol attack. Uses `ShootLara` for gunfire with a visibility check determining when to aim and shoot. Navigates with walk and run states using dynamic turn rates stored in AI data. Heavy use of queued state transitions through an idle hub state. Has level-specific logic: boosted combat values on level 4, and triggers a game event on death in level 0xC.
 
 ## Notes
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
 - Called with the entity's index into the entity array, not a pointer
-- `UpdateEnemyMood` called with passive flag — cautious behaviour
-- Turn rate is **dynamic**: stored in an AI data field, updated per state (slower for walk, faster for run). `TurnTo` reads this value each frame
+- `UpdateEnemyMood` called with passive flag (0) — cautious behaviour
+- Turn rate is **dynamic**: stored in an AI data field, updated per state (0x222 for walk, 0x444 for run). `TurnTo` reads this value each frame
 - Uses a visibility/targeting check to determine if Larson can see Lara — controls aim/shoot vs movement decisions
 - A combat state tracking function is called each frame with health values and targeting status — purpose not fully identified
 - On death: calls combat tracking function, then sets death animation (state 5)
-- On a specific level, entity health and a base combat value are both boosted by 10%
-- On another level (on death, normal/easy NG+ only): triggers a level-specific game event
-- **Torso tracking** via `ENTITY_PITCH`: in run state, torso tilts at half the turn delta (leans into turns). In other states, torso centers back to zero. Clamped per frame
-- Head yaw tracking via AI data joint, clamped per frame with a total rotation limit
+- Level 4: entity health and a base combat value are both boosted by 10%
+- Level 0xC (on death, normal/easy NG+ only): calls a game event function via function pointer with params (10, 100) — likely triggers a level-specific event when Larson dies
+- **Torso tracking** via `ENTITY_PITCH`: in run state, torso tilts at half the turn delta (leans into turns). In other states, torso centers back to 0. Clamped ±0x222 per frame
+- Head yaw tracking via AI data joint (clamped ±0x38E per frame, ±0x4000 total)
 - Shoot state uses `ShootLara` — a patch-level function that performs hit detection with projectile data
 - After shooting, queues aim state (4) for follow-up shots; if escaping, queues idle (1) instead
-- On death under certain conditions, sets a death tracking flag
+- Death tracking flag: 0x2000
 
 ### States
 
 | State | Name       | Description                                                          |
 |-------|------------|----------------------------------------------------------------------|
 | 1     | Idle       | Hub state; routes via queued state to walk, run, aim, or idle anim   |
-| 2     | Walk       | Slow patrol; mood-based transitions                                  |
-| 3     | Run        | Fast pursuit; torso tilts into turns                                 |
+| 2     | Walk       | Slow patrol (turn rate 0x222); mood-based transitions                |
+| 3     | Run        | Fast pursuit (turn rate 0x444); torso tilts into turns               |
 | 4     | Aim        | Aiming at Lara; checks visibility to decide shoot or disengage      |
 | 5     | Death      | Death animation                                                      |
 | 6     | Idle anim  | Standing idle animation; returns to walk or idle based on mood       |
@@ -41,17 +41,17 @@ AI behaviour for Larson — a recurring human enemy with a ranged pistol attack.
 - Default → 2 (walk)
 
 **State 2 (walk):**
-- Sets slow turn rate
+- Sets turn rate to 0x222
 - Bored + random → 1 (idle) + queue 6 (idle anim)
 - Can see Lara → 1 (idle) + queue 4 (aim)
-- Facing + close → stay walking
+- Facing + close (< 0x900001) → stay walking
 - Escape or too far → 1 (idle) + queue 3 (run)
 
 **State 3 (run):**
-- Sets fast turn rate, torso tilt = turnDelta / 2
+- Sets turn rate to 0x444, torso tilt = turnDelta / 2
 - Bored + random → 1 (idle) + queue 6 (idle anim)
 - Can see Lara → 1 (idle) + queue 4 (aim)
-- Facing + close → 1 (idle) + queue 2 (walk)
+- Facing + close (< 0x900000) → 1 (idle) + queue 2 (walk)
 
 **State 4 (aim):**
 - If queued state set → use queued state
@@ -77,6 +77,13 @@ AI behaviour for Larson — a recurring human enemy with a ranged pistol attack.
 
 - Sets bit 4 of Lara's `ENTITY_STATUS`
 - Hit detection performed by `ShootLara` using projectile data and distance/angle
+
+### Turn Rates
+
+| Context | Rate  |
+|---------|-------|
+| Walking | 0x222 |
+| Running | 0x444 |
 
 ## Details
 
@@ -135,20 +142,26 @@ function EntityLarson(entityId):
 
     // --- Dead ---
     if entity[ENTITY_HEALTH] <= 0:
-        bonus = baseCombatValue / 10 on specific level, else 0
+        if levelId == 4:
+            bonus = baseCombatValue / 10
+            baseCombatValue += bonus
+        else:
+            bonus = 0
         updateCombatState(entity, 0, bonus, 0, baseCombatValue)
 
         if currentState != 5 (death):
-            set death animation
+            set death animation (base + 0xF)
             set state = 5
-            on specific level (normal/easy NG+):
-                triggerGameEvent(...)  // level-specific event
+            if levelId == 0xC and normal/easy NG+:
+                triggerGameEvent(10, 100)  // level-specific event
         skip to torso/head tracking + movement
 
     // --- Alive ---
     SenseLara(entity, trackData)
     health = entity[ENTITY_HEALTH]
-    // On specific level: boost health and baseCombatValue by 10%
+    if levelId == 4:
+        health += baseCombatValue / 10
+        baseCombatValue += baseCombatValue / 10
 
     canTarget = checkTargetVisibility(entity, trackData)
     updateCombatState(entity, canTarget, health, 0, baseCombatValue)
@@ -169,25 +182,25 @@ function EntityLarson(entityId):
             targetState = target
 
         case 2 (walk):
-            aiData.turnRate = WALK_TURN_RATE
+            aiData.turnRate = 0x222
             if mood == bored and random:
                 targetState = 1, queue = 6
             elif mood != escape:
                 if canTarget:
                     targetState = 1, queue = 4 (aim)
-                elif facing + close:
+                elif facing + close (< 0x900001):
                     stay
                 else: fall through to run
             targetState = 1, queue = 3 (run)
 
         case 3 (run):
-            aiData.turnRate = RUN_TURN_RATE
+            aiData.turnRate = 0x444
             torsoPitch = turnDelta / 2
             if mood == bored and random:
                 targetState = 1, queue = 6
             elif canTarget:
                 targetState = 1, queue = 4 (aim)
-            elif facing + close:
+            elif facing + close (< 0x900000):
                 targetState = 1, queue = 2 (walk)
 
         case 4 (aim):
@@ -211,17 +224,17 @@ function EntityLarson(entityId):
                     else (hard NG+): Lara health -= 70
                     set Lara ENTITY_STATUS bit 4
                     if Lara dead and specific game version:
-                        set death tracking flag
+                        set tracking flag 0x2000
                 queue = 4 (aim for follow-up)
             if mood == escape:
                 queue = 1 (flee)
 
-    // Torso tracking — tilt toward torsoPitch, clamped per frame
-    adjust ENTITY_PITCH toward torsoPitch
+    // Torso tracking
+    adjust ENTITY_PITCH toward torsoPitch * 4 (clamped ±0x222 per frame)
 
-    // Head tracking — yaw toward target, clamped per frame with total limit
+    // Head tracking
     if AI data head joint exists:
-        adjust joint toward headYaw
+        adjust joint toward headYaw (±0x38E per frame, clamped ±0x4000)
 
     ProcessEntityMovement(entityId, turnDelta, 0)
 ```

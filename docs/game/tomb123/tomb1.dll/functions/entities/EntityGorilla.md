@@ -8,7 +8,7 @@ AI behaviour for the gorilla enemy. A ground enemy with unique movement — uses
 - Called with the entity's index into the entity array, not a pointer
 - Uses a custom movement function for most states — only uses `ProcessEntityMovement` in state 0xB
 - `UpdateEnemyMood` is called with aggressive=false (passive mood by default)
-- Behaviour flag at offset 0x0E tracks aggro state (bit 0) and 90° turn state (bits 1-2) — aggro is set when Lara hits the gorilla or is close (< 0x400000)
+- Behaviour flag tracks aggro state (bit 0) and 90° turn state (bits 1-2) — aggro is set when Lara hits the gorilla or is close (< 0x400000)
 - States 8 and 9 snap `ENTITY_YAW` by ±90° (0x4000) — when returning to idle (state 1), these rotations are corrected back
 - Touch bitmask for attack: 0xFF00
 - On death: random death animation from 2 choices; on level 6 in a specific room and position, plays a special sound
