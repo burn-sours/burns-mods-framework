@@ -62,7 +62,7 @@ mod.hook('AddText')
 
 ### Calling from mod code
 ```javascript
-const entry = ptr(game.callFunction(game.module, 'AddText', 0, 0, UI_RENDER_LAYER, game.allocString('Hello')));
+const entry = game.callFunction(game.module, 'AddText', 0, 0, UI_RENDER_LAYER, game.allocString('Hello'));
 
 // Modify properties on the returned entry
 entry.writeS32(0x1001);                              // TEXT_FLAGS
