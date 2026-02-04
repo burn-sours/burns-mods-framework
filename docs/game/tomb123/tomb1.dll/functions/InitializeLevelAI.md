@@ -18,6 +18,7 @@ Each slot is initialized with a `0xFFFF` marker and an associated box array for 
 |-----------|----------|
 | Usage     | `Hook`   |
 | Params    | *(none)* |
+| Return    | `void`   |
 
 ## Usage
 ### Hooking

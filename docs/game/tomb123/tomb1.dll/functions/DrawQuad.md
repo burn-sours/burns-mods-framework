@@ -18,6 +18,7 @@ Useful for modders who need direct control over quad rendering with per-vertex c
 |-----------|-----------------------------------------------------------------------------------------|
 | Usage     | `Hook & Call`                                                                           |
 | Params    | `int, int, int, int, int, int, int, int, float, float, float, float, int`              |
+| Return    | `void`                                                                                  |
 
 ### Parameters
 

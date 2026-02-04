@@ -18,6 +18,7 @@ Also maintains a rolling buffer of recent keypresses. Under a specific game stat
 |-----------|------------------|
 | Usage     | `Hook & Call`    |
 | Params    | `uint, int`      |
+| Return    | `void`           |
 
 ### Parameters
 

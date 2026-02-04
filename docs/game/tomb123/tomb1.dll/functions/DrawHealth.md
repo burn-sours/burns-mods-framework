@@ -27,6 +27,7 @@ In classic mode, the bar is drawn right-aligned using UiDrawWidth, with a 2-pixe
 |-----------|-------------|
 | Usage     | `Hook & Call` |
 | Params    | `int`       |
+| Return    | `void`      |
 
 ### Parameters
 

@@ -62,7 +62,7 @@ module.exports = {
         SoundEffect: { Address: "0x78ff0", Params: ['int', 'pointer', 'int'], Return: 'int' },
         RenderUI: { Address: "0x19780", Params: [], Return: 'void' },
         Menu: { Address: "0x1b850", Params: ['int'], Return: 'int' },
-        Clone: { Address: "0x8e780", Params: ['pointer', 'pointer', 'uint64'], Return: 'pointer' },
+        Clone: { Address: "0x8e780", Params: ['pointer', 'pointer', 'uint64'], Return: 'void' },
         AddText: { Address: "0x7be50", Params: ['int', 'int', 'int', 'pointer'], Return: 'pointer' },
         DrawSetup: { Address: "0x50460", Params: ['int', 'pointer'], Return: 'void' },
         DrawRect: { Address: "0x51320", Params: ['int', 'int', 'int', 'int', 'uint64', 'uint64'], Return: 'void' },
