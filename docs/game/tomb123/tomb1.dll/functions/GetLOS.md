@@ -6,7 +6,7 @@ Tests whether a clear line of sight exists between a source position and a targe
 ## Notes
 - Param 0 (source) is read-only. Param 1 (target) is read-write — modified in-place when LOS fails
 - Target position struct: three consecutive Int32 values (x, y, z) followed by a room ID as UInt16 at byte offset 12. The room ID may also be updated on failure
-- Uses GetTileData and GetFloorHeight internally. Also calls an unidentified ceiling height function (FUN_18000a6f0) for the ceiling check path
+- Uses GetTileData, GetFloorHeight, and GetCeilingHeight internally
 - The sampling steps from ~31/32 to ~7/8 of the way along the line (near the target end), providing coarse resolution for the obstruction point
 - Floor check: if floor height at target < target Y, the target is below the floor
 - Ceiling check: if ceiling height at target > target Y, the target is above the ceiling
