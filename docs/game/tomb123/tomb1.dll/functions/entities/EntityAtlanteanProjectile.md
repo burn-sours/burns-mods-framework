@@ -5,44 +5,37 @@ Handles movement and collision for atlantean projectiles — both bullets (from 
 
 ## Notes
 - Called with the projectile's index into the projectile array, not a pointer
-- Projectile struct size is 0x44 bytes, accessed at `projectilesPointer + projectileId * 0x44`
-- **Movement**: 3D velocity calculated from speed, pitch, and yaw using fixed-point sine/cosine lookups (shared trig table). Updates X, Y, Z positions each frame.
+- **Movement**: 3D velocity calculated from speed, pitch, and yaw using fixed-point sine/cosine lookups. Updates X, Y, Z positions each frame.
 - Uses `GetSector` for room transitions, `CalculateFloorHeight` and `CalculateCeilingHeight` to determine valid space
-- Hit detection via `checkProjectileHitLara` with a 200-unit hit radius — only checked when projectile is between floor and ceiling
-- Two projectile types distinguished by an animation identifier field:
+- Hit detection against Lara with a 200-unit radius — only checked when projectile is between floor and ceiling
+- Two projectile types determined by which creation function was used:
 
-### Bullet (animation identifier 172)
+### Bullet (created by `ShootAtlanteanBullet`)
 - **Direct hit on Lara**:
-  - Normal: −30
-  - NG+ hard: −70
   - Plays `SoundEffect` 50
-  - Classic graphics: transitions to impact animation (158)
+  - Classic graphics: transitions to impact state
   - Remastered graphics: spawns visual effect, then `DestroyProjectile`
 - **Environment impact (ricochet)**:
   - Clears speed, applies random gravity arc
   - Calculates angle toward Lara and redirects the ricochet
-  - Sets a lifetime counter (6)
-  - Transitions to ricochet animation (164)
   - Plays `SoundEffect` 10
 
-### Meatball (any other animation identifier)
+### Meatball (created by `ShootAtlanteanMeatball`)
 - **Direct hit on Lara**:
-  - Normal: −100
-  - NG+ hard: varies by shooter model (−150, −180, or −200)
-  - Spawns 3 impact particles slightly behind the projectile (trig-offset from current direction)
+  - Spawns 3 impact particles slightly behind the projectile (calculated from current direction)
   - Plays `SoundEffect` 31 at Lara's position (hit feedback) + `SoundEffect` 104 at impact
   - If Lara survives: triggers camera shake (5 frames, locked to projectile)
-  - Transitions to impact animation (151), sets impact flag
+  - Transitions to impact state, sets impact flag
 - **Environment impact (splash damage)**:
-  - Effective radius ~1024 units (distance² < 1,048,576)
-  - Damage scales linearly with distance²: −100 at point blank, tapering to 0 at max range
-  - Classic graphics: transitions to impact animation, stops movement
-  - Remastered graphics: spawns 3 impact particles, then `DestroyProjectile`
+  - Effective radius ~1024 units
+  - Damage scales linearly with squared distance: max at point blank, tapering to 0 at max range
+  - Spawns 3 impact particles behind the projectile (remastered only)
   - Plays `SoundEffect` 104
-  - Sets Lara's entity flags bit 4 if within splash range
+  - Remastered: `DestroyProjectile` after spawning particles
+  - Sets Lara's `ENTITY_STATUS` bit 4 if within splash range
 
 ### Post-Hit (both types, direct hit only)
-- Sets Lara's entity flags bit 4 (hit by projectile)
+- Sets Lara's `ENTITY_STATUS` bit 4 (hit by projectile)
 - Copies Lara's yaw and movement speed to the projectile
 - Clears projectile gravity
 
@@ -128,7 +121,7 @@ function EntityAtlanteanProjectile(projectileId):
                 return  // projectile continues flying
 
             // === DIRECT HIT ON LARA ===
-            if projectile.animId == 172:  // bullet
+            if projectile is bullet type:
                 if NG+ hard:
                     Lara.health -= 70
                 else:
@@ -136,29 +129,24 @@ function EntityAtlanteanProjectile(projectileId):
 
                 if remastered:
                     spawnVisualEffect(projectile)
+                    DestroyProjectile(projectileId)
                 else:
-                    projectile.animId = 158  // impact animation
+                    transition to impact state
 
                 SoundEffect(50, projectile.position, 0)
 
-                if remastered:
-                    DestroyProjectile(projectileId)
-
-            else:  // meatball
-                // Calculate position slightly behind projectile using trig
-                behindPos = offsetBehindProjectile(projectile)
-
-                // Spawn 3 impact particles at behind position
-                spawnParticle(behindPos, size=-2, room)
-                spawnParticle(behindPos, size=-1, room)  // ×2
+            else:  // meatball type
+                // Spawn 3 impact particles behind projectile
+                behindPos = calculatePositionBehind(projectile)
+                spawnParticle(behindPos, room)  // 1 large + 2 small
 
                 if NG+ hard:
-                    damage by shooter model: -150, -200, or -180
+                    damage varies by shooter model: -150, -200, or -180
                 else:
                     Lara.health -= 100
 
-                projectile.animId = 151  // impact animation
-                projectile.impactFlag = 1
+                transition to impact state
+                set impact flag
 
                 if Lara.health > 0:
                     SoundEffect(31, Lara.position, 0)
@@ -167,48 +155,44 @@ function EntityAtlanteanProjectile(projectileId):
 
                 SoundEffect(104, projectile.position, 0)
 
-            // Post-hit: attach projectile direction to Lara
-            set Lara flags bit 4
+            // Post-hit: attach projectile to Lara's direction
+            set Lara ENTITY_STATUS bit 4
             projectile.yaw = Lara.yaw
             projectile.speed = Lara.xzSpeed
             projectile.gravity = 0
             return
 
     // === ENVIRONMENT IMPACT (floor/ceiling/wall) ===
-    if projectile.animId == 172:  // bullet — ricochet
+    if projectile is bullet type:
+        // Ricochet toward Lara
         projectile.speed = 0
-        projectile.lifetime = 6
-        projectile.animId = 164  // ricochet animation
-        projectile.gravity = randomArc
+        apply random gravity arc
+        transition to ricochet state
 
         SoundEffect(10, projectile.position, 0)
 
-        // Redirect ricochet toward Lara
-        angleToLara = atan2XZ(projectile.pos, Lara.pos)
+        angleToLara = calculateAngleToLara(projectile, Lara)
         applyRicochetDirection(projectile, angleToLara)
 
-    else:  // meatball — splash damage
-        if classic graphics:
-            projectile.animId = 151  // impact animation
-            projectile.speed = 0
-            projectile.gravity = 0
-            projectile.impactFlag = 1
-        else:
+    else:  // meatball type
+        if remastered:
             // Spawn 3 impact particles behind projectile
-            behindPos = offsetBehindProjectile(projectile)
-            spawnParticle(behindPos, size=-2, room)
-            spawnParticle(behindPos, size=-1, room)  // ×2
+            behindPos = calculatePositionBehind(projectile)
+            spawnParticle(behindPos, room)  // 1 large + 2 small
+        else:
+            transition to impact state
+            stop movement
 
         SoundEffect(104, projectile.position, 0)
 
         if remastered:
             DestroyProjectile(projectileId)
 
-        // Distance-based splash damage
-        distSq = distanceSquared(projectile.pos, Lara.pos)
+        // Splash damage — distance-based
+        distSq = distanceSquared(projectile.position, Lara.position)
         if distSq < 1048576:  // ~1024 unit radius
-            // Linear falloff: -100 at point blank → 0 at max range
+            // Scales from -100 at point blank to 0 at max range
             damage = (distSq - 1048576) * 100 >> 20
             Lara.health += damage
-            set Lara flags bit 4
+            set Lara ENTITY_STATUS bit 4
 ```
