@@ -135,8 +135,8 @@ module.exports = {
         RemoveItemFromInventory: { Address: "0x1e520", Params: ['int'], Return: 'int' },
         ConvertInventoryId: { Address: "0x1db40", Params: ['int'], Return: 'int' },
         GetTileData: { Address: "0x93d0", Params: ['int', 'int', 'int', 'pointer'], Return: 'pointer' },
-        GetFloorHeight: { Address: "0x97e0", Params: ['pointer', 'int', 'int', 'int'], Return: 'int' },
-        GetCeilingHeight: { Address: "0xa6f0", Params: ['pointer', 'int', 'int', 'int'], Return: 'int' },
+        CalculateFloorHeight: { Address: "0x97e0", Params: ['pointer', 'int', 'int', 'int'], Return: 'int' },
+        CalculateCeilingHeight: { Address: "0xa6f0", Params: ['pointer', 'int', 'int', 'int'], Return: 'int' },
         CreateImpactSparks: { Address: "0x41d90", Params: ['int', 'int', 'int', 'int'], Return: 'void' },
     }
 };
