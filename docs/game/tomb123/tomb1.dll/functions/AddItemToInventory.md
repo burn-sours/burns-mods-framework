@@ -6,7 +6,7 @@ Adds an item to Lara's inventory by model ID. Handles all item types: weapons, a
 Validates the model ID against the model data table, converts alternate IDs if needed, and then either increments an existing slot's quantity or adds a new item. Weapons have special handling — picking up a weapon consolidates any loose ammo pickups of that type into the weapon's ammo pool and updates world entity model IDs to the ammo variant.
 
 ## Notes
-- Each item type has two accepted model IDs (original and alternate) — ConvertInventoryId resolves between them
+- Each item type has two accepted model IDs (original and alternate) — GetAlternateId resolves between them
 - If the model ID's flag is not set in the model data table, the function attempts conversion and returns 0 on failure
 - Items already in inventory just get their quantity incremented (weapons capped at 255)
 - **Weapon pickup consolidation:** When picking up a weapon (shotgun, magnums, uzis), any loose ammo pickups of that type already in inventory are removed and converted to direct ammo. World entities of the weapon type are also updated to show as ammo pickups instead
@@ -63,7 +63,7 @@ game.callFunction(game.module, 'AddItemToInventory', 0x5d);
 function AddItemToInventory(modelId):
     // Validate model ID flag
     if model flag not set for modelId:
-        modelId = ConvertInventoryId(modelId)
+        modelId = GetAlternateId(modelId)
         if modelId == -1 or flag still not set:
             return 0
 

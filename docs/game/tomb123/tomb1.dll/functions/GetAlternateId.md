@@ -1,12 +1,13 @@
-# Function: ConvertInventoryId
+# Function: GetAlternateId
 
 ## Description
-Converts an inventory model ID to its alternate counterpart. Every inventory item type has two valid model IDs (original and alternate). This function maps between the two, allowing either ID to resolve to the other. Used internally by functions like AddItemToInventory to normalise model IDs before processing.
+Returns the alternate model ID for a given model ID. Every inventory-related item type has two valid model IDs (original and alternate). This function maps between the two, allowing either ID to resolve to the other. Used internally by functions like AddItemToInventory to normalise model IDs before processing.
 
 ## Notes
 - Pure lookup table — no side effects, no memory access
 - All mappings are bidirectional pairs (A→B and B→A), with one exception: four IDs (143, 144, 145, 146) all map to 150 with no reverse
 - Returns `-1` when the given ID has no alternate
+- Covers all pickup types: weapons, ammo, medipacks, puzzle items, keys, quest items
 - The specific model ID values are game-internal and vary by level data
 
 ## Details
@@ -33,7 +34,7 @@ Converts an inventory model ID to its alternate counterpart. Every inventory ite
 ## Usage
 ### Hooking
 ```javascript
-mod.hook('ConvertInventoryId')
+mod.hook('GetAlternateId')
     .onEnter(function(modelId) {
         log('Converting model ID:', modelId);
     })
@@ -47,17 +48,17 @@ mod.hook('ConvertInventoryId')
 ### Calling from mod code
 ```javascript
 // Get the alternate model ID for a given item
-const alternateId = game.callFunction(game.module, 'ConvertInventoryId', 0x48);
+const alternateId = game.callFunction(game.module, 'GetAlternateId', 0x48);
 // alternateId = 0x52
 
 // Check if an ID has an alternate
-const result = game.callFunction(game.module, 'ConvertInventoryId', 0x10);
+const result = game.callFunction(game.module, 'GetAlternateId', 0x10);
 // result = -1 (no alternate)
 ```
 
 ## Pseudocode
 ```
-function ConvertInventoryId(modelId):
+function GetAlternateId(modelId):
     // Lookup table of bidirectional pairs
     // Each inventory item type has an original and alternate model ID
     // The function maps original → alternate and alternate → original
