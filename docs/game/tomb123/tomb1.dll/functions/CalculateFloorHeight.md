@@ -46,8 +46,9 @@ mod.hook('CalculateFloorHeight')
         // sector: pointer to sector data from GetSector
         // x, y, z: world position
     })
-    .onLeave(function(returnValue) {
+    .onLeave(function(returnValue, sector, x, y, z) {
         // returnValue: calculated floor height
+        // sector, x, y, z: same args from onEnter (captured automatically)
     });
 ```
 

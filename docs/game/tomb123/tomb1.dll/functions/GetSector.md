@@ -40,8 +40,9 @@ mod.hook('GetSector')
         // x, y, z: world position
         // roomPtr: pointer to UInt16 room ID (will be updated)
     })
-    .onLeave(function(returnValue) {
+    .onLeave(function(returnValue, x, y, z, roomPtr) {
         // returnValue: pointer to resolved sector data
+        // x, y, z, roomPtr: same args from onEnter (captured automatically)
     });
 ```
 

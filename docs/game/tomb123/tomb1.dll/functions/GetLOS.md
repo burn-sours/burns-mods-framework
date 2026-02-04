@@ -41,8 +41,9 @@ mod.hook('GetLOS')
         // source: pointer to [x, y, z] Int32 values
         // target: pointer to [x, y, z] Int32 values + UInt16 room ID
     })
-    .onLeave(function(returnValue) {
+    .onLeave(function(returnValue, source, target) {
         // returnValue: 1 = clear LOS, 0 = blocked
+        // source, target: same args from onEnter (captured automatically)
     });
 ```
 

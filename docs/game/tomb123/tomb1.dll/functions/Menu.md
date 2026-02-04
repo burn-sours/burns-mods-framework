@@ -51,8 +51,9 @@ mod.hook('Menu')
     .onEnter(function(menuType) {
         // menuType: 1 = weapons, 2 = items
     })
-    .onLeave(function(result) {
-        // result: 0 = closed, 1 = item used, etc.
+    .onLeave(function(returnValue, menuType) {
+        // returnValue: 0 = closed, 1 = item used, etc.
+        // menuType: same arg from onEnter (captured automatically)
     });
 ```
 
