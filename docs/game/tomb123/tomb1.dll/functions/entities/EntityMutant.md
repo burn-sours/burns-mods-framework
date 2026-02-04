@@ -1,7 +1,7 @@
 # Function: EntityMutant
 
 ## Description
-AI behaviour for the Atlantean mutant — the most complex enemy in TR1 with 14 states, three melee attack ranges, two ranged projectile types (meatball and bullet), and a flying mode for one model variant. Handles three model types (20 = winged, 21 = grounded, 22 = another variant) with model-specific behavior. The winged mutant (model 20) can enter a flying state with reconfigured AI sensing. On death, explodes with a sound effect and deactivates. Has extensive level-specific kill tracking for end-game events.
+AI behaviour for the Atlantean mutant — the most complex enemy in TR1 with 14 states, three melee attack ranges, two ranged projectile types (large slow projectile and fast shard), and a flying mode for one model variant. Handles three model types (20 = winged, 21 = grounded, 22 = another variant) with model-specific behavior. The winged mutant (model 20) can enter a flying state with reconfigured AI sensing. On death, explodes with a sound effect and deactivates. Has extensive level-specific kill tracking for end-game events.
 
 ## Notes
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
@@ -33,7 +33,7 @@ AI behaviour for the Atlantean mutant — the most complex enemy in TR1 with 14 
 | 8     | Melee attack   | Close-range attack; highest damage                                 |
 | 9     | Aim front      | Sets front-aim flag; transitions to shoot (11)                     |
 | 10    | Aim rear       | Sets rear-aim flag; transitions to shoot (11)                      |
-| 11    | Shoot          | Fires meatball (from front aim) or bullet (from rear aim)          |
+| 11    | Shoot          | Fires large projectile (front aim) or fast shard (rear aim)        |
 | 12    | Transition     | Returns to idle                                                    |
 | 13    | Flying         | Model 20 only; reconfigured sensing; returns to idle on landing    |
 
@@ -81,7 +81,7 @@ AI behaviour for the Atlantean mutant — the most complex enemy in TR1 with 14 
 - If not yet fired AND touch contact (0x678): fires from bone position, sets queued = 1
 
 **State 9 (aim front):**
-- Sets flag bits 0 + 3 (meatball + something)
+- Sets flag bits 0 + 3 (large projectile type)
 - Lara still ahead → 11 (shoot)
 - Otherwise → 1 (idle)
 
@@ -91,8 +91,8 @@ AI behaviour for the Atlantean mutant — the most complex enemy in TR1 with 14 
 - Otherwise → 1 (idle)
 
 **State 11 (shoot):**
-- If flag bit 0 set: clears it, fires `shootAtlanteanMeatball` from bone position
-- Elif flag bit 1 set: clears it, fires `shootAtlanteanBullet` from bone position
+- If flag bit 0 set: clears it, fires a large slow projectile from bone position
+- Elif flag bit 1 set: clears it, fires a fast shard projectile from bone position
 
 **State 13 (flying, model 20 only):**
 - If flying flag cleared AND entity on ground (animation at base position) → 1 (idle)
@@ -121,8 +121,8 @@ AI behaviour for the Atlantean mutant — the most complex enemy in TR1 with 14 
 | New Game Plus (hard)   | -300   |
 
 - All melee attacks require touch contact (0x678) and set bit 4 of Lara's `ENTITY_STATUS`
-- All melee attacks use `getBonePosition` + a projectile/impact creation function from the same bone
-- States 9/10/11 fire projectiles (`shootAtlanteanMeatball` / `shootAtlanteanBullet`) — damage determined by projectile
+- All melee attacks use `getAttackOrigin` + a projectile/impact creation function from the same bone
+- States 9/10/11 fire projectiles (large slow projectile / fast shard) — damage determined by projectile type
 
 ### Level-Specific Kill Tracking
 
@@ -284,7 +284,7 @@ function EntityMutant(entityId):
 
         case 4 (ranged attack):
             if not yet fired and touch contact (0x678):
-                pos = getBonePosition(entity, boneData)
+                pos = getAttackOrigin(entity, boneData)
                 createImpactEffect(pos, entity.yaw, entity.room)
                 if normal: Lara health -= 150
                 else (hard NG+): Lara health -= 180
@@ -300,7 +300,7 @@ function EntityMutant(entityId):
 
         case 7 (close attack):
             if not yet fired and touch contact (0x678):
-                pos = getBonePosition(entity, boneData)
+                pos = getAttackOrigin(entity, boneData)
                 createImpactEffect(pos, entity.yaw, entity.room)
                 if normal: Lara health -= 100
                 else (hard NG+): Lara health -= 150
@@ -310,7 +310,7 @@ function EntityMutant(entityId):
 
         case 8 (melee):
             if not yet fired and touch contact (0x678):
-                pos = getBonePosition(entity, boneData)
+                pos = getAttackOrigin(entity, boneData)
                 createImpactEffect(pos, entity.yaw, entity.room)
                 if normal: Lara health -= 200
                 else (hard NG+): Lara health -= 300
@@ -319,7 +319,7 @@ function EntityMutant(entityId):
                 queued = 1
 
         case 9 (aim front):
-            flags |= 9  // bits 0 + 3 (meatball)
+            flags |= 9  // bits 0 + 3 (large projectile)
             if laraAhead: targetState = 11 (shoot)
             else: targetState = 1 (idle)
 
@@ -331,12 +331,12 @@ function EntityMutant(entityId):
         case 11 (shoot):
             if flags bit 0 set:
                 clear bit 0
-                pos = getBonePosition(entity, meatballBoneData)
-                shootAtlanteanMeatball(pos, entity.yaw, entity.room, entity.model)
+                pos = getAttackOrigin(entity, projectileBoneData)
+                fireSlowProjectile(pos, entity.yaw, entity.room, entity.model)
             elif flags bit 1 set:
                 clear bit 1
-                pos = getBonePosition(entity, bulletBoneData)
-                shootAtlanteanBullet(pos, entity.yaw, entity.room, entity.model)
+                pos = getAttackOrigin(entity, shardBoneData)
+                fireShardProjectile(pos, entity.yaw, entity.room, entity.model)
 
         case 12 (transition):
             → 1 (idle)

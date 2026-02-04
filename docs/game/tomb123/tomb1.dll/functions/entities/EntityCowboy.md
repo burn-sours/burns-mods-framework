@@ -229,7 +229,7 @@ function EntityCowboy(entityId):
                         if Lara dead: set tracking flag
                 else:
                     // Blind fire — spawn projectile
-                    bonePos = getBonePosition(entity, weaponData2.boneOffset)
+                    bonePos = getAttackOrigin(entity, weaponData2.boneOffset)
                     projectileId = spawnProjectile(bonePos, entity.yaw, entity.room)
                     entity.weaponState = 4
                     if projectileId != -1:
