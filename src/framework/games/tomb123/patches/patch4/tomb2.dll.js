@@ -80,7 +80,7 @@ module.exports = {
         CheckAim: { Address: "0x49da0", Params: ['pointer'], Return: 'void' },
         OnDamage: { Address: "0x763e0", Params: ['pointer', 'int', 'int'], Return: 'void' },
         SimulateLaraHair: { Address: "0x7c430", Params: ['int', 'int'], Return: 'void' },
-        ProcessGrenade: { Address: "0x454c0", Params: ['int16'], Return: 'void' },
+        EntityGrenade: { Address: "0x454c0", Params: ['int16'], Return: 'void' },
         ProcessHarpoon: { Address: "0x45000", Params: ['int16'], Return: 'void' },
         ModernGfx: { Address: "0x20870", Params: ['int', 'int', 'int', 'int', 'int', 'int', 'int'], Return: 'void' },
         OgGfxPrep: { Address: "0x3cb20", Params: ['int'], Return: 'uint64' },
