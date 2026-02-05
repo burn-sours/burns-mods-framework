@@ -1,7 +1,7 @@
 # Function: EntityCat
 
 ## Description
-AI behaviour shared by all lion-type enemies: lion, lioness, and panther. A ground predator with a claw swipe and a bite attack, with damage values that vary by model type on New Game Plus. Death animations are also model-specific.
+AI behaviour shared by all cat enemies: lion, lioness, and panther. A ground predator with a claw swipe and a bite attack, with damage values that vary by model type on New Game Plus. Death animations are also model-specific.
 
 ## Notes
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
