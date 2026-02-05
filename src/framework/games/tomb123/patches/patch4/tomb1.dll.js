@@ -84,7 +84,7 @@ module.exports = {
         DrawHealth: { Address: "0x62740", Params: ['int'], Return: 'void' },
         RoomChange: { Address: "0x1eab0", Params: ['int', 'int'], Return: 'void' },
         GetRelYawPitch: { Address: "0x664c0", Params: ['int', 'int', 'int', 'pointer'], Return: 'void' },
-        GetLineOfSight: { Address: "0x4fcc0", Params: ['pointer', 'pointer'], Return: 'int' },
+        TraceLineOfSight: { Address: "0x4fcc0", Params: ['pointer', 'pointer'], Return: 'int' },
         TraceRangeX: { Address: "0x4f900", Params: ['pointer', 'pointer'], Return: 'int' },
         TraceRangeZ: { Address: "0x4f540", Params: ['pointer', 'pointer'], Return: 'int' },
         CheckAim: { Address: "0x26520", Params: ['pointer'], Return: 'void' },

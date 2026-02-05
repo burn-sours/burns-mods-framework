@@ -1,4 +1,4 @@
-# Function: GetLineOfSight
+# Function: TraceLineOfSight
 
 ## Description
 Tests whether a clear line of sight exists between a source position and a target position by checking if the target point sits in open space (between floor and ceiling). If the target is inside geometry, it steps backward along the line in 4 samples to find the furthest reachable point, updates the target position in-place to that point, and returns 0.
@@ -36,7 +36,7 @@ Tests whether a clear line of sight exists between a source position and a targe
 ## Usage
 ### Hooking
 ```javascript
-mod.hook('GetLineOfSight')
+mod.hook('TraceLineOfSight')
     .onEnter(function(source, target) {
         // source: pointer to [x, y, z] Int32 values
         // target: pointer to [x, y, z] Int32 values + UInt16 room ID
@@ -62,7 +62,7 @@ target.add(4).writeS32(tgtY);
 target.add(8).writeS32(tgtZ);
 target.add(12).writeU16(roomId);
 
-const hasLOS = game.callFunction(game.module, 'GetLineOfSight', source, target);
+const hasLOS = game.callFunction(game.module, 'TraceLineOfSight', source, target);
 
 if (!hasLOS) {
     // target was updated to the furthest reachable point
@@ -74,7 +74,7 @@ if (!hasLOS) {
 
 ## Pseudocode
 ```
-function GetLineOfSight(source, target):
+function TraceLineOfSight(source, target):
     roomId = target.roomId
     tile = GetSector(target.x, target.y, target.z, roomId)
     floorHeight = CalculateFloorHeight(tile, target.x, target.y, target.z)

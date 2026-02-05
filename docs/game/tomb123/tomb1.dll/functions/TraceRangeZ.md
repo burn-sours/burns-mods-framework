@@ -6,7 +6,7 @@ Traces a horizontal ray along the Z axis from a source position to a target posi
 X and Y coordinates are linearly interpolated along the Z axis as the ray steps forward or backward through sectors.
 
 ## Notes
-- Both params use the same position struct as GetLineOfSight: three consecutive Int32 values (x, y, z) followed by a UInt16 room ID at byte offset 12
+- Both params use the same position struct as TraceLineOfSight: three consecutive Int32 values (x, y, z) followed by a UInt16 room ID at byte offset 12
 - Param 0 (source) is read-only. Param 1 (target) is read-write — modified in-place when the ray is blocked
 - If source and target have the same Z coordinate, returns 1 immediately (trivially in range)
 - Steps in 1024-unit increments (one sector width), aligned to sector boundaries

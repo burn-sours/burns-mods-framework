@@ -74,7 +74,7 @@ module.exports = {
         RenderBoat: { Address: "0x16930", Params: ['pointer'], Return: 'void' },
         RoomChange: { Address: "0x3c9b0", Params: ['int', 'int'], Return: 'void' },
         GetRelYawPitch: { Address: "0x98340", Params: ['int', 'int', 'int', 'pointer'], Return: 'void' },
-        GetLineOfSight: { Address: "0x7f750", Params: ['pointer', 'pointer'], Return: 'int' },
+        TraceLineOfSight: { Address: "0x7f750", Params: ['pointer', 'pointer'], Return: 'int' },
         TraceRangeX: { Address: "0x7f390", Params: ['pointer', 'pointer'], Return: 'int' },
         TraceRangeZ: { Address: "0x7efd0", Params: ['pointer', 'pointer'], Return: 'int' },
         CheckAim: { Address: "0x49da0", Params: ['pointer'], Return: 'void' },
