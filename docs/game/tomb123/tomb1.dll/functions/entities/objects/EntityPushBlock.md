@@ -1,4 +1,4 @@
-# Function: EntityPushblock
+# Function: EntityPushBlock
 
 ## Description
 Controls pushable block objects that Lara can push or pull. Handles gravity when the block is above the floor, plays an impact sound and visual effects on landing, adjusts sector collision floor height, and processes sector triggers at the final resting position. On level 17, tracks specific block placements for puzzle progression.
@@ -40,7 +40,7 @@ Controls pushable block objects that Lara can push or pull. Handles gravity when
 ### Hooking
 ```javascript
 // Log when a pushblock lands and triggers
-mod.hook('EntityPushblock')
+mod.hook('EntityPushBlock')
     .onEnter(function(entityId) {
         const entities = game.readVar(game.module, 'Entities');
         const entity = entities.add(entityId * ENTITY_SIZE);
@@ -58,12 +58,12 @@ mod.hook('EntityPushblock')
 
 ### Calling from mod code
 ```javascript
-game.callFunction(game.module, 'EntityPushblock', pushblockEntityIndex);
+game.callFunction(game.module, 'EntityPushBlock', pushblockEntityIndex);
 ```
 
 ## Pseudocode
 ```
-function EntityPushblock(entityId):
+function EntityPushBlock(entityId):
     entity = entities[entityId]
 
     // Initial setup — block already placed

@@ -103,7 +103,7 @@ module.exports = {
         EntityLavaFlow: { Address: "0x43f50", Params: ['int'], Return: 'void' },
         EntityLightningBall: { Address: "0x2b570", Params: ['int'], Return: 'void' },
         EntityMovingBlock: { Address: "0x2edc0", Params: ['int'], Return: 'void' },
-        EntityPushblock: { Address: "0x2e1d0", Params: ['int'], Return: 'void' },
+        EntityPushBlock: { Address: "0x2e1d0", Params: ['int'], Return: 'void' },
         EntitySwitch: { Address: "0x37310", Params: ['int'], Return: 'void' },
         EntityWolf: { Address: "0x49780", Params: ['int'], Return: 'void' },
         EntityBat: { Address: "0x10e0", Params: ['int'], Return: 'void' },
