@@ -1,4 +1,4 @@
-# Function: GetRelYawPitch
+# Function: CalculateYawPitch
 
 ## Description
 Computes the yaw and pitch angles from a 3D coordinate difference. Takes three axis deltas and writes two angle values (yaw and pitch) to the output pointer.
@@ -32,7 +32,7 @@ Yaw is calculated from the two horizontal components using `Atan2`. Pitch is cal
 ## Usage
 ### Hooking
 ```javascript
-mod.hook('GetRelYawPitch')
+mod.hook('CalculateYawPitch')
     .onEnter(function(xDiff, yDiff, zDiff, result) {
         // xDiff, yDiff, zDiff: coordinate deltas
         // result: pointer to output [yaw, pitch] (two Int16 values)
@@ -43,14 +43,14 @@ mod.hook('GetRelYawPitch')
 ```javascript
 // Compute angles from position A to position B
 const result = game.alloc(4); // two Int16 values
-game.callFunction(game.module, 'GetRelYawPitch', xB - xA, yB - yA, zB - zA, result);
+game.callFunction(game.module, 'CalculateYawPitch', xB - xA, yB - yA, zB - zA, result);
 const yaw = result.readS16();
 const pitch = result.add(2).readS16();
 ```
 
 ## Pseudocode
 ```
-function GetRelYawPitch(xDiff, yDiff, zDiff, result):
+function CalculateYawPitch(xDiff, yDiff, zDiff, result):
     // compute yaw from horizontal components
     yaw = Atan2(zDiff, xDiff)
     result[0] = yaw

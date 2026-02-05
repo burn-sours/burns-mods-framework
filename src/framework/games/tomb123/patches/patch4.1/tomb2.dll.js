@@ -73,7 +73,7 @@ module.exports = {
         RenderSkidoo: { Address: "0x6cde0", Params: ['pointer'], Return: 'void' },
         RenderBoat: { Address: "0x167e0", Params: ['pointer'], Return: 'void' },
         RoomChange: { Address: "0x3c4a0", Params: ['int', 'int'], Return: 'void' },
-        GetRelYawPitch: { Address: "0x99ce0", Params: ['int', 'int', 'int', 'pointer'], Return: 'void' },
+        CalculateYawPitch: { Address: "0x99ce0", Params: ['int', 'int', 'int', 'pointer'], Return: 'void' },
         TraceLineOfSight: { Address: "0x7ffa0", Params: ['pointer', 'pointer'], Return: 'int' },
         TraceRangeX: { Address: "0x7fbe0", Params: ['pointer', 'pointer'], Return: 'int' },
         TraceRangeZ: { Address: "0x7f820", Params: ['pointer', 'pointer'], Return: 'int' },

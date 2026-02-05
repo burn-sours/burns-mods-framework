@@ -83,7 +83,7 @@ module.exports = {
         DrawQuad: { Address: "0x52a50", Params: ['int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'float', 'float', 'float', 'float', 'int'], Return: 'void' },
         DrawHealth: { Address: "0x64f90", Params: ['int'], Return: 'void' },
         RoomChange: { Address: "0x1f010", Params: ['int', 'int'], Return: 'void' },
-        GetRelYawPitch: { Address: "0x68e70", Params: ['int', 'int', 'int', 'pointer'], Return: 'void' },
+        CalculateYawPitch: { Address: "0x68e70", Params: ['int', 'int', 'int', 'pointer'], Return: 'void' },
         TraceLineOfSight: { Address: "0x514e0", Params: ['pointer', 'pointer'], Return: 'int' },
         TraceRangeX: { Address: "0x51120", Params: ['pointer', 'pointer'], Return: 'int' },
         TraceRangeZ: { Address: "0x50d60", Params: ['pointer', 'pointer'], Return: 'int' },
