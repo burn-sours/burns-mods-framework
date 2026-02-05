@@ -1,4 +1,4 @@
-# Function: UpdateLighting
+# Function: CalculateLighting
 
 ## Description
 Calculates lighting for a given world position within a room. Iterates through the room's light sources, computes distance-based attenuation, and determines the brightest light affecting the position. Outputs an ambient light level and directional lighting factor.
@@ -36,7 +36,7 @@ This function has different code paths depending on the game version and graphic
 ## Usage
 ### Hooking
 ```javascript
-mod.hook('UpdateLighting')
+mod.hook('CalculateLighting')
     .onEnter(function(x, y, z, roomIndex, context) {
         // Called before lighting calculation
         console.log('Calculating light at:', x, y, z, 'room:', roomIndex);
@@ -44,7 +44,7 @@ mod.hook('UpdateLighting')
 ```
 
 ```javascript
-mod.hook('UpdateLighting')
+mod.hook('CalculateLighting')
     .onLeave(function(returnValue, x, y, z, roomIndex, context) {
         // Lighting calculation complete
     });

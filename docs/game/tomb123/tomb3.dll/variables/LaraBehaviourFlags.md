@@ -1,34 +1,49 @@
-# Variable: LaraBehaviourFlags
+# LaraBehaviourFlags
 
-## Description
-Bitmask controlling various Lara behaviour/state flags.
-
-## Notes
-- Each bit represents a different behaviour state
-- Needs more info: full bit mapping not yet documented
+Bitfield controlling various Lara behavior and state flags. TR3-only variable (not present in TR1/TR2).
 
 ## Details
 
-| Field     | Value           |
-|-----------|-----------------|
-| Type      | `Int8`          |
+| Property | Value |
+|----------|-------|
+| Type | Int8 |
+| Games | TR3 |
 
-## Known Bits
+## Known Flags
 
-| Bit | Mask   | Description                    |
-|-----|--------|--------------------------------|
-| 6   | `0x40` | Currently climbing wall        |
+| Bit | Value | Description |
+|-----|-------|-------------|
+| 2 | 0x04 | Set during climbing state transitions |
+| 4 | 0x10 | State flag (checked during hazard interactions) |
+| 6 | 0x40 | Climbing active |
+| 11 | 0x800 | Periodic processing flag (cleared after handling) |
+
+> **Note:** Not all bits are fully documented. The flag meanings were derived from decompiled code analysis.
 
 ## Usage
-### Calling from mod code
-```javascript
-const flags = game.readVar(game.module, 'LaraBehaviourFlags');
 
-// Check if Lara is climbing
-if (flags & 0x40) {
-    // wall climbing
-}
+```javascript
+const module = 'tomb3.dll';
+
+// Check if climbing flag is set
+const flags = game.readMemoryVariable('LaraBehaviourFlags', module);
+const isClimbing = (flags & 0x40) !== 0;
 
 // Set climbing flag
-game.writeVar(game.module, 'LaraBehaviourFlags', flags | 0x40);
+game.writeMemoryVariable(
+    'LaraBehaviourFlags',
+    game.readMemoryVariable('LaraBehaviourFlags', module) | 0x40,
+    module
+);
+
+// Clear a flag (example: clear bit 4)
+game.writeMemoryVariable(
+    'LaraBehaviourFlags',
+    game.readMemoryVariable('LaraBehaviourFlags', module) & ~0x10,
+    module
+);
 ```
+
+## See Also
+
+- [LaraClimbState](LaraClimbState.md) — Separate climbing state variable
