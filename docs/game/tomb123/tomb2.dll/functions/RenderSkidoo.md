@@ -27,23 +27,17 @@ Renders the skidoo (snowmobile) vehicle entity. Handles mesh rendering with inte
 ## Usage
 ### Hooking
 ```javascript
-// Skip skidoo rendering entirely
-mod.hook(game.module, 'RenderSkidoo', {
-    onEnter(entity) {
-        // Return early to hide the skidoo
-        // Or modify entity data before rendering
-    }
-});
+mod.hook('RenderSkidoo')
+    .onEnter(function(entity) {
+        // entity is a pointer to the skidoo entity data
+    });
 ```
 
 ```javascript
-// Execute code after skidoo renders
-mod.hook(game.module, 'RenderSkidoo', {
-    onLeave(returnValue, entity) {
+mod.hook('RenderSkidoo')
+    .onLeave(function(returnValue, entity) {
         // Skidoo has finished rendering
-        // Could render additional effects here
-    }
-});
+    });
 ```
 
 ## Pseudocode
