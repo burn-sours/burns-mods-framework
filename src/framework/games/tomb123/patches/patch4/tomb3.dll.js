@@ -84,7 +84,7 @@ module.exports = {
         EntityGrenade: { Address: "0x62890", Params: ['int16'], Return: 'void' },
         ProcessRocket: { Address: "0x61750", Params: ['int16'], Return: 'void' },
         EntityHarpoon: { Address: "0x60b40", Params: ['int16'], Return: 'void' },
-        ModernGfx: { Address: "0x30540", Params: ['int', 'int', 'int', 'int', 'int', 'int', 'int'], Return: 'void' },
+        CreateGraphic: { Address: "0x30540", Params: ['int', 'int', 'int', 'int', 'int', 'int', 'int'], Return: 'void' },
         RemoveEntity: { Address: "0x51040", Params: ['int'], Return: 'void' },
         GetEntityBox: { Address: "0xc3bb0", Params: ['pointer'], Return: 'pointer' },
         RecordWorldState: { Address: "0x9c340", Params: ['int'], Return: 'void' },

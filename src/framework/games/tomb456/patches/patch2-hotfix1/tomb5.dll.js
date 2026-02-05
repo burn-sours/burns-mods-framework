@@ -26,7 +26,7 @@ module.exports = {
         TraceRangeZ: { Address: "0x125d0", Params: ['pointer', 'pointer'], Return: 'int' },
         CheckAim: { Address: "0x5beb0", Params: ['pointer'], Return: 'void' },
         OnDamage: { Address: "0x5c810", Params: ['pointer', 'int', 'int', 'int'], Return: 'void' },
-        ModernGfx: { Address: "0x339b0", Params: ['int', 'int', 'int', 'int', 'int', 'int', 'int'], Return: 'void' },
+        CreateGraphic: { Address: "0x339b0", Params: ['int', 'int', 'int', 'int', 'int', 'int', 'int'], Return: 'void' },
         GetEntityBox: { Address: "0x9c710", Params: ['pointer'], Return: 'pointer' },
         RemoveEntity: { Address: "0x45fa0", Params: ['int'], Return: 'void' },
         SimulateLaraHair: { Address: "0xedcc0", Params: ['int', 'int'], Return: 'void' },
