@@ -130,7 +130,7 @@ function RenderLara(lara):
                 applyRotation(0, 0xC004, aimAngle << 8)
                 setLightIntensity(600)
                 renderMesh(weaponMeshPointer, 1)
-                drawSetup(ogGraphicsMode | 0x2E, tempMatrix)
+                DrawSetup(ogGraphicsMode | 0x2E, tempMatrix)
                 renderMuzzleFlashSprite()
         else:
             renderGunEffect(LaraGunType, rightHandData, 13)
@@ -152,7 +152,7 @@ function RenderLara(lara):
                 applyRotation(0, 0xC004, aimAngle << 8)
                 setLightIntensity(600)
                 renderMesh(weaponMeshPointer, 1)
-                drawSetup(ogGraphicsMode | 0x2E, tempMatrix)
+                DrawSetup(ogGraphicsMode | 0x2E, tempMatrix)
                 renderMuzzleFlashSprite()
         else:
             renderGunEffect(LaraGunType, leftHandData, 10)
@@ -161,7 +161,7 @@ function RenderLara(lara):
     popMatrix()
     
     // Final passes
-    getEntityBox(lara)
+    GetEntityBox(lara)
     setupEntityBounds(lara)
     finalLightingPass()
 ```
