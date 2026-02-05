@@ -35,9 +35,18 @@ Brief description of what this function does.
 ## Usage
 ### Hooking
 ```javascript
-game.hookFunction(game.module, 'Name', (args) => {
-    // args[0], args[1], args[2]
-});
+mod.hook('Name')
+    .onEnter(function(arg0, arg1, arg2) {
+        // Called before the function executes
+    });
+```
+
+```javascript
+mod.hook('Name')
+    .onLeave(function(returnValue, arg0, arg1, arg2) {
+        // Called after the function executes
+        // returnValue is null for void functions
+    });
 ```
 
 ### Calling from mod code
