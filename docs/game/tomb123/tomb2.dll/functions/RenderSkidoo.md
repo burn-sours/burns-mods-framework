@@ -43,46 +43,111 @@ mod.hook('RenderSkidoo')
 ## Pseudocode
 ```
 function RenderSkidoo(entity):
+    meshIndex = 0
+    flags = 0
+    
     entityBox = GetEntityBox(entity)
     
-    // Read entity flags
-    flags = read entity flag data (0 if null)
-    savedRoomId = entity room ID
+    // Read flags from entity flag pointer if present
+    if entity.flagPointer != null:
+        flags = *entity.flagPointer
     
-    // Select model based on flag bit 2
+    savedRoomId = entity.roomId
+    
+    // Select model data source based on flag bit 2
     if (flags & 4) == 0:
-        use standard room model
+        // Standard path: use room-indexed model table
+        modelData = modelTable[entity.roomId]
     else:
-        // OG graphics: override to model 51
-        if OG mode enabled:
-            set entity room to 51
-        use alternate model data
+        // Alternate path: OG graphics mode
+        if ogGraphicsFlag & 1:
+            entity.roomId = 51  // Skidoo model ID
+        modelData = alternateModelData
     
-    // Setup transformation matrix from entity position/rotation
+    // Setup entity bounding/transform
+    setupEntityBounds(entity, entityBox)
     
-    // OG graphics path
-    if model has mesh data and OG mode enabled:
-        render entity mesh
+    // Push matrix stack, copy current matrix state
+    pushMatrix()
+    
+    // Apply entity rotation and position to matrix
+    applyEntityTransform(entity.rotation, entity.position)
+    
+    // OG graphics rendering path
+    if modelData.meshPointer != 0 and ogGraphicsFlag & 1:
+        renderMesh(entity)
         
-        // Driver appearance swap (from flags upper byte)
-        if driver slot valid:
-            save mesh data
-            apply alternate appearance
-            render again
-            restore mesh data
-        return
+        // Driver appearance swap
+        driverSlot = flags >> 8
+        if entity.flagPointer != 0:
+            slotOffset = driverSlot * 0x8f8
+            if slotValid(driverSlot) and slotHasMesh(slotOffset):
+                // Save original model mesh data (6 mesh entries)
+                savedMeshData = modelData.meshes[0..5]
+                
+                // Copy alternate appearance mesh data
+                modelData.meshes[0..5] = alternateAppearance[slotOffset]
+                
+                // Render with swapped appearance
+                renderMesh(entity)
+                
+                // Restore original mesh data
+                modelData.meshes[0..5] = savedMeshData
+        
+        goto cleanup
     
-    // Modern graphics path
+    // Modern graphics rendering path
     // Select alternate mesh based on flag bits 0-1
-    alternateMesh = none
-    if (flags & 3) == 1: alternateMesh = slot 1
-    if (flags & 3) == 2: alternateMesh = slot 7
+    alternateMesh = null
+    if (flags & 3) == 1:
+        alternateMesh = meshTable[baseIndex + 1]
+    else if (flags & 3) == 2:
+        alternateMesh = meshTable[baseIndex + 7]
     
-    // Render each mesh part enabled in mesh bit flags
-    for each enabled mesh part:
-        // Interpolate frame transforms (uses InterpolationFactor)
-        // Apply camera offset
-        // Render mesh (alternate for first part if set)
+    // Iterate through mesh parts
+    meshCount = modelData.meshCount
+    meshBit = 1
     
+    while meshIndex < meshCount:
+        // Check if this mesh part is enabled
+        if entity.meshBits & meshBit:
+            // Calculate frame data offset for this mesh
+            frameOffset = meshIndex * 0x30
+            
+            // Get interpolation factor (or 0x100 if disabled)
+            interpFactor = InterpolationFactor
+            if interpolationDisabled:
+                interpFactor = 0x100
+            
+            // Interpolate between current and previous frame transforms
+            interpolateTransform(
+                entity.currentFrame + frameOffset,
+                entity.previousFrame + frameOffset,
+                interpFactor
+            )
+            
+            // Add camera offset to matrix
+            matrix[3] += cameraOffsetX
+            matrix[7] += cameraOffsetY
+            matrix[11] += cameraOffsetZ
+            
+            // Finalize transform
+            finalizeTransform()
+            
+            // Render mesh
+            if meshIndex == 0 or alternateMesh == null:
+                renderMeshPart(modelData.meshes[meshIndex], 1)
+            else:
+                renderMeshPart(alternateMesh, 1)
+                alternateMesh = null
+        
+        meshIndex++
+        meshBit = (meshBit << 1) | (meshBit >> 31)  // Rotate bit
+    
+cleanup:
     // Restore original room ID
+    entity.roomId = savedRoomId
+    
+    // Pop matrix stack
+    popMatrix()
 ```
