@@ -1,75 +1,188 @@
-# RenderLara
+# Function: RenderLara
 
-Renders Lara's complete character model including body, equipped weapons, back pocket items, and hair.
+## Description
+Renders Lara's model. Handles culling checks, lighting setup, body part rendering with bone interpolation, back pocket item rendering, and gun model rendering for left/right hands.
 
-## Signature
+If Lara is flagged as invisible, the function returns immediately. Otherwise it performs a bone-based culling check against the camera — if all bone positions are within culling range, rendering is skipped.
 
-```c
-void RenderLara(Entity* entity)
-```
+Each body part is iterated (up to 15 bones) and rendered with matrix interpolation for smooth movement between ticks. Gun models are rendered separately for left and right hands based on gun flags.
 
-## Parameters
-
-| Parameter | Type | Description |
-|-----------|------|-------------|
-| `entity` | `Entity*` | Pointer to Lara's entity structure |
+## Notes
+- The invisible flag is checked via a bitmask (`0x100`) on `ENTITY_FLAGS`
+- The culling check only runs under certain conditions (OG graphics flags set and a state check)
+- **TR3-specific**: Checks `VehicleId` — skips entity setup if Lara is in a vehicle
+- **TR3-specific**: Renders back pocket items (e.g., shotgun on back) when equipped
+- **TR3-specific**: Special weapon sprite rendering for certain level types (level type 3) with muzzle flash effects
+- Gun rendering for right hand: conditional on `LaraGunFlags` bit 3 (`0x8`)
+- Gun rendering for left hand: conditional on `LaraGunFlags` bit 2 (`0x4`)
+- Interpolation can be disabled by an internal flag, in which case `0x100` (fixed) is used
+- Sets behavior flag `0x1000` on `LaraBehaviourFlags` when rendering proceeds
 
 ## Details
 
-| Property | Value |
-|----------|-------|
-| **Module** | tomb3.dll |
-| **Address** | 0x298b0 |
-| **Params** | `['pointer']` |
-| **Return** | `void` |
+| Field     | Value       |
+|-----------|-------------|
+| Usage     | `Hook`      |
+| Params    | `pointer`   |
+| Return    | `void`      |
 
-## Behavior
+### Parameters
 
-1. **Visibility Check**: Returns immediately if entity has invisibility flag (0x100) set
-2. **Frustum Culling**: Iterates through 15 bone positions checking distance from camera; skips rendering if all bones are outside view range
-3. **Behavior Flags**: Sets flag 0x1000 on Lara's behavior flags when rendering proceeds
-4. **Vehicle Check**: Performs additional setup when Lara is not in a vehicle
-5. **Matrix Setup**: Pushes transformation matrix and sets up rendering transforms
-6. **Body Part Rendering**: Iterates through 15 body mesh slots, rendering each visible part based on mesh visibility bits with interpolation support
-7. **Back Pocket Item**: Renders equipped back pocket item (shotgun, harpoon gun, etc.) if present and visible
-8. **Right Hand Weapon**: Renders weapon in right hand when gun flags indicate active (bit 3)
-9. **Left Hand Weapon**: Renders weapon in left hand when gun flags indicate active (bit 2)
-10. **Special Weapon Effects**: Handles special rendering for certain weapon types including muzzle flash sprites
-11. **Hair Simulation**: Triggers hair rendering at the end of the process
-12. **Matrix Cleanup**: Pops transformation matrix after rendering completes
+| #   | Type      | Description                  |
+|-----|-----------|------------------------------|
+| 0   | `pointer` | Pointer to Lara entity data  |
 
-## Tomb3-Specific
-
-- Back pocket item rendering system for larger weapons
-- Enhanced weapon rendering with level-type-specific handling
-- Special sprite-based muzzle flash rendering for certain weapon configurations
-
-## Use Cases
-
-- **Custom Lara Models**: Replace or modify body part rendering
-- **Weapon Visuals**: Customize equipped weapon appearance
-- **Special Effects**: Add rendering effects during Lara's draw call
-- **Visibility Control**: Implement custom culling or LOD systems
-
-## Example
-
+## Usage
+### Hooking
 ```javascript
-// Add glow effect when Lara is rendering
-const { hooks, memory, utils } = framework;
-
-hooks.tomb3.dll.RenderLara.onEnter = function(entity) {
-    // Custom pre-render logic
-    console.log('Rendering Lara at:', memory.read.int32(entity + 0x10));
-};
-
-hooks.tomb3.dll.RenderLara.onLeave = function(returnValue, entity) {
-    // Post-render effects
-    // returnValue is null for void functions
-};
+mod.hook('RenderLara')
+    .onEnter(function(lara) {
+        // lara is a pointer to Lara's entity data
+    });
 ```
 
-## Related
+```javascript
+mod.hook('RenderLara')
+    .onLeave(function(returnValue, lara) {
+        // Lara has finished rendering
+    });
+```
 
-- [RenderEntity](./RenderEntity.md) - Generic entity rendering
-- [UpdateLaraAppearance](./UpdateLaraAppearance.md) - Updates Lara's visual state
-- [SimulateLaraHair](./SimulateLaraHair.md) - Hair physics simulation
+## Pseudocode
+```
+function RenderLara(lara):
+    // Check invisible flag
+    if Lara.ENTITY_FLAGS & 0x100:
+        return
+    
+    // Bone-based culling check (OG graphics mode)
+    if ogGraphicsFlag1 and ogGraphicsFlag2 and stateCheck != 3:
+        for boneIndex = 0 to 14:
+            GetBonePosition(Lara, position, boneIndex)
+            distance = distanceSquared(position, cameraPosition)
+            threshold = boneRadius + 32
+            if distance < threshold * threshold:
+                return  // too close, skip render
+    
+    // Set render active flag
+    LaraBehaviourFlags |= 0x1000
+    
+    // Skip certain renders based on level and state
+    if levelType == 3 and lara.field_0x7a == 0 and levelId != 5:
+        return
+    
+    // Entity setup (skip if in vehicle)
+    if VehicleId == -1:
+        setupEntityLighting(lara)
+    
+    // Push matrix stack
+    pushMatrix()
+    
+    // Apply entity transform
+    applyEntityTransform(lara.rotation, lara.position)
+    
+    // Get animation frame bounds
+    frameResult = getAnimationFrameBounds(lara)
+    
+    if frameResult == 0:
+        // Render each body part (15 bones)
+        meshBit = 1
+        for boneIndex = 0 to 14:
+            if lara.meshBits & meshBit:
+                // Get interpolation factor
+                interpFactor = InterpolationFactor
+                if interpolationDisabled:
+                    interpFactor = 0x100
+                
+                // Interpolate between current and previous frame
+                interpolateTransform(currentBone, previousBone, interpFactor)
+                
+                // Add camera offset
+                addCameraOffset()
+                
+                // Finalize and render
+                finalizeTransform()
+                renderMesh(boneMeshPointer, 1)
+            
+            meshBit = (meshBit << 1) | (meshBit >> 31)
+    
+    // Back pocket item rendering (TR3-specific)
+    if not ogGraphicsMode and backPocketSlot != 0 and (lara.meshBits & 0x80):
+        // Push matrix for back item
+        interpFactor = InterpolationFactor
+        if interpolationDisabled:
+            interpFactor = 0x100
+        
+        // Interpolate back bone transform
+        interpolateTransform(backBoneCurrent, backBonePrevious, interpFactor)
+        addCameraOffset()
+        finalizeTransform()
+        
+        // Apply item rotation offset
+        applyItemRotation(itemRotationData)
+        
+        // Parse mesh vertex data and render
+        renderBackPocketItem(backPocketSlot)
+    
+    // Right hand gun rendering
+    if LaraGunFlags & 0x8:
+        interpFactor = InterpolationFactor
+        if interpolationDisabled:
+            interpFactor = 0x100
+        
+        interpolateTransform(rightHandCurrent, rightHandPrevious, interpFactor)
+        addCameraOffset()
+        finalizeTransform()
+        
+        if levelType == 3:
+            // TR3-specific: special weapon rendering with muzzle flash sprites
+            if gunState != 4 and specialFlag & 1:
+                applyWeaponOffset(ogGraphicsMode)
+                applyRotation(0, 0xC004, aimAngle << 8)
+                setLightIntensity(600)
+                
+                if not ogGraphicsMode or alternateRenderFlag == 0:
+                    renderMesh(weaponMeshPointer, 1)
+                    draw_setup(ogGraphicsMode | 0x2E, tempMatrix)
+                    // Render muzzle flash sprite
+                    renderSprite(flashSpriteData)
+                else:
+                    renderAlternateWeapon()
+        else:
+            renderGunEffect(LaraGunType, rightHandData, 13)
+    
+    // Left hand gun rendering
+    if LaraGunFlags & 0x4:
+        interpFactor = InterpolationFactor
+        if interpolationDisabled:
+            interpFactor = 0x100
+        
+        interpolateTransform(leftHandCurrent, leftHandPrevious, interpFactor)
+        addCameraOffset()
+        finalizeTransform()
+        
+        if levelType == 3:
+            // TR3-specific: special weapon rendering with muzzle flash sprites
+            if gunState != 4 and specialFlag & 1:
+                applyWeaponOffset(ogGraphicsMode)
+                applyRotation(0, 0xC004, aimAngle << 8)
+                setLightIntensity(600)
+                
+                if not ogGraphicsMode or alternateRenderFlag == 0:
+                    renderMesh(weaponMeshPointer, 1)
+                    draw_setup(ogGraphicsMode | 0x2E, tempMatrix)
+                    // Render muzzle flash sprite
+                    renderSprite(flashSpriteData)
+                else:
+                    renderAlternateWeapon()
+        else:
+            renderGunEffect(LaraGunType, leftHandData, 10)
+    
+    // Pop main matrix
+    popMatrix()
+    
+    // Final lighting/setup pass
+    entityBox = GetEntityBox(lara)
+    setupEntityBounds(lara, entityBox)
+    finalLightingPass()
+```
