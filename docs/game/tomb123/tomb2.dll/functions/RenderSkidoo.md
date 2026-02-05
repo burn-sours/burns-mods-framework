@@ -49,90 +49,46 @@ mod.hook(game.module, 'RenderSkidoo', {
 ## Pseudocode
 ```
 function RenderSkidoo(entity):
-    // Get bounding box for culling/collision
     entityBox = GetEntityBox(entity)
     
-    // Read flags from entity data
-    flags = 0
-    if entity.flagsPointer != null:
-        flags = *entity.flagsPointer
+    // Read entity flags
+    flags = read entity flag data (0 if null)
+    savedRoomId = entity room ID
     
-    // Save current room ID
-    savedRoomId = entity.roomId
-    
-    // Select model data based on flags
+    // Select model based on flag bit 2
     if (flags & 4) == 0:
-        modelData = roomModels[entity.roomId]
+        use standard room model
     else:
-        // OG graphics mode - use alternate model
-        if ogGraphicsEnabled:
-            entity.roomId = 51  // Skidoo model ID
-        modelData = alternateModelData
+        // OG graphics: override to model 51
+        if OG mode enabled:
+            set entity room to 51
+        use alternate model data
     
-    // Setup entity transformation
-    SetupEntityTransform(entity, entityBox)
+    // Setup transformation matrix from entity position/rotation
     
-    // Push matrix stack
-    PushMatrixStack()
-    
-    // Apply entity position/rotation to matrix
-    ApplyEntityRotation(entity.rotation, entity.position)
-    
-    // Check for OG mode mesh rendering
-    if modelData.meshPointer != 0 and ogGraphicsEnabled:
-        RenderEntityMesh(entity)
+    // OG graphics path
+    if model has mesh data and OG mode enabled:
+        render entity mesh
         
-        // Handle driver appearance swap if available
-        driverSlot = (flags >> 8)
-        if entity.flagsPointer != 0 and driverSlot valid:
-            // Save original mesh data
-            // Apply alternate driver appearance
-            // Render with swapped appearance
-            // Restore original mesh data
-        
-        goto cleanup
+        // Driver appearance swap (from flags upper byte)
+        if driver slot valid:
+            save mesh data
+            apply alternate appearance
+            render again
+            restore mesh data
+        return
     
-    // Determine alternate mesh based on flag bits
-    alternateMesh = null
-    if (flags & 3) == 1:
-        alternateMesh = meshTable[baseIndex + 1]
-    else if (flags & 3) == 2:
-        alternateMesh = meshTable[baseIndex + 7]
+    // Modern graphics path
+    // Select alternate mesh based on flag bits 0-1
+    alternateMesh = none
+    if (flags & 3) == 1: alternateMesh = slot 1
+    if (flags & 3) == 2: alternateMesh = slot 7
     
-    // Iterate through mesh parts
-    meshCount = modelData.meshCount
-    meshBits = entity.meshBits
-    meshIndex = 0
+    // Render each mesh part enabled in mesh bit flags
+    for each enabled mesh part:
+        // Interpolate frame transforms (uses InterpolationFactor)
+        // Apply camera offset
+        // Render mesh (alternate for first part if set)
     
-    for i = 0 to meshCount:
-        if (meshBits & (1 << i)) != 0:
-            // Apply interpolation for smooth rendering
-            if interpolationEnabled:
-                factor = cameraInterpolationFactor
-            else:
-                factor = 256  // Full weight to current frame
-            
-            InterpolateMeshTransform(entity.currentFrame, entity.previousFrame, factor)
-            
-            // Add camera offset to matrix
-            AddCameraOffset()
-            
-            // Finalize transformation
-            FinalizeTransform()
-            
-            // Render the mesh
-            if meshIndex == 0 or alternateMesh == null:
-                RenderMesh(modelData.meshes[i], 1)
-            else:
-                RenderMesh(alternateMesh, 1)
-                alternateMesh = null
-        
-        meshIndex++
-    
-cleanup:
     // Restore original room ID
-    entity.roomId = savedRoomId
-    
-    // Pop matrix stack
-    PopMatrixStack()
 ```
