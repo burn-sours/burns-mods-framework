@@ -131,6 +131,7 @@ module.exports = {
         EntityNatla: { Address: "0x2f780", Params: ['int'], Return: 'void' },
         EntityTorso: { Address: "0x2eff0", Params: ['int'], Return: 'void' },
         EntityAtlanteanProjectile: { Address: "0x47b00", Params: ['int'], Return: 'void' },
+        CreateBloodSplatter: { Address: "0x12ca0", Params: ['int', 'int', 'int', 'uint16', 'int16', 'int16'], Return: 'int' },
         AdjustEntityCollision: { Address: "0x2eef0", Params: ['pointer', 'int'], Return: 'void' },
         SenseLara: { Address: "0x1b30", Params: ['pointer', 'pointer'], Return: 'void' },
         UpdateEnemyMood: { Address: "0x2280", Params: ['pointer', 'pointer', 'int'], Return: 'void' },

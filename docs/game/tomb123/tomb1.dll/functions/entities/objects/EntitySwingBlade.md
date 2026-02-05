@@ -14,7 +14,7 @@ Controls swinging blade trap objects. Uses the trigger/timer toggle to activate 
   - Normal: deals -100 damage to Lara's health
   - NG+ on levels outside 16–19 with mid-range difficulty: instant kill (health set to -1)
   - Sets Lara's trap damage flag (status bit 4)
-  - Creates a blood splatter effect at a randomised position near Lara (random X/Z offset, random Y based on height, random yaw offset) using the RNG
+  - Calls `CreateBloodSplatter` at a randomised position near Lara (random X/Z offset, random Y based on height, random yaw offset) using the RNG
   - If Lara dies and the level is outside 16–19, sets a game death flag
 - Updates floor tracking via `GetSector` + `CalculateFloorHeight` each frame (stores previous and current floor)
 - Calls `ProcessEntityAnimation` every frame
@@ -90,7 +90,7 @@ function EntitySwingBlade(entityId):
         set Lara status bit 4  // trap damage
 
         // Blood splatter at randomised position near Lara
-        createBloodEffect(
+        CreateBloodSplatter(
             Lara.x + random offset,
             Lara.y - random height,
             Lara.z + random offset,
