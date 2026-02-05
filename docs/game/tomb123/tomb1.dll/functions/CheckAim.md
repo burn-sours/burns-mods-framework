@@ -9,7 +9,7 @@ If no target exists, clears all aiming state immediately. Otherwise, calculates 
 - The source position is Lara's world position with a vertical offset applied (gun height)
 - The target's 3D position is resolved from the entity pointed to by LaraAimingEnemy
 - Range checks use TraceRangeX and TraceRangeZ — the one covering the greater distance axis runs first
-- Line of sight is checked via GetLOS after resolving the target's sector with GetSector
+- Line of sight is checked via GetLineOfSight after resolving the target's sector with GetSector
 - The screen boundaries parameter contains 12 consecutive Int16 angle values: 3 zones × (yaw min, yaw max, pitch min, pitch max)
   - Zone 0 (indices 0–3): inner lock-on zone — if target is within this, aiming locks on
   - Zone 1 (indices 4–7): left gun persistence zone — if already aiming and target leaves this, left gun stops aiming
@@ -89,7 +89,7 @@ function CheckAim(aimBoundaries):
 
     // Verify line of sight
     GetSector(targetPos.x, targetPos.y, targetPos.z, roomId)
-    losResult = GetLOS(source, targetPos)
+    losResult = GetLineOfSight(source, targetPos)
 
     if losResult == 0 or hResult != 1 or vResult != 1:
         LaraAimingLeft = 0

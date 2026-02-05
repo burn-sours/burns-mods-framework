@@ -75,7 +75,7 @@ module.exports = {
         RoomChange: { Address: "0x51e80", Params: ['int', 'int'], Return: 'void' },
         RenderEntity: { Address: "0x296f0", Params: ['pointer'], Return: 'void' },
         GetRelYawPitch: { Address: "0xe7920", Params: ['int', 'int', 'int', 'pointer'], Return: 'void' },
-        GetLOS: { Address: "0xc8e80", Params: ['pointer', 'pointer'], Return: 'int' },
+        GetLineOfSight: { Address: "0xc8e80", Params: ['pointer', 'pointer'], Return: 'int' },
         TraceRangeX: { Address: "0xc8ac0", Params: ['pointer', 'pointer'], Return: 'int' },
         TraceRangeZ: { Address: "0xc8700", Params: ['pointer', 'pointer'], Return: 'int' },
         CheckAim: { Address: "0x682d0", Params: ['pointer'], Return: 'void' },
