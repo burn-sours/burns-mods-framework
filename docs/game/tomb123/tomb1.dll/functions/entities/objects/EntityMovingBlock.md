@@ -1,7 +1,7 @@
 # Function: EntityMovingBlock
 
 ## Description
-Controls pushable/movable block objects. Uses the trigger/timer toggle to transition between idle and moving states, adjusting the sector collision floor height as the block moves. On deactivation, snaps the block's position to the centre of its current sector grid cell and restores the collision floor.
+Controls moving block objects that slide between positions via trigger activation. Uses the trigger/timer toggle to transition between idle and moving states, adjusting the sector collision floor height as the block moves. On deactivation, snaps the block's position to the centre of its current sector grid cell and restores the collision floor.
 
 ## Notes
 - Only called by the game loop for entities on the active processing list (`ENTITY_STATUS` bit 0 set)
