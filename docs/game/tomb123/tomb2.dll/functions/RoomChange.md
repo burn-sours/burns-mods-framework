@@ -1,16 +1,16 @@
 # Function: RoomChange
 
 ## Description
-Moves an entity from its current room to a different room by updating the room linked lists. Each room maintains a singly linked list of entities (via ROOM_ENTITY_HEAD and ENTITY_NEXT_IN_ROOM). This function unlinks the entity from its current room's list, updates the entity's room field, and inserts it at the head of the new room's list.
+Moves an entity from its current room to a different room by updating the room linked lists. Each room maintains a singly linked list of entities (via `ROOM_ENTITY_HEAD` and `ENTITY_NEXT_IN_ROOM`). This function unlinks the entity from its current room's list, updates the entity's room field, and inserts it at the head of the new room's list.
 
 If entities are currently being processed (iteration is active), the room change is deferred — it's queued with operation type 4 and executed after processing completes. This prevents corrupting the entity list mid-iteration.
 
 ## Notes
 - Safe to call during entity processing — automatically defers via the internal queue
-- Operates on the Entities and Rooms arrays using ENTITY_SIZE (0xe50) and ROOM_SIZE (0xa8) strides
-- The linked list uses ENTITY_NEXT_IN_ROOM (offset 0x1e) as the next pointer, with -1 as the terminator
+- Operates on the `Entities` and `Rooms` arrays using `ENTITY_SIZE` (`0xe50`) and `ROOM_SIZE` (`0xa8`) strides
+- The linked list uses `ENTITY_NEXT_IN_ROOM` (offset `0x1e`) as the next pointer, with `-1` as the terminator
 - Entity is always inserted at the head of the new room's list
-- Skips unlinking if the entity's current room is 0xff (invalid/no-room state)
+- Skips unlinking if the entity's current room is `0xff` (invalid/no-room state)
 
 ## Details
 
