@@ -106,6 +106,7 @@ module.exports = {
         EntityPushBlock: { Address: "0x2e1d0", Params: ['int'], Return: 'void' },
         EntitySuspendedShack: { Address: "0x31270", Params: ['int'], Return: 'void' },
         EntitySwingBlade: { Address: "0x40b20", Params: ['int'], Return: 'void' },
+        EntityThorHammerHandle: { Address: "0x2cbe0", Params: ['int'], Return: 'void' },
         EntitySwitch: { Address: "0x37310", Params: ['int'], Return: 'void' },
         EntityWolf: { Address: "0x49780", Params: ['int'], Return: 'void' },
         EntityBat: { Address: "0x10e0", Params: ['int'], Return: 'void' },
