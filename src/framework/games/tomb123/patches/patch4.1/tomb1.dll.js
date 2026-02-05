@@ -115,7 +115,7 @@ module.exports = {
         EntityRaptor: { Address: "0xBAE0", Params: ['int'], Return: 'void' },
         EntityTrex: { Address: "0xc160", Params: ['int'], Return: 'void' },
         EntityLarson: { Address: "0x322d0", Params: ['int'], Return: 'void' },
-        EntityLion: { Address: "0x49e80", Params: ['int'], Return: 'void' },
+        EntityCat: { Address: "0x49e80", Params: ['int'], Return: 'void' },
         EntityPierre: { Address: "0x32e20", Params: ['int'], Return: 'void' },
         EntityGorilla: { Address: "0x337b0", Params: ['int'], Return: 'void' },
         EntityCrocodileDry: { Address: "0xafb0", Params: ['int', 'pointer'], Return: 'void' },

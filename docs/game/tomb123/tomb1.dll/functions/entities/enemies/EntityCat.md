@@ -1,4 +1,4 @@
-# Function: EntityLion
+# Function: EntityCat
 
 ## Description
 AI behaviour shared by all lion-type enemies: lion, lioness, and panther. A ground predator with a claw swipe and a bite attack, with damage values that vary by model type on New Game Plus. Death animations are also model-specific.
@@ -69,7 +69,7 @@ AI behaviour shared by all lion-type enemies: lion, lioness, and panther. A grou
 ### Hooking
 ```javascript
 // Log which lion variant is attacking
-mod.hook('EntityLion')
+mod.hook('EntityCat')
     .onEnter(function(entityId) {
         const entities = game.readVar(game.module, 'Entities');
         const entity = entities.add(entityId * ENTITY_SIZE);
@@ -81,12 +81,12 @@ mod.hook('EntityLion')
 
 ### Calling from mod code
 ```javascript
-game.callFunction(game.module, 'EntityLion', lionEntityIndex);
+game.callFunction(game.module, 'EntityCat', lionEntityIndex);
 ```
 
 ## Pseudocode
 ```
-function EntityLion(entityId):
+function EntityCat(entityId):
     entity = entities[entityId]
 
     // Activation check
