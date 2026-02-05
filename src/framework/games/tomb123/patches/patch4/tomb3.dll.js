@@ -62,7 +62,7 @@ module.exports = {
         UpdateLaraAppearance: { Address: "0xf82e0", Params: [], Return: 'void' },
         CalculateLighting: { Address: "0xd59c0", Params: ['int', 'int', 'int', 'int', 'pointer'], Return: 'void' },
         LoadLevel: { Address: "0x3b1e0", Params: ['int', 'int', 'pointer', 'pointer'], Return: 'pointer' },
-        InitializeLevelAI: { Address: "0x74cb0", Params: ['int'], Return: 'void' },
+        InitializeLevelAI: { Address: "0x84670", Params: ['int'], Return: 'void' },
         SoundEffect: { Address: "0xe3f50", Params: ['int', 'pointer', 'int'], Return: 'int' },
         RenderUI: { Address: "0x483a0", Params: [], Return: 'void' },
         Menu: { Address: "0x4aef0", Params: ['int'], Return: 'int' },
