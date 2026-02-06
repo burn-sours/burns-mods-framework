@@ -16,4 +16,5 @@ Lara's currently selected modern (remastered) outfit ID.
 ### Calling from mod code
 ```javascript
 const outfit = game.readVar('tomb123.exe', 'LaraAppearanceModernOutfit');
+game.writeVar('tomb123.exe', 'LaraAppearanceModernOutfit', 14); // Vegas outfit
 ```
