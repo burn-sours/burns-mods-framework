@@ -1,4 +1,4 @@
-# Variable: LaraAppearanceModernSunglasses
+# Variable: LaraModernSunglasses
 
 ## Description
 Flag indicating whether Lara is wearing sunglasses in modern/remastered graphics mode.
@@ -22,5 +22,5 @@ Flag indicating whether Lara is wearing sunglasses in modern/remastered graphics
 ## Usage
 ### Calling from mod code
 ```javascript
-const sunglasses = game.readVar('tomb123.exe', 'LaraAppearanceModernSunglasses');
+const sunglasses = game.readVar('tomb123.exe', 'LaraModernSunglasses');
 ```

@@ -9,7 +9,7 @@ module.exports = {
         Level: { Address: "0x25FA74", Type: "Int32" },
         GameVersion: { Address: "0xe0b68", Type: "Int32" },
         LaraModernOutfit: { Address: "0x25FA7C", Type: "Int32" },
-        LaraAppearanceModernSunglasses: { Address: "0x25FA88", Type: "Int8" },
+        LaraModernSunglasses: { Address: "0x25FA88", Type: "Int8" },
         IsPhotoMode: { Address: "0x25FAA8", Type: "Int32" },
         IsPhotoModeUI: { Address: "0x25FAAC", Type: "Int32" },
         GameSettings: { Address: "0x25FF68", Type: "UInt8" },
