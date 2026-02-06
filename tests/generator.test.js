@@ -33,7 +33,7 @@ const mockPatchData = {
         'tomb1.dll': {
             variables: {
                 LevelId: { Address: '0xe2ab8', Type: 'Int32' },
-                LaraBase: { Address: '0x311030', Type: 'Int64' },
+                Lara: { Address: '0x311030', Type: 'Pointer' },
                 RoomType: { Address: '0x310e8c', Type: 'Int16' },
             },
             hooks: {
@@ -100,7 +100,7 @@ describe('ScriptGenerator: generate', () => {
         const script = gen.generate();
         assert.ok(script.includes('memoryAddresses'));
         assert.ok(script.includes('LevelId'));
-        assert.ok(script.includes('LaraBase'));
+        assert.ok(script.includes('Lara'));
         assert.ok(script.includes('GameVersion'));
     });
 

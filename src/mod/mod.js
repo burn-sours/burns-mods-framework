@@ -4,7 +4,7 @@ const mod = createMod('Burn\'s Mod Framework', 'tomb123', ['tomb1.dll', 'tomb2.d
 
 mod.init(function() {
     try {
-        game._lara = game.getVarPtr(game.module, 'LaraBase').readPointer();
+        game._lara = game.readVar(game.module, 'Lara');
         if (game._lara && !game._lara.isNull()) {
             log("Lara already in game", game._lara);
         }
@@ -16,7 +16,7 @@ mod.init(function() {
 mod.hook('InitializeLevelAI')
     .onLeave(function(returnValue) {
         try {
-            game._lara = game.getVarPtr(game.module, 'LaraBase').readPointer();
+            game._lara = game.readVar(game.module, 'Lara');
             if (game._lara && !game._lara.isNull()) {
                 log("Lara entered the level", game._lara);
             }
