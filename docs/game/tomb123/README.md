@@ -20,13 +20,14 @@ Documentation for TR I-III Remastered game internals.
 
 ## Quick Links
 
-### Common Variables
+### Variables
 - `Lara` — Pointer to Lara's entity data
-- `Level` — Current level index
-- `Tick` — Frame counter
+- `LevelId` — Current level index
+- `BinaryTick` — Frame counter (0/1 toggle)
+- `Entities` / `EntitiesCount` — Entity array
 
-### Common Functions
+### Functions
 - `LoadLevel` — Level initialization
 - `OnDamage` — Damage application hook
-- `RenderLara` / `RenderEntity` — Rendering hooks
+- `RenderLara` — Lara rendering
 - `CalculateFloorHeight` / `CalculateCeilingHeight` — Collision geometry
