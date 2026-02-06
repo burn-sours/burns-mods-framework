@@ -4,10 +4,8 @@ Reference documentation for Tomb Raider Remastered game internals — variables,
 
 ## Games
 
-| Folder | Game | Status |
-|--------|------|--------|
-| [`tomb123/`](tomb123/) | Tomb Raider I-III Remastered | ✅ Complete |
-| [`tomb456/`](tomb456/) | Tomb Raider IV-VI Remastered | 🚧 In Progress |
+- [`tomb123/`](tomb123/) — Tomb Raider I-III Remastered
+- [`tomb456/`](tomb456/) — Tomb Raider IV-VI Remastered
 
 ## Structure
 

@@ -2,8 +2,6 @@
 
 Documentation for TR IV-VI Remastered game internals.
 
-> ⚠️ **Work in Progress** — Documentation is incomplete. Variables and functions are defined in patch files but docs are pending.
-
 ## Modules
 
 | Module | Description |
@@ -17,11 +15,3 @@ Documentation for TR IV-VI Remastered game internals.
 - TR4 and TR5 share more code than TR1-3 did
 - Structure follows the same pattern as tomb123 docs
 - Some variables/functions have different names or behavior compared to tomb123
-
-## Status
-
-| Module | Variables | Functions |
-|--------|-----------|-----------|
-| tomb456.exe | 🚧 Pending | 🚧 Pending |
-| tomb4.dll | 🚧 Pending | 🚧 Pending |
-| tomb5.dll | 🚧 Pending | 🚧 Pending |
