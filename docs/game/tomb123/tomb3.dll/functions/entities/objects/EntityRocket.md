@@ -66,7 +66,7 @@ function EntityRocket(entityId):
         createAirTrail = true
         rotSpeed = (speed >> 2) + 7
     else:
-        if speed < 0x81:
+        if speed < 129:
             speed = accel + speed + 4
             if speed > 128:
                 speed = 128
@@ -105,7 +105,7 @@ function EntityRocket(entityId):
     // Add to particle effects pool
     if particlePoolCount != 32:
         pool[count].active = 1
-        pool[count].timer = 0xE00
+        pool[count].timer = 3584
         pool[count].x = rocket.x + trailX + random offset
         pool[count].y = rocket.y + trailY + random offset
         pool[count].z = rocket.z + trailZ + random offset
@@ -272,7 +272,7 @@ function EntityRocket(entityId):
             applyScreenShake(1, shakeIntensity, shakeIntensity, 2, shakeIntensity >> 4, 2)
         
         triggerEffects(rocket)
-        SoundEffect(105, rocket.position, 0x1800004)
+        SoundEffect(105, rocket.position, 25165828)
         SoundEffect(106, rocket.position, 0)
         RemoveEntity(entityId)
 ```

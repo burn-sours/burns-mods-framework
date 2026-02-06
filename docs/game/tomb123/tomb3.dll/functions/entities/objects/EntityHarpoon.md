@@ -191,7 +191,7 @@ function EntityHarpoon(entityId):
                 harpoon.speed = cos(pitch) << 8 >> 14
             else:
                 // Water: create bubble effects
-                if (tickCounter & 0xF) == 0:
+                if (tickCounter & 15) == 0:
                     if ogGraphicsMode:
                         createBubbleEffect(harpoon.position, harpoon.room, 2, 8)
                     else:

@@ -226,7 +226,7 @@ function EntityGrenade(entityId):
             applyScreenShake(1, shakeIntensity, shakeIntensity, 2, shakeIntensity >> 4, 2)
         
         triggerEffects(grenade)
-        SoundEffect(105, grenade.position, 0x1800004)
+        SoundEffect(105, grenade.position, 25165828)
         SoundEffect(106, grenade.position, 0)
         RemoveEntity(entityId)
 ```
