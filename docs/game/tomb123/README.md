@@ -85,7 +85,7 @@ Constants are defined at the game level and may be overridden by patch-specific 
 
 | Constant | Value | Description |
 |----------|-------|-------------|
-| `UI_RENDER_LAYER` | 57 | UI render layer for DrawSetup (patch-defined) |
+| `UI_RENDER_LAYER` | 57 | UI render layer for DrawSetup |
 
 ## Notes
 
