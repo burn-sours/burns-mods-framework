@@ -2,6 +2,8 @@
 const patch2 = require("../patch2/tomb456.exe");
 
 module.exports = {
+    constants: patch2.constants,
+
     variables: patch2.variables,
 
     hooks: {

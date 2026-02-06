@@ -26,7 +26,7 @@ module.exports = {
         ENTITY_Y: 0x5c,
         ENTITY_Z: 0x60,
         ENTITY_YAW: 0x66,
-        ENTITY_TILT: 0x68,
+        ENTITY_PITCH: 0x68,
         ENTITY_ROLL: 0x6a,
         ENTITY_LAST_X: 0x6c,
         ENTITY_ROOM: 0x1c,
@@ -53,6 +53,13 @@ module.exports = {
         ENTITY_DROP_3: 0x3e,
         ENTITY_DROP_4: 0x40,
         ENTITY_PUSHBLOCK_BUSY: 0x3c,
+        TEXT_FLAGS: 0x00,
+        TEXT_X: 0x0c,
+        TEXT_Y: 0x10,
+        TEXT_COLOR: 0x40,
+        TEXT_Z_ORDER: 0x42,
+        TEXT_STRING: 0x48,
+        TEXT_FONT_SIZE: 0x50,
     },
     patches: {
         "patch4": {

@@ -20,6 +20,9 @@ const mockPatchData = {
     name: 'Test Patch',
     memory: {
         'tomb123.exe': {
+            constants: {
+                UI_RENDER_LAYER: 0x39,
+            },
             variables: {
                 GameVersion: { Address: '0xe4bd8', Type: 'Int32' },
             },
@@ -69,6 +72,26 @@ describe('ScriptGenerator: generate', () => {
         assert.ok(script.includes('const ENTITY_Y_SPEED = 0x24'));
         assert.ok(script.includes('const ENTITY_HEALTH = 0x26'));
         assert.ok(script.includes('const ENTITY_SIZE = 0xe50'));
+    });
+
+    it('emits patch-level constants from executable module', () => {
+        const mod = createMod('Test', 'tomb123', ['tomb1.dll']);
+        const gen = new ScriptGenerator(mod, mockGameConfig, mockPatchData);
+        const script = gen.generate();
+        assert.ok(script.includes('const UI_RENDER_LAYER = 0x39'));
+    });
+
+    it('patch constants override game constants with same name', () => {
+        const configWithOverlap = {
+            ...mockGameConfig,
+            constants: { ...mockGameConfig.constants, UI_RENDER_LAYER: 0x10 },
+        };
+        const mod = createMod('Test', 'tomb123', ['tomb1.dll']);
+        const gen = new ScriptGenerator(mod, configWithOverlap, mockPatchData);
+        const script = gen.generate();
+        // Patch value (0x39) should win over game value (0x10)
+        assert.ok(script.includes('const UI_RENDER_LAYER = 0x39'));
+        assert.ok(!script.includes('const UI_RENDER_LAYER = 0x10'));
     });
 
     it('emits address table with variables and hooks', () => {
