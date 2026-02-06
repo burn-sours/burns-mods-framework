@@ -1,4 +1,4 @@
-# Variable: LaraAppearanceModernOutfit
+# Variable: LaraModernOutfit
 
 ## Description
 Lara's currently selected modern (remastered) outfit ID.
@@ -15,6 +15,6 @@ Lara's currently selected modern (remastered) outfit ID.
 ## Usage
 ### Calling from mod code
 ```javascript
-const outfit = game.readVar('tomb123.exe', 'LaraAppearanceModernOutfit');
-game.writeVar('tomb123.exe', 'LaraAppearanceModernOutfit', 14); // Vegas outfit
+const outfit = game.readVar('tomb123.exe', 'LaraModernOutfit');
+game.writeVar('tomb123.exe', 'LaraModernOutfit', 14); // Vegas outfit
 ```
