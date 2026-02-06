@@ -17,12 +17,113 @@ Also maintains a rolling buffer of recent keypresses. Under a specific game stat
 
 These are the game's internal keycodes, not Windows virtual key codes:
 
+### Function Keys
 | Key | Keycode |
 |-----|---------|
+| F1  | 62      |
+| F2  | 63      |
+| F3  | 64      |
+| F4  | 65      |
 | F5  | 66      |
+| F6  | 67      |
+| F7  | 68      |
+| F8  | 69      |
 | F9  | 70      |
+| F10 | 71      |
+| F11 | 72      |
+| F12 | 73      |
 
-*More keycodes to be documented as discovered.*
+### Number Row
+| Key | Keycode |
+|-----|---------|
+| 0   | 11      |
+| 1   | 12      |
+| 2   | 13      |
+| 3   | 14      |
+| 4   | 15      |
+| 5   | 16      |
+| 6   | 17      |
+| 7   | 18      |
+| 8   | 19      |
+| 9   | 20      |
+| -   | 74      |
+| =   | 75      |
+
+### Letters
+| Key | Keycode |
+|-----|---------|
+| A   | 21      |
+| B   | 22      |
+| C   | 23      |
+| D   | 24      |
+| E   | 25      |
+| F   | 26      |
+| G   | 27      |
+| H   | 28      |
+| I   | 29      |
+| J   | 30      |
+| K   | 31      |
+| L   | 32      |
+| M   | 33      |
+| N   | 34      |
+| O   | 35      |
+| P   | 36      |
+| Q   | 37      |
+| R   | 38      |
+| S   | 39      |
+| T   | 40      |
+| U   | 41      |
+| V   | 42      |
+| W   | 43      |
+| X   | 44      |
+| Y   | 45      |
+| Z   | 46      |
+
+### Punctuation
+| Key | Keycode |
+|-----|---------|
+| [   | 76      |
+| ]   | 77      |
+| ;   | 83      |
+| '   | 82      |
+| \   | 79      |
+| ,   | 80      |
+| .   | 81      |
+| /   | 78      |
+
+### Numpad
+| Key       | Keycode |
+|-----------|---------|
+| Numpad 1  | 48      |
+| Numpad 2  | 49      |
+| Numpad 3  | 50      |
+| Numpad 4  | 51      |
+| Numpad 5  | 52      |
+| Numpad 6  | 53      |
+| Numpad 7  | 54      |
+| Numpad 8  | 55      |
+| Numpad 9  | 56      |
+| Numpad +  | 57      |
+| Numpad -  | 58      |
+| Numpad *  | 59      |
+| Numpad /  | 60      |
+
+### Modifiers & Special
+| Key         | Keycode |
+|-------------|---------|
+| Space       | 4       |
+| Tab         | 5       |
+| Enter       | 6       |
+| Shift       | 8       |
+| Ctrl        | 9       |
+| Alt         | 10      |
+
+### Mouse
+| Button       | Keycode |
+|--------------|---------|
+| Left Click   | 108     |
+| Right Click  | 109     |
+| Middle Click | 110     |
 
 ## Details
 
