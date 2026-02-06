@@ -29,5 +29,5 @@ Documentation for TR I-III Remastered game internals.
 ### Functions
 - `LoadLevel` — Level initialization
 - `OnDamage` — Damage application hook
-- `RenderLara` — Lara rendering
+- `RenderLara` / `RenderEntity` — Rendering hooks
 - `CalculateFloorHeight` / `CalculateCeilingHeight` — Collision geometry
