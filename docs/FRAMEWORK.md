@@ -32,6 +32,26 @@ The `modules` array determines which game DLLs your mod is compatible with. Loop
 
 All builder methods return `this` for chaining.
 
+> ⚠️ **Scope Warning:** The builder callbacks (`.onEnter()`, `.onLeave()`, `.replace()`, `.run()`, `init()`, `exit()`, `receive()`) are serialized and executed inside the game process, not in Node.js. **Variables, constants, or functions defined outside these callbacks are not available at runtime.**
+>
+> ```javascript
+> // ❌ WRONG — this const won't exist in the game script
+> const MAX_SPEED = 130;
+> mod.loop('myLoop').every(50).run(function() {
+>     if (speed > MAX_SPEED) { ... }  // ReferenceError: MAX_SPEED is not defined
+> });
+>
+> // ✅ CORRECT — define constants on the game object in init
+> mod.init(function() {
+>     game.MAX_SPEED = 130;
+> });
+> mod.loop('myLoop').every(50).run(function() {
+>     if (speed > game.MAX_SPEED) { ... }  // works
+> });
+> ```
+>
+> Use `game.*` to store any runtime state or constants. The `game` object persists across all callbacks.
+
 ### `mod.init(fn)`
 
 Called once after injection, when all modules are loaded and hooks are installed. Use this for initial state setup.

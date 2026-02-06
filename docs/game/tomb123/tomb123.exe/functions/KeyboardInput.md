@@ -24,8 +24,92 @@ Also maintains a rolling buffer of recent keypresses. Under a specific game stat
 
 | #   | Type   | Description                                      |
 |-----|--------|--------------------------------------------------|
-| 0   | `uint` | Keycode                                          |
+| 0   | `uint` | Keycode (see table below)                        |
 | 1   | `int`  | Pressed state (non-zero = pressed, 0 = released) |
+
+### Keycode Mappings
+
+| Category | Key | Code |
+|----------|-----|------|
+| Navigation | LEFT | 0 |
+| Navigation | RIGHT | 1 |
+| Navigation | UP | 2 |
+| Navigation | DOWN | 3 |
+| Navigation | SPACE | 4 |
+| Navigation | TAB | 5 |
+| Navigation | ENTER | 6 |
+| Navigation | ESC | 7 |
+| Navigation | BACKSPACE | 91 |
+| Modifiers | SHIFT | 8 |
+| Modifiers | CTRL | 9 |
+| Modifiers | ALT | 10 |
+| Numbers | 0 | 11 |
+| Numbers | 1 | 12 |
+| Numbers | 2 | 13 |
+| Numbers | 3 | 14 |
+| Numbers | 4 | 15 |
+| Numbers | 5 | 16 |
+| Numbers | 6 | 17 |
+| Numbers | 7 | 18 |
+| Numbers | 8 | 19 |
+| Numbers | 9 | 20 |
+| Numbers | - | 74 |
+| Numbers | = | 75 |
+| Letters | A | 21 |
+| Letters | B | 22 |
+| Letters | C | 23 |
+| Letters | D | 24 |
+| Letters | E | 25 |
+| Letters | F | 26 |
+| Letters | G | 27 |
+| Letters | H | 28 |
+| Letters | I | 29 |
+| Letters | J | 30 |
+| Letters | K | 31 |
+| Letters | L | 32 |
+| Letters | M | 33 |
+| Letters | N | 34 |
+| Letters | O | 35 |
+| Letters | P | 36 |
+| Letters | Q | 37 |
+| Letters | R | 38 |
+| Letters | S | 39 |
+| Letters | T | 40 |
+| Letters | U | 41 |
+| Letters | V | 42 |
+| Letters | W | 43 |
+| Letters | X | 44 |
+| Letters | Y | 45 |
+| Letters | Z | 46 |
+| Numpad | NUM 0 | 47 |
+| Numpad | NUM 1 | 48 |
+| Numpad | NUM 2 | 49 |
+| Numpad | NUM 3 | 50 |
+| Numpad | NUM 4 | 51 |
+| Numpad | NUM 5 | 52 |
+| Numpad | NUM 6 | 53 |
+| Numpad | NUM 7 | 54 |
+| Numpad | NUM 8 | 55 |
+| Numpad | NUM 9 | 56 |
+| Numpad | NUM + | 57 |
+| Numpad | NUM - | 58 |
+| Numpad | NUM * | 59 |
+| Numpad | NUM / | 60 |
+| Function | F1 | 62 |
+| Function | F2 | 63 |
+| Function | F3 | 64 |
+| Function | F4 | 65 |
+| Function | F5 | 66 |
+| Function | F6 | 67 |
+| Function | F7 | 68 |
+| Function | F8 | 69 |
+| Function | F9 | 70 |
+| Function | F10 | 71 |
+| Function | F11 | 72 |
+| Function | F12 | 73 |
+| Mouse | LEFT CLICK | 108 |
+| Mouse | RIGHT CLICK | 109 |
+| Mouse | MIDDLE CLICK | 110 |
 
 ## Usage
 ### Hooking
