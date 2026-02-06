@@ -71,7 +71,7 @@ module.exports = {
         DrawSetup: { Address: "0xc9710", Params: ['int', 'pointer'], Return: 'void' },
         DrawRect: { Address: "0xca5a0", Params: ['int', 'int', 'int', 'int', 'uint64', 'uint64'], Return: 'void' },
         DrawQuad: { Address: "0xca4a0", Params: ['int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'float', 'float', 'float', 'float', 'int'], Return: 'void' },
-        DrawHealth: { Address: "0xe2790", Params: ['int'], Return: 'void' },
+        DrawHealth: { Address: "0xe2790", Params: ['int', 'int'], Return: 'void' },
         RoomChange: { Address: "0x51e80", Params: ['int', 'int'], Return: 'void' },
         RenderEntity: { Address: "0x296f0", Params: ['pointer'], Return: 'void' },
         CalculateYawPitch: { Address: "0xe7920", Params: ['int', 'int', 'int', 'pointer'], Return: 'void' },
