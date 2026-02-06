@@ -38,7 +38,7 @@ Called once after injection, when all modules are loaded and hooks are installed
 
 ```javascript
 mod.init(function() {
-    game._lara = game.getVarPtr(game.module, 'LaraBase').readPointer();
+    game._lara = game.getVarPtr(game.module, 'Lara').readPointer();
 });
 ```
 
@@ -93,6 +93,8 @@ mod.hook('SoundEffect')
 | `.replace(fn)` | `fn(...params)` |
 
 Use either `.onEnter()`/`.onLeave()` or `.replace()`, not both.
+
+> ⚠️ **Warning:** Using `.replace()` can make your mod incompatible with other mods running at the same time. If a second mod hooks the same function after a replace, and the replacing mod is removed first, it can break the game or the other mod. **Only use `.replace()` when you absolutely cannot achieve the result with `.onEnter()`/`.onLeave()`.** Prefer the enter/leave approach as a rule of thumb.
 
 ### `mod.loop(name)`
 
@@ -181,13 +183,13 @@ Variables are defined in patch data files with a name, address, type, and option
 ```javascript
 // Read
 const level = game.readVar(game.module, 'LevelId');
-const base = game.readVar('tomb1.dll', 'LaraBase');
+const base = game.readVar('tomb1.dll', 'Lara');
 
 // Write
 game.writeVar(game.module, 'LaraOxygen', 1800);
 
 // Get raw pointer to a variable's address
-const ptr = game.getVarPtr(game.module, 'LaraBase');
+const ptr = game.getVarPtr(game.module, 'Lara');
 const lara = ptr.readPointer();
 
 // Read a block (returns ArrayBuffer)
@@ -202,9 +204,6 @@ For working with addresses directly, outside the named variable system.
 // Typed read/write at an absolute address
 const val = game.readMemory(addr, 'Int32');
 game.writeMemory(addr, 'Float', 1.5);
-
-// Pointer dereference
-const target = game.readPointer(addr);
 
 // Allocate memory
 const buf = game.alloc(256);
@@ -223,26 +222,12 @@ game.isModuleSupported(game.module)  // true if module is in this mod's supporte
 
 ### Calling Game Functions
 
-All hooks from patch data are auto-registered as callable native functions. You can call them directly.
+All hooks from patch data are auto-registered as callable native functions. Custom hooks declared with `mod.hook().at()` are also registered as callable.
 
 ```javascript
 if (game.hasFunction(game.module, 'SoundEffect')) {
     game.callFunction(game.module, 'SoundEffect', 42, ptr(0), 0);
 }
-
-// Manually register a function not in patch data
-game.registerFunction('tomb1.dll', 'MyFunc', 0x12345, 'int', ['int', 'pointer']);
-game.callFunction('tomb1.dll', 'MyFunc', 1, ptr(0));
-```
-
-### Instruction Patching
-
-```javascript
-// NOP out instructions (original bytes are backed up)
-game.deleteInstruction('tomb1.dll', 0x1A2B3, 6);
-
-// Restore all patched instructions
-game.restoreInstructions();
 ```
 
 ### Pointer Arithmetic
@@ -251,7 +236,7 @@ The `game` object supports dynamic state. You can store any property on it to pe
 
 ```javascript
 // In a hook
-game._lara = game.getVarPtr(game.module, 'LaraBase').readPointer();
+game._lara = game.getVarPtr(game.module, 'Lara').readPointer();
 
 // In a loop - use NativePointer methods for struct field access
 const health = game._lara.add(ENTITY_HEALTH).readS16();
@@ -278,7 +263,7 @@ error('Failed to read pointer');
 ### Utility
 
 ```javascript
-await game.delay(100);  // async delay (only usable in init)
+await game.delay(100);  // async delay
 ```
 
 ## Communication
@@ -431,16 +416,16 @@ const mod = createMod('no-fall-damage', 'tomb123', ['tomb1.dll']);
 
 mod.init(function() {
     try {
-        game._lara = game.getVarPtr(game.module, 'LaraBase').readPointer();
+        game._lara = game.readVar(game.module, 'Lara');
     } catch(e) {
         game._lara = null;
     }
 });
 
-mod.hook('LaraInLevel')
+mod.hook('InitializeLevelAI')
     .onLeave(function(returnValue) {
         try {
-            game._lara = game.getVarPtr(game.module, 'LaraBase').readPointer();
+            game._lara = game.readVar(game.module, 'Lara');
         } catch(e) {
             game._lara = null;
         }

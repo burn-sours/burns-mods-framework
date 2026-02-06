@@ -37,10 +37,17 @@ class ScriptGenerator {
     }
 
     _emitConstants() {
-        const constants = this.gameConfig.constants;
-        if (!constants || Object.keys(constants).length === 0) return '';
+        const gameConstants = this.gameConfig.constants || {};
+
+        // Merge patch-level constants from the executable module
+        const exeData = this.patchData.memory[this.gameConfig.executable];
+        const patchConstants = (exeData && exeData.constants) || {};
+
+        const merged = { ...gameConstants, ...patchConstants };
+        if (Object.keys(merged).length === 0) return '';
+
         const lines = [];
-        for (const [name, value] of Object.entries(constants)) {
+        for (const [name, value] of Object.entries(merged)) {
             lines.push(`const ${name} = ${typeof value === 'number' ? '0x' + value.toString(16) : JSON.stringify(value)};`);
         }
         return lines.join('\n');
@@ -118,6 +125,17 @@ ${this.mod._init ? `
                 lines.push(`    try {`);
                 lines.push(`        game.registerFunction(${JSON.stringify(modName)}, ${JSON.stringify(hookName)}, ${JSON.stringify(hookDef.Address)}, ${JSON.stringify(returnType)}, ${JSON.stringify(paramTypes)});`);
                 lines.push(`    } catch(e) { error('Failed to register ${hookName}:', e.message); }`);
+            }
+        }
+
+        // Register custom .at() hooks as callable too
+        for (const hook of this.mod._hooks) {
+            if (hook._module && hook._offset !== null) {
+                const returnType = hook._return || 'void';
+                const paramTypes = hook._params || [];
+                lines.push(`    try {`);
+                lines.push(`        game.registerFunction(${JSON.stringify(hook._module)}, ${JSON.stringify(hook.name)}, ${JSON.stringify(hook._offset)}, ${JSON.stringify(returnType)}, ${JSON.stringify(paramTypes)});`);
+                lines.push(`    } catch(e) { error('Failed to register ${hook.name}:', e.message); }`);
             }
         }
 

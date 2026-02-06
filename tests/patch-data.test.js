@@ -71,14 +71,31 @@ for (const { config, name } of games) {
                     assert.ok(patchDef.memory[config.executable], `missing memory data for ${config.executable}`);
                 });
 
+                it('executable has UI_RENDER_LAYER constant', () => {
+                    const exeData = patchDef.memory[config.executable];
+                    assert.ok(exeData, `missing memory data for ${config.executable}`);
+                    assert.ok(exeData.constants, `${config.executable} missing constants`);
+                    assert.ok('UI_RENDER_LAYER' in exeData.constants,
+                        `${config.executable} missing UI_RENDER_LAYER constant`);
+                    assert.equal(typeof exeData.constants.UI_RENDER_LAYER, 'number',
+                        `UI_RENDER_LAYER is not a number: ${exeData.constants.UI_RENDER_LAYER}`);
+                });
+
                 for (const [modName, modData] of Object.entries(patchDef.memory)) {
                     describe(`Module: ${modName}`, () => {
+                        if (modData.constants) {
+                            describe('constants', () => {
+                                for (const [constName, constValue] of Object.entries(modData.constants)) {
+                                    it(`${constName}: is a number`, () => {
+                                        assert.equal(typeof constValue, 'number', `${constName} is not a number: ${constValue}`);
+                                    });
+                                }
+                            });
+                        }
+
                         if (modData.variables) {
                             describe('variables', () => {
                                 for (const [varName, varDef] of Object.entries(modData.variables)) {
-                                    // Skip raw string offset entries (e.g. OgModels*)
-                                    if (typeof varDef === 'string') continue;
-
                                     it(`${varName}: valid address`, () => {
                                         assert.ok(varDef.Address, `${varName} missing Address`);
                                         assert.ok(isValidHex(varDef.Address), `${varName} invalid hex address: ${varDef.Address}`);
@@ -151,16 +168,23 @@ describe('Patch consistency', () => {
         });
 
         for (const modName of allModuleNames) {
-            // Collect all variable names (non-string) across all patches for this module
+            // Collect all constant names across all patches for this module
+            const allConstNames = new Set();
+            // Collect all variable names across all patches for this module
             const allVarNames = new Set();
             const allHookNames = new Set();
 
             for (const patchName of patchNames) {
                 const modData = config.patches[patchName].memory[modName];
                 if (!modData) continue;
+                if (modData.constants) {
+                    for (const k of Object.keys(modData.constants)) {
+                        allConstNames.add(k);
+                    }
+                }
                 if (modData.variables) {
                     for (const [k, v] of Object.entries(modData.variables)) {
-                        if (typeof v !== 'string') allVarNames.add(k);
+                        allVarNames.add(k);
                     }
                 }
                 if (modData.hooks) {
@@ -168,6 +192,21 @@ describe('Patch consistency', () => {
                         allHookNames.add(k);
                     }
                 }
+            }
+
+            if (allConstNames.size > 0) {
+                describe(`${name} / ${modName}: constant consistency`, () => {
+                    for (const constName of allConstNames) {
+                        it(`${constName} exists in all patches`, () => {
+                            const missing = patchNames.filter(p => {
+                                const modData = config.patches[p].memory[modName];
+                                return !modData || !modData.constants || !(constName in modData.constants);
+                            });
+                            assert.equal(missing.length, 0,
+                                `constant "${constName}" missing from patches: ${missing.join(', ')}`);
+                        });
+                    }
+                });
             }
 
             if (allVarNames.size > 0) {
@@ -193,7 +232,7 @@ describe('Patch consistency', () => {
                         for (const varName of allVarNames) {
                             const baseVar = baseVars[varName];
                             const otherVar = otherVars[varName];
-                            if (!baseVar || typeof baseVar === 'string' || !otherVar || typeof otherVar === 'string') continue;
+                            if (!baseVar || !otherVar) continue;
 
                             it(`${varName}: same type in ${basePatch} and ${otherPatch}`, () => {
                                 assert.equal(baseVar.Type, otherVar.Type,

@@ -219,7 +219,7 @@ declare const ENTITY_X: number;
 declare const ENTITY_Y: number;
 declare const ENTITY_Z: number;
 declare const ENTITY_YAW: number;
-declare const ENTITY_TILT: number;
+declare const ENTITY_PITCH: number;
 declare const ENTITY_ROLL: number;
 declare const ENTITY_LAST_X: number;
 declare const ENTITY_ROOM: number;

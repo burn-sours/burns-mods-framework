@@ -1,5 +1,9 @@
 /** tomb456.exe - Patch 2 */
 module.exports = {
+    constants: {
+        UI_RENDER_LAYER: 0x42,
+    },
+
     variables: {
         ExitingGame: { Address: "0x69a80c", Type: "Int8" },
         KeyToControl: { Address: "0x586120", Type: "Int64" },
@@ -7,8 +11,8 @@ module.exports = {
         Level: { Address: "0x585A70", Type: "Int32" },
         GameVersion: { Address: "0x17b3ac", Type: "Int32" },
         LaraAppearanceModern: { Address: "0x585A78", Type: "Block", Size: "0x17" },
-        LaraAppearanceModernOutfit: { Address: "0x585A78", Type: "UInt64" },
-        LaraAppearanceModernSunglasses: { Address: "0x585A8F", Type: "Int8" },
+        LaraModernOutfit: { Address: "0x585A78", Type: "UInt64" },
+        LaraModernSunglasses: { Address: "0x585A8F", Type: "Int8" },
         IsPhotoMode: { Address: "0x585A9C", Type: "Int32" },
         IsGameMenu: { Address: "0x585DD8", Type: "Int32" },
         GameSettings: { Address: "0x585F64", Type: "UInt8" },
