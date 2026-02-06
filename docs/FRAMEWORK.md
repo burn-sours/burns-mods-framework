@@ -42,18 +42,17 @@ mod.init(function() {
 });
 ```
 
-> ⚠️ **Callback Scoping:** All callback functions (`init`, `exit`, `onEnter`, `onLeave`, `replace`, `run`, `receive`) are stringified during code generation. This means **constants and variables defined outside the callback are not available at runtime**. Always inline values directly in your callbacks instead of referencing external constants.
+> ⚠️ **Callback Scoping:** Callbacks are stringified during code generation — variables defined outside are not available at runtime. Inline values directly, or use `game._` properties to share state between callbacks.
 >
 > ```javascript
-> // ❌ WRONG — SIZE is not available at runtime
+> // ❌ WRONG — SIZE is not available
 > const SIZE = 0x3800;
-> mod.init(function() {
->     game._buffer = game.alloc(SIZE);  // ReferenceError!
-> });
+> mod.init(function() { game._buffer = game.alloc(SIZE); });
 >
-> // ✅ CORRECT — inline the value
+> // ✅ CORRECT — inline or use game._
 > mod.init(function() {
->     game._buffer = game.alloc(0x3800);
+>     game._bufferSize = 0x3800;
+>     game._buffer = game.alloc(game._bufferSize);
 > });
 > ```
 
