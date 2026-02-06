@@ -7,9 +7,9 @@ Renders Lara's health bar on screen. Takes a health value parameter and a second
 - Position is calculated relative to `UiDrawWidth` (right-aligned, offset -108 from right edge)
 - Has four different color schemes based on game version and the second parameter:
   - **Version 0**: Blue theme (`0xff2c5c70`, `0xff4878a4`, etc.)
-  - **Version 1**: Red/blue-to-green gradient theme (poison indicator colors)
+  - **Version 1**: Red/blue-to-green gradient theme
   - **Version 2, param2 == 0**: Green theme (`0xff000040`/`0xff008000`, etc.)
-  - **Version 2, param2 != 0**: Cyan/teal theme (`0xff006060`, `0xff00b0b0`, `0xff00f0f0`) — used for special states like poison
+  - **Version 2, param2 != 0**: Cyan/teal theme (`0xff006060`, `0xff00b0b0`, `0xff00f0f0`)
 - Each version has an OG graphics fallback path (checks flag at offset `0x7e4` bit 0)
 - Uses `DrawSetup` with mode `0x39` for modern rendering
 - Draws border frame using `DrawRect`, then fills with `DrawQuad`
@@ -30,7 +30,7 @@ Renders Lara's health bar on screen. Takes a health value parameter and a second
 | #   | Type  | Description                                                      |
 |-----|-------|------------------------------------------------------------------|
 | 0   | `int` | Health bar fill width (0 = empty, higher = more filled)          |
-| 1   | `int` | Color scheme flag — for version 2+, 0 = green, non-zero = cyan   |
+| 1   | `int` | Color scheme flag — affects color selection when game version >= 2 |
 
 ## Usage
 ### Hooking
@@ -44,10 +44,10 @@ mod.hook('DrawHealth')
 
 ### Calling from mod code
 ```javascript
-// Draw a health bar with specific fill (green scheme)
+// Draw a health bar with specific fill
 game.callFunction(game.module, 'DrawHealth', 100, 0);
 
-// Draw with cyan/teal scheme (e.g., poisoned state)
+// Draw with alternate color scheme (version 2+)
 game.callFunction(game.module, 'DrawHealth', 100, 1);
 ```
 
@@ -74,13 +74,13 @@ function DrawHealth(healthWidth, colorFlag):
     
     // gameVersion >= 2
     if colorFlag == 0:
-        // Green color scheme (normal health)
+        // Green color scheme
         if not ogGraphicsMode:
             drawModernHealthBar(healthWidth, greenColors)
         else:
             drawOgHealthBar(healthWidth, greenColorTable)
     else:
-        // Cyan/teal color scheme (special state, e.g. poison)
+        // Cyan/teal color scheme
         if not ogGraphicsMode:
             drawModernHealthBar(healthWidth, cyanColors)
         else:
