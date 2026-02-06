@@ -6,16 +6,16 @@ Processes rocket projectile entity behavior. Handles movement using velocity and
 ## Notes
 - Called each tick for active rocket entities
 - Movement uses yaw and pitch angles with sine/cosine lookups for 3D trajectory
-- Air vs water: in air, speed increases up to max 0x200 with rolling rotation; in water, speed increases up to max 0x80 with reduced acceleration
+- Air vs water: in air, speed increases up to max 320 with rolling rotation; in water, speed increases up to max 128 with reduced acceleration
 - Creates smoke trail particles behind the rocket
 - Creates bubble/splash effects when in water
 - Creates particle pool entry for visual trail effect using RNG-based positioning
-- On collision (floor/ceiling or entity hit): creates explosion effects, plays sounds (0x69, 0x6A), applies screen shake based on distance to Lara, removes rocket
-- Damage is scaled: base 30 (`0x1E`) left-shifted by a value from the projectile data
-- Models `0x65-0x68` (101-104) trigger special entity behavior
-- Models `0x26` (38) and `0x175` (373) trigger state change on hit
-- Model `0x24` (36) has level-specific behavior
-- Model `0x66` (102) on level 6 requires specific projectile flag to trigger
+- On collision (floor/ceiling or entity hit): creates explosion effects, plays sounds (105, 106), applies screen shake based on distance to Lara, removes rocket
+- Damage is scaled: base 30 (`30`) left-shifted by a value from the projectile data
+- Models `101-104` (101-104) trigger special entity behavior
+- Models `38` (38) and `373` (373) trigger state change on hit
+- Model `36` (36) has level-specific behavior
+- Model `102` (102) on level 6 requires specific projectile flag to trigger
 - Skips Lara when checking entity collisions
 - Only damages entities with shootable flag (bit 5) set
 
@@ -60,7 +60,7 @@ function EntityRocket(entityId):
     accel = speed >> 2
     
     if not inWater:
-        if speed < 0x200:
+        if speed < 320:
             speed = accel + speed + 4
             rocket.speed = speed
         createAirTrail = true
@@ -68,25 +68,25 @@ function EntityRocket(entityId):
     else:
         if speed < 0x81:
             speed = accel + speed + 4
-            if speed > 0x80:
-                speed = 0x80
+            if speed > 128:
+                speed = 128
             rocket.speed = speed
         createAirTrail = false
         rotSpeed = (speed >> 3) + 3
     
     // Apply roll rotation
-    rocket.rotZ += rotSpeed * 0xB6
-    rocket.frame = 0xC210
+    rocket.rotZ += rotSpeed * 182
+    rocket.frame = 49680
     
     // Setup transform matrices
     pushMatrix()
     applyRotation(rocket.rotY, rocket.pitch, rocket.rotZ)
     copyMatrix()
-    translateLocal(0, 0, -0x80)
+    translateLocal(0, 0, -128)
     
     // Calculate trail offset with random variation
     random = updateRNG()
-    tailOffset = -0x600 - (random >> 10 & 0x1FF)
+    tailOffset = -1536 - (random >> 10 & 31F)
     
     trailX = matrix1.x >> 14
     trailY = matrix1.y >> 14
@@ -150,7 +150,7 @@ function EntityRocket(entityId):
             hasCollision = 0
             collisionRadius = 0
         else:
-            collisionRadius = 0x400 << (rocket.scaleFlag & 0x1F)
+            collisionRadius = 640 << (rocket.scaleFlag & 31)
             hasCollision = 1
     else:
         hasCollision = 0
@@ -174,14 +174,14 @@ function EntityRocket(entityId):
                 continue
             
             // Check if entity is shootable
-            if (target.flags & 0x20) == 0:
+            if (target.flags & 32) == 0:
                 continue
             
             targetModel = target.model
             
             // Check for valid target types
-            if targetModel in [0x65, 0x66, 0x67, 0x68] or targetModel == 0x26 or 
-               targetModel == 0x175 or targetModel == 0x2F or
+            if targetModel in [101, 102, 103, 104] or targetModel == 38 or 
+               targetModel == 373 or targetModel == 47 or
                (hasShootableFlag(targetModel) and (target.flags & 6) != 6 and hasHealth(targetModel)):
                 
                 // Get bounding box and check collision
@@ -196,24 +196,24 @@ function EntityRocket(entityId):
                     continue
                 
                 // Handle collision based on model type
-                if targetModel == 0x66:
+                if targetModel == 102:
                     if levelId == 6:
                         if rocket.scaleFlag == 1:
                             triggerSpecialEntity(targetId)
                     else:
                         triggerSpecialEntity(targetId)
-                else if targetModel in [0x65, 0x67, 0x68]:
+                else if targetModel in [101, 103, 104]:
                     triggerSpecialEntity(targetId)
-                else if targetModel in [0x26, 0x175]:
+                else if targetModel in [38, 373]:
                     if (target.flags & 6) == 2:
                         continue
                     target.flags = (target.flags & ~4) | 2
                     activateEntity(targetId)
                 else if (target.flags & 6) == 2:
                     // Apply scaled damage
-                    damage = 0x1E << (rocket.scaleFlag & 0x1F)
+                    damage = 30 << (rocket.scaleFlag & 31)
                     
-                    if targetModel == 0x24 and specialFlag:
+                    if targetModel == 36 and specialFlag:
                         handleSpecialDamage(rocket.x, rocket.y, rocket.z, target)
                     else:
                         if target.health > 0:
@@ -221,22 +221,22 @@ function EntityRocket(entityId):
                         if target.health > 0 and target.health <= damage:
                             incrementKillCounter()
                         target.health -= damage
-                        target.flags |= 0x10
+                        target.flags |= 16
                         if target.linkedEntity != null:
-                            target.linkedEntity.flags |= 0x10
+                            target.linkedEntity.flags |= 16
                     
                     incrementHitCounter()
                     
                     // Handle death
                     if target.health < 1:
                         if targetModel not in special list:
-                            if targetModel == 0x23 and flag set:
+                            if targetModel == 35 and flag set:
                                 clearFlag()
                             triggerDeath(targetId, 1)
                 
                 if not hasCollision:
                     hasCollision = 1
-                    collisionRadius = 0x400 << (rocket.scaleFlag & 0x1F)
+                    collisionRadius = 640 << (rocket.scaleFlag & 31)
                     break
             
             targetId = target.nextInRoom
@@ -267,12 +267,12 @@ function EntityRocket(entityId):
         dz = offsetZ - Lara.z
         distSquared = dx*dx + dy*dy + dz*dz
         
-        if distSquared < 0x1900000:
-            shakeIntensity = 0xFF00 - ((distSquared >> 9) & 0xFF00)
+        if distSquared < 26214400:
+            shakeIntensity = 65280 - ((distSquared >> 9) & 65280)
             applyScreenShake(1, shakeIntensity, shakeIntensity, 2, shakeIntensity >> 4, 2)
         
         triggerEffects(rocket)
-        SoundEffect(0x69, rocket.position, 0x1800004)
-        SoundEffect(0x6A, rocket.position, 0)
+        SoundEffect(105, rocket.position, 0x1800004)
+        SoundEffect(106, rocket.position, 0)
         RemoveEntity(entityId)
 ```

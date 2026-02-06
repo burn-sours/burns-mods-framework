@@ -5,17 +5,17 @@ Processes harpoon projectile entity behavior. Handles underwater and above-water
 
 ## Notes
 - Called each tick for active harpoon entities
-- Has a lifetime timer that counts down from `0x100` — when below `0xC0`, applies wobble effect to trajectory
-- In air: applies downward arc to pitch angle (gravity simulation), limited to min pitch `-0x4000`
+- Has a lifetime timer that counts down from `256` — when below `192`, applies wobble effect to trajectory
+- In air: applies downward arc to pitch angle (gravity simulation), limited to min pitch `-16384`
 - In water: creates bubble effects, slower velocity decay
 - Movement uses yaw angle for XZ direction, pitch for Y velocity
 - On entity hit: creates blood splatter effect (type 3), applies damage
 - Damage is from global value, left-shifted by projectile scale factor
-- Model `0x13` (19) is explicitly skipped (not a valid target)
-- Models `0x65-0x68` (101-104) and `0x66` (102) on non-level-6 trigger special entity behavior
-- Models `0x26` (38) and `0x175` (373) trigger state change on hit
-- Model `0x24` (36) has special handling with flag check
-- Model `0x39` (57) skips blood effect but still deals damage
+- Model `19` (19) is explicitly skipped (not a valid target)
+- Models `101-104` (101-104) and `102` (102) on non-level-6 trigger special entity behavior
+- Models `38` (38) and `373` (373) trigger state change on hit
+- Model `36` (36) has special handling with flag check
+- Model `57` (57) skips blood effect but still deals damage
 - On ceiling collision: applies rotation and trajectory arc, creates effects in water
 - Skips Lara when checking entity collisions
 - Only damages entities with shootable flag (bit 5) set
@@ -82,18 +82,18 @@ function EntityHarpoon(entityId):
             continue
         
         // Check if entity is shootable (flag bit 5)
-        if (target.flags & 0x20) == 0:
+        if (target.flags & 32) == 0:
             continue
         
         targetModel = target.model
         
-        // Skip model 0x13 explicitly
-        if targetModel == 0x13:
+        // Skip model 19 explicitly
+        if targetModel == 19:
             continue
         
         // Check for valid target types
-        isSpecialTarget = targetModel in [0x65, 0x66, 0x67, 0x68] or
-                         targetModel == 0x26 or targetModel == 0x175
+        isSpecialTarget = targetModel in [101, 102, 103, 104] or
+                         targetModel == 38 or targetModel == 373
         isShootableEnemy = (target.flags & 6) != 6 and hasHealth(targetModel)
         
         if not isSpecialTarget and not isShootableEnemy:
@@ -130,39 +130,39 @@ function EntityHarpoon(entityId):
             continue
         
         // Collision confirmed - handle based on target type
-        if targetModel == 0x66:
+        if targetModel == 102:
             if levelId != 6:
                 triggerSpecialEntity(targetId)
-        else if targetModel in [0x65, 0x67, 0x68]:
+        else if targetModel in [101, 103, 104]:
             triggerSpecialEntity(targetId)
-        else if targetModel in [0x26, 0x175]:
+        else if targetModel in [38, 373]:
             if (target.flags & 6) == 2:
                 continue
             target.flags = (target.flags & ~4) | 2
             activateEntity(targetId)
         else if hasShootableFlag(targetModel) and (target.flags & 6) == 2:
-            // Special handling for model 0x24
-            if targetModel == 0x24 and specialFlag:
+            // Special handling for model 36
+            if targetModel == 36 and specialFlag:
                 handleSpecialDamage(harpoon.x, harpoon.y, harpoon.z, target)
                 RemoveEntity(entityId)
                 return
             
-            // Create blood effect (skip for model 0x39)
-            if targetModel != 0x39:
+            // Create blood effect (skip for model 57)
+            if targetModel != 57:
                 createBloodEffect(harpoon.x, harpoon.y, harpoon.z, 0, 0, harpoon.room, 3)
             
             // Calculate and apply damage
-            damage = globalHarpoonDamage << (harpoon.scaleFlag & 0x1F)
+            damage = globalHarpoonDamage << (harpoon.scaleFlag & 31)
             
             if target.health > 0:
                 OnDamage(target, gunType, damage)
             if target.health > 0 and target.health <= damage:
                 incrementKillCounter()
             target.health -= damage
-            target.flags |= 0x10
+            target.flags |= 16
             
             if target.linkedEntity != null:
-                target.linkedEntity.flags |= 0x10
+                target.linkedEntity.flags |= 16
             
             incrementHitCounter()
             RemoveEntity(entityId)
@@ -175,19 +175,19 @@ function EntityHarpoon(entityId):
         ceiling = CalculateCeilingHeight(sector, harpoon.x, harpoon.y, harpoon.z)
         if ceiling < harpoon.y:
             // Between floor and ceiling - apply trajectory arc
-            harpoon.rotZ += 0x18E2  // roll
+            harpoon.rotZ += 6370  // roll
             
             roomFlags = Rooms[harpoon.room].flags
             isUnderwater = (roomFlags & 1) != 0
             
             if not isUnderwater:
                 // Air: apply gravity arc to pitch
-                harpoon.pitch -= 0xB6
-                if harpoon.pitch < -0x4000:
-                    harpoon.pitch = -0x4000
+                harpoon.pitch -= 182
+                if harpoon.pitch < -16384:
+                    harpoon.pitch = -16384
                 
                 // Recalculate Y velocity from new pitch
-                harpoon.yVelocity = sin(pitch) * -0x100 >> 14
+                harpoon.yVelocity = sin(pitch) * -256 >> 14
                 harpoon.speed = cos(pitch) << 8 >> 14
             else:
                 // Water: create bubble effects
@@ -197,10 +197,10 @@ function EntityHarpoon(entityId):
                     else:
                         createParticleEffect(harpoon.position, harpoon.room, 2, 8)
                 
-                createTrailParticle(harpoon.x, harpoon.y, harpoon.z, 0x40)
+                createTrailParticle(harpoon.x, harpoon.y, harpoon.z, 64)
                 
                 // Slower velocity in water
-                harpoon.yVelocity = sin(pitch) * -0x80 >> 14
+                harpoon.yVelocity = sin(pitch) * -128 >> 14
                 harpoon.speed = cos(pitch) << 7 >> 14
             
             // Update sector after position change
@@ -213,15 +213,15 @@ function EntityHarpoon(entityId):
     // Lifetime timer handling
     timer = harpoon.timer
     
-    if timer == 0x100:
+    if timer == 256:
         // Store initial pitch for wobble reference
         harpoon.savedPitch = harpoon.pitch
     
-    if timer > 0xBF:
+    if timer > 191:
         // Apply wobble to trajectory
-        wobbleAmount = (timer - 0xC0) & 7
-        wobbleOffset = (sin(wobbleAmount << 9) >> 1) - 0x400
-        harpoon.pitch = harpoon.savedPitch + (wobbleOffset * (timer - 0xC0) >> 6)
+        wobbleAmount = (timer - 192) & 7
+        wobbleOffset = (sin(wobbleAmount << 9) >> 1) - 640
+        harpoon.pitch = harpoon.savedPitch + (wobbleOffset * (timer - 192) >> 6)
     
     timer--
     harpoon.timer = timer
