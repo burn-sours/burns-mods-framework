@@ -22,7 +22,6 @@ Documentation for TR I-III Remastered game internals.
 
 ### Common Variables
 - `Lara` — Pointer to Lara's entity data
-- `LaraHealth` — Current health (0-1000)
 - `Level` — Current level index
 - `Tick` — Frame counter
 
