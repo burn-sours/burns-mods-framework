@@ -4,7 +4,6 @@
 Lara's currently selected modern (remastered) outfit ID.
 
 ## Notes
-- Part of the LaraAppearanceModern block
 - Only applies when using modern/remastered graphics mode
 
 ## Details

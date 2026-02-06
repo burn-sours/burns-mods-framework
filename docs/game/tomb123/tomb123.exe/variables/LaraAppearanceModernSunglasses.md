@@ -4,7 +4,7 @@
 Flag indicating whether Lara is wearing sunglasses in modern/remastered graphics mode.
 
 ## Notes
-- Part of the LaraAppearanceModern block
+- Only applies when using modern/remastered graphics mode
 
 ## Details
 
