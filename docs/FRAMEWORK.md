@@ -32,6 +32,22 @@ The `modules` array determines which game DLLs your mod is compatible with. Loop
 
 All builder methods return `this` for chaining.
 
+> ⚠️ **Callback Scoping**
+>
+> Callbacks are stringified during code generation — variables defined outside are not available at runtime. Use `game._` properties to share state between callbacks:
+>
+> ```javascript
+> // ❌ SIZE is not available at runtime
+> const SIZE = 0x3800;
+> mod.init(function() { game._buffer = game.alloc(SIZE); });
+>
+> // ✅ Use game._ to share values
+> mod.init(function() {
+>     game._bufferSize = 0x3800;
+>     game._buffer = game.alloc(game._bufferSize);
+> });
+> ```
+
 ### `mod.init(fn)`
 
 Called once after injection, when all modules are loaded and hooks are installed. Use this for initial state setup.
@@ -41,20 +57,6 @@ mod.init(function() {
     game._lara = game.getVarPtr(game.module, 'Lara').readPointer();
 });
 ```
-
-> ⚠️ **Callback Scoping:** Callbacks are stringified during code generation — variables defined outside are not available at runtime. Inline values directly, or use `game._` properties to share state between callbacks.
->
-> ```javascript
-> // ❌ WRONG — SIZE is not available
-> const SIZE = 0x3800;
-> mod.init(function() { game._buffer = game.alloc(SIZE); });
->
-> // ✅ CORRECT — inline or use game._
-> mod.init(function() {
->     game._bufferSize = 0x3800;
->     game._buffer = game.alloc(game._bufferSize);
-> });
-> ```
 
 ### `mod.exit(fn)`
 
