@@ -82,7 +82,7 @@ module.exports = {
         OnDamage: { Address: "0xbc460", Params: ['pointer', 'int', 'int'], Return: 'void' },
         SimulateLaraHair: { Address: "0xc5830", Params: ['int', 'int'], Return: 'void' },
         EntityGrenade: { Address: "0x631b0", Params: ['int16'], Return: 'void' },
-        ProcessRocket: { Address: "0x62120", Params: ['int16'], Return: 'void' },
+        EntityRocket: { Address: "0x62120", Params: ['int16'], Return: 'void' },
         EntityHarpoon: { Address: "0x61500", Params: ['int16'], Return: 'void' },
         CreateGraphic: { Address: "0x30740", Params: ['int', 'int', 'int', 'int', 'int', 'int', 'int'], Return: 'void' },
         RemoveEntity: { Address: "0x51830", Params: ['int'], Return: 'void' },
