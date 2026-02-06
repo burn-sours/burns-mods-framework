@@ -42,6 +42,21 @@ mod.init(function() {
 });
 ```
 
+> ⚠️ **Callback Scoping:** All callback functions (`init`, `exit`, `onEnter`, `onLeave`, `replace`, `run`, `receive`) are stringified during code generation. This means **constants and variables defined outside the callback are not available at runtime**. Always inline values directly in your callbacks instead of referencing external constants.
+>
+> ```javascript
+> // ❌ WRONG — SIZE is not available at runtime
+> const SIZE = 0x3800;
+> mod.init(function() {
+>     game._buffer = game.alloc(SIZE);  // ReferenceError!
+> });
+>
+> // ✅ CORRECT — inline the value
+> mod.init(function() {
+>     game._buffer = game.alloc(0x3800);
+> });
+> ```
+
 ### `mod.exit(fn)`
 
 Called before the script is unloaded. Use this to clean up any mod state.

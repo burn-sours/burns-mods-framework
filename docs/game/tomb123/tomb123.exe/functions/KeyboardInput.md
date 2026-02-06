@@ -11,6 +11,18 @@ Also maintains a rolling buffer of recent keypresses. Under a specific game stat
 - Early returns if the key state hasn't actually changed (already pressed/already released)
 - The purpose of the stored sequences and the resulting value (1–5) is unknown — needs clarification
 - The game state condition that enables sequence detection is also unidentified
+- Keycodes are **not** standard Windows VK codes — the game uses its own mapping (see Known Keycodes below)
+
+## Known Keycodes
+
+These are the game's internal keycodes, not Windows virtual key codes:
+
+| Key | Keycode |
+|-----|---------|
+| F5  | 66      |
+| F9  | 70      |
+
+*More keycodes to be documented as discovered.*
 
 ## Details
 
