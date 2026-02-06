@@ -117,4 +117,42 @@ for (const { config, name } of games) {
             }
         }
     });
+
+    // Check constants documentation coverage
+    describe(`${name}: constants documented`, () => {
+        // Collect all constants from game manifest and patches
+        const allConstants = new Set();
+
+        // Add game-level constants
+        if (config.constants) {
+            for (const constName of Object.keys(config.constants)) {
+                allConstants.add(constName);
+            }
+        }
+
+        // Add patch-level constants from executable modules
+        for (const patchName of patchNames) {
+            const exeData = config.patches[patchName].memory[config.executable];
+            if (exeData && exeData.constants) {
+                for (const constName of Object.keys(exeData.constants)) {
+                    allConstants.add(constName);
+                }
+            }
+        }
+
+        // Read the README and check each constant is mentioned
+        const readmePath = path.join(docsDir, name, 'README.md');
+        const readmeContent = fs.existsSync(readmePath) ? fs.readFileSync(readmePath, 'utf-8') : '';
+
+        for (const constName of allConstants) {
+            it(`${constName} is documented in README.md`, () => {
+                // Check for the constant name in a markdown table row (| `CONST_NAME` |)
+                const pattern = new RegExp(`\\|\\s*\`${constName}\`\\s*\\|`);
+                assert.ok(
+                    pattern.test(readmeContent),
+                    `missing constant: ${constName} not documented in docs/game/${name}/README.md`
+                );
+            });
+        }
+    });
 }
