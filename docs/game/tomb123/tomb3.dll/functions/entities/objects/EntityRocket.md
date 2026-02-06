@@ -11,11 +11,11 @@ Processes rocket projectile entity behavior. Handles movement using velocity and
 - Creates bubble/splash effects when in water
 - Creates particle pool entry for visual trail effect using RNG-based positioning
 - On collision (floor/ceiling or entity hit): creates explosion effects, plays sounds (105, 106), applies screen shake based on distance to Lara, removes rocket
-- Damage is scaled: base 30 (`30`) left-shifted by a value from the projectile data
-- Models `101-104` (101-104) trigger special entity behavior
-- Models `38` (38) and `373` (373) trigger state change on hit
-- Model `36` (36) has level-specific behavior
-- Model `102` (102) on level 6 requires specific projectile flag to trigger
+- Damage is scaled: base 30 left-shifted by a value from the projectile data
+- Models 101-104 trigger special entity behavior
+- Models 38 and 373 trigger state change on hit
+- Model 36 has level-specific behavior
+- Model 102 on level 6 requires specific projectile flag to trigger
 - Skips Lara when checking entity collisions
 - Only damages entities with shootable flag (bit 5) set
 
@@ -86,7 +86,7 @@ function EntityRocket(entityId):
     
     // Calculate trail offset with random variation
     random = updateRNG()
-    tailOffset = -1536 - (random >> 10 & 31F)
+    tailOffset = -1536 - (random >> 10 & 511)
     
     trailX = matrix1.x >> 14
     trailY = matrix1.y >> 14

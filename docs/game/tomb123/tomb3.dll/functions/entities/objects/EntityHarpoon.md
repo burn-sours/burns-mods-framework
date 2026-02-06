@@ -5,17 +5,17 @@ Processes harpoon projectile entity behavior. Handles underwater and above-water
 
 ## Notes
 - Called each tick for active harpoon entities
-- Has a lifetime timer that counts down from `256` — when below `192`, applies wobble effect to trajectory
-- In air: applies downward arc to pitch angle (gravity simulation), limited to min pitch `-16384`
+- Has a lifetime timer that counts down from 256 — when below 192, applies wobble effect to trajectory
+- In air: applies downward arc to pitch angle (gravity simulation), limited to min pitch -16384
 - In water: creates bubble effects, slower velocity decay
 - Movement uses yaw angle for XZ direction, pitch for Y velocity
 - On entity hit: creates blood splatter effect (type 3), applies damage
 - Damage is from global value, left-shifted by projectile scale factor
-- Model `19` (19) is explicitly skipped (not a valid target)
-- Models `101-104` (101-104) and `102` (102) on non-level-6 trigger special entity behavior
-- Models `38` (38) and `373` (373) trigger state change on hit
-- Model `36` (36) has special handling with flag check
-- Model `57` (57) skips blood effect but still deals damage
+- Model 19 is explicitly skipped (not a valid target)
+- Models 101-104 on non-level-6 trigger special entity behavior
+- Models 38 and 373 trigger state change on hit
+- Model 36 has special handling with flag check
+- Model 57 skips blood effect but still deals damage
 - On ceiling collision: applies rotation and trajectory arc, creates effects in water
 - Skips Lara when checking entity collisions
 - Only damages entities with shootable flag (bit 5) set

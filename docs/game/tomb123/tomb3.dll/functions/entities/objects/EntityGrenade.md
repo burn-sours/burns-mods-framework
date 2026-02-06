@@ -10,10 +10,10 @@ Processes grenade projectile entity behavior. Handles movement using velocity an
 - Rotation is applied to yaw and pitch each tick based on speed
 - Creates smoke trail particles when in air
 - On collision (timer expiry or entity hit): creates explosion effects, plays sounds (105, 106), applies screen shake based on distance to Lara, removes grenade
-- Deals 20 (`20`) damage to hit entities via `OnDamage`
-- Models `101-104` (101-104) and `102` (102) have special handling
-- Models `38` (38) and `373` (373) trigger state change on hit
-- Model `36` (36) has level-specific behavior with special flag check
+- Deals 20 damage to hit entities via `OnDamage`
+- Models 101-104 have special handling
+- Models 38 and 373 trigger state change on hit
+- Model 36 has level-specific behavior with special flag check
 - Skips Lara when checking entity collisions
 - Only damages entities with shootable flag (bit 5) set
 
