@@ -10,8 +10,7 @@ Initializes AI navigation data when a level starts. Unlike TR1/TR2, TR3 allocate
 - Each box array in the first structure is sized to `boxCount * 8` bytes
 - If the pool lacks space for a box array, that slot gets a null pointer
 - Resets two active enemy counters to 0
-- This is a good hook point for mods that need to run setup when a level loads
-- **For adding UI text labels:** use `ResetUiTexts` instead — it runs after this hook and ensures the text pool is properly cleared first
+- This is a good hook point for mods that need to run setup when a level loads (for UI text labels, use `ResetUiTexts` instead — it runs after this and clears the text pool first)
 
 ## Details
 
