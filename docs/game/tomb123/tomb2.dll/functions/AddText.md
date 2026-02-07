@@ -46,7 +46,7 @@ The returned pointer can be used to modify the text entry's properties directly 
 | TEXT_FLAGS      | UInt32  | Flags (see Text Flags below)   |
 | TEXT_X          | Float   | X position                     |
 | TEXT_Y          | Float   | Y position                     |
-| TEXT_COLOR      | UInt32  | Color (see Text Color Format below). Only affects heading font. |
+| TEXT_COLOR      | UInt32  | Color. Only affects heading font. |
 | TEXT_STRING     | Pointer | Text string pointer            |
 | TEXT_FONT_SIZE  | UInt32  | Font size (e.g. `11000`)       |
 
