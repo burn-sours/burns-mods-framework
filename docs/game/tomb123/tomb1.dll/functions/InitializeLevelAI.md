@@ -10,7 +10,7 @@ Each slot is initialized with a `0xFFFF` marker and an associated box array for 
 - Each of the 20 slots gets a `boxCount * 8` byte box array
 - If the pool doesn't have enough space for a box array, that slot gets a null pointer
 - Resets `totalActiveEnemiesAI` to 0
-- This is a good hook point for mods that need to run setup when a level loads
+- This is a good hook point for mods that need to run setup when a level loads (for UI text labels, use `ResetUiTexts` instead — it runs after this and clears the text pool first)
 
 ## Details
 

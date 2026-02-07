@@ -78,6 +78,7 @@ module.exports = {
         Menu: { Address: "0x1b850", Params: ['int'], Return: 'int' },
         Clone: { Address: "0x8e780", Params: ['pointer', 'pointer', 'uint64'], Return: 'pointer' },
         AddText: { Address: "0x7be50", Params: ['int', 'int', 'int', 'pointer'], Return: 'pointer' },
+        ResetUiTexts: { Address: "0x7bcc0", Params: [], Return: 'void' },
         DrawSetup: { Address: "0x50460", Params: ['int', 'pointer'], Return: 'void' },
         DrawRect: { Address: "0x51320", Params: ['int', 'int', 'int', 'int', 'uint64', 'uint64'], Return: 'void' },
         DrawQuad: { Address: "0x51220", Params: ['int', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'float', 'float', 'float', 'float', 'int'], Return: 'void' },

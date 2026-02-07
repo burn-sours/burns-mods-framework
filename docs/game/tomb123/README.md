@@ -105,6 +105,7 @@ Constants are defined at the game level and may be overridden by patch-specific 
 ### Functions
 - `LoadLevel` — Level initialization
 - `InitializeLevelAI` — AI system setup (called after LoadLevel)
+- `ResetUiTexts` — UI text pool reset (use this for adding text labels on level start)
 - `OnDamage` — Damage application hook
 - `RenderLara` / `RenderEntity` — Rendering hooks
 - `CalculateFloorHeight` / `CalculateCeilingHeight` — Collision geometry
