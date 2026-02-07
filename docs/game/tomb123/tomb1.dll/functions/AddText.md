@@ -5,6 +5,30 @@ Adds a text entry to the UI text pool for on-screen rendering. Allocates a slot 
 
 The returned pointer can be used to modify the text entry's properties directly (position, font size, color, flags).
 
+## Details
+
+| Field     | Value                          |
+|-----------|--------------------------------|
+| Usage     | `Hook & Call`                  |
+| Params    | `int, int, int, pointer`       |
+| Return    | `pointer`                      |
+
+### Parameters
+
+| #   | Type      | Description                                  |
+|-----|-----------|----------------------------------------------|
+| 0   | `int`     | X position offset on screen                  |
+| 1   | `int`     | Y position offset on screen                  |
+| 2   | `int`     | Color high word (upper 16 bits of TEXT_COLOR) |
+| 3   | `pointer` | Pointer to null-terminated text string        |
+
+### Return Values
+
+| Value     | Description                                  |
+|-----------|----------------------------------------------|
+| `pointer` | Pointer to the allocated text entry in the pool |
+| `null`    | Text was null or pool is full (64 entries)   |
+
 ## Notes
 - Maximum of 64 simultaneous text entries (pool size `0x40`). Returns null when full.
 - Each text slot has a 512-byte string buffer (`0x200`), so text is limited to that length.
@@ -53,30 +77,6 @@ The returned pointer can be used to modify the text entry's properties directly 
 
 - **Normal font**: Fixed color with outline. TEXT_COLOR is ignored. Use TEXT_FLAG_ALT_COLOR for alternate color (TR2/TR3 only).
 - **Heading font** (TEXT_FLAG_HEADING): Uses TEXT_COLOR for gradient. Color value controls both gradient colors.
-
-## Details
-
-| Field     | Value                          |
-|-----------|--------------------------------|
-| Usage     | `Hook & Call`                  |
-| Params    | `int, int, int, pointer`       |
-| Return    | `pointer`                      |
-
-### Parameters
-
-| #   | Type      | Description                                  |
-|-----|-----------|----------------------------------------------|
-| 0   | `int`     | X position offset on screen                  |
-| 1   | `int`     | Y position offset on screen                  |
-| 2   | `int`     | Color high word (upper 16 bits of TEXT_COLOR) |
-| 3   | `pointer` | Pointer to null-terminated text string        |
-
-### Return Values
-
-| Value     | Description                                  |
-|-----------|----------------------------------------------|
-| `pointer` | Pointer to the allocated text entry in the pool |
-| `null`    | Text was null or pool is full (64 entries)   |
 
 ## Usage
 ### Hooking
