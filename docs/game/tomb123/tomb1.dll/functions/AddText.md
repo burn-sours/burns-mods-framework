@@ -25,7 +25,7 @@ The returned pointer can be used to modify the text entry's properties directly 
 | TEXT_COLOR      | UInt16  | Color — `0x0` = white, `0x1111` = yellow. Exact encoding TBD |
 | TEXT_Z_ORDER    | UInt16  | Z order / render layer         |
 | TEXT_STRING     | Pointer | Text string pointer            |
-| TEXT_FONT_SIZE  | Int32   | Font size (e.g. `11000`)       |
+| TEXT_FONT_SIZE  | Int16   | Font size (e.g. `11000`)       |
 
 ## Details
 
@@ -66,7 +66,7 @@ const entry = game.callFunction(game.module, 'AddText', 0, 0, UI_RENDER_LAYER, g
 
 // Modify properties on the returned entry
 entry.writeS32(0x1001);                              // TEXT_FLAGS
-entry.add(TEXT_FONT_SIZE).writeS32(11000);            // font size
+entry.add(TEXT_FONT_SIZE).writeS16(11000);            // font size
 entry.add(TEXT_COLOR).writeU16(0x1111);               // color
 entry.add(TEXT_X).writeFloat(x);                      // x position
 entry.add(TEXT_Y).writeFloat(y);                      // y position
