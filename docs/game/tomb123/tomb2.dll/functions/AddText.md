@@ -73,11 +73,6 @@ The returned pointer can be used to modify the text entry's properties directly 
 | Horizontal | default | TEXT_FLAG_CENTER_H | TEXT_FLAG_END_H |
 | Vertical | default | TEXT_FLAG_CENTER_V | TEXT_FLAG_END_V |
 
-### Color Behavior
-
-- **Normal font**: Fixed color with outline. TEXT_COLOR is ignored. Use TEXT_FLAG_ALT_COLOR for alternate color (TR2/TR3 only).
-- **Heading font** (TEXT_FLAG_HEADING): Uses TEXT_COLOR for gradient. Color value controls both gradient colors.
-
 ## Usage
 ### Hooking
 ```javascript
