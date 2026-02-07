@@ -54,8 +54,8 @@ The returned pointer can be used to modify the text entry's properties directly 
 ### Hooking
 ```javascript
 mod.hook('AddText')
-    .onEnter(function(x, y, z, text) {
-        log('AddText:', x, y, z, text.readUtf8String());
+    .onEnter(function(x, y, colorHigh, text) {
+        log('AddText:', x, y, colorHigh, text.readUtf8String());
     });
 ```
 
@@ -76,7 +76,7 @@ entry.add(TEXT_STRING).readPointer().writeUtf8String('Updated text');
 
 ## Pseudocode
 ```
-function AddText(xOffset, yOffset, zOffset, text):
+function AddText(xOffset, yOffset, colorHigh, text):
     if text == null: return null
     if UiTextsCount >= 64: return null
 
