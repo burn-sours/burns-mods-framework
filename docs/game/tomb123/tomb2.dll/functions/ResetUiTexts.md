@@ -24,7 +24,7 @@ mod.hook('ResetUiTexts')
         // Add persistent text after the pool is cleared
         const label = game.callFunction(game.module, 'AddText', 100, 50, 0, game.allocString('Level Loaded'));
         // Configure the text entry as needed
-        label.add(TEXT_FONT_SIZE).writeS16(11000);
+        label.add(TEXT_FONT_SIZE).writeU32(11000);
     });
 ```
 
