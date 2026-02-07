@@ -55,7 +55,7 @@ The returned pointer can be used to modify the text entry's properties directly 
 | Flag | Value | Description |
 |------|-------|-------------|
 | TEXT_FLAG_ACTIVE | 0x1 | Entry is in use |
-| TEXT_FLAG_ALT_COLOR | 0x4 | Alt color for normal font (TR2/TR3 only) |
+| TEXT_FLAG_ALT_COLOR | 0x4 | Use alternate color for normal font |
 | TEXT_FLAG_CENTER_H | 0x10 | Horizontal center |
 | TEXT_FLAG_CENTER_V | 0x20 | Vertical center |
 | TEXT_FLAG_END_H | 0x80 | Horizontal end (right align) |
