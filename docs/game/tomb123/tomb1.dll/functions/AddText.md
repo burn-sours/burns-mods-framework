@@ -15,18 +15,6 @@ The returned pointer can be used to modify the text entry's properties directly 
 - A default font size value is applied from a global setting if it is not -1, otherwise defaults to `0x10000`.
 - The text content can be updated after creation by writing to the text buffer via `entry.add(TEXT_STRING).readPointer().writeUtf8String()`.
 
-## Text Entry Structure
-
-| Constant       | Type    | Description                    |
-|----------------|---------|--------------------------------|
-| TEXT_FLAGS      | Int32   | Flags (e.g. `0x1001`)          |
-| TEXT_X          | Float   | X position                     |
-| TEXT_Y          | Float   | Y position                     |
-| TEXT_COLOR      | UInt16  | Color — `0x0` = white, `0x1111` = yellow. Exact encoding TBD |
-| TEXT_Z_ORDER    | UInt16  | Z order / render layer         |
-| TEXT_STRING     | Pointer | Text string pointer            |
-| TEXT_FONT_SIZE  | Int32   | Font size (e.g. `11000`)       |
-
 ## Details
 
 | Field     | Value                          |
@@ -41,7 +29,7 @@ The returned pointer can be used to modify the text entry's properties directly 
 |-----|-----------|----------------------------------------------|
 | 0   | `int`     | X position offset on screen                  |
 | 1   | `int`     | Y position offset on screen                  |
-| 2   | `int`     | Z order / render layer offset                |
+| 2   | `int`     | Color high word (upper 16 bits of TEXT_COLOR) |
 | 3   | `pointer` | Pointer to null-terminated text string        |
 
 ### Return Values
@@ -51,23 +39,81 @@ The returned pointer can be used to modify the text entry's properties directly 
 | `pointer` | Pointer to the allocated text entry in the pool |
 | `null`    | Text was null or pool is full (64 entries)   |
 
+## Text Entry Structure
+
+| Constant       | Type    | Description                    |
+|----------------|---------|--------------------------------|
+| TEXT_FLAGS      | UInt32  | Flags (see Text Flags below)   |
+| TEXT_X          | Float   | X position                     |
+| TEXT_Y          | Float   | Y position                     |
+| TEXT_COLOR      | UInt32  | Color. Only affects heading font. |
+| TEXT_STRING     | Pointer | Text string pointer            |
+| TEXT_FONT_SIZE  | UInt32  | Font size (e.g. `11000`)       |
+
+### Text Flags
+
+| Flag | Value | Description |
+|------|-------|-------------|
+| TEXT_FLAG_ACTIVE | 0x1 | Entry is in use |
+| TEXT_FLAG_ALT_COLOR | 0x4 | Unused in TR1 |
+| TEXT_FLAG_CENTER_H | 0x10 | Horizontal center |
+| TEXT_FLAG_CENTER_V | 0x20 | Vertical center |
+| TEXT_FLAG_END_H | 0x80 | Horizontal end (right align) |
+| TEXT_FLAG_END_V | 0x100 | Vertical end (bottom align) |
+| TEXT_FLAG_BACKGROUND | 0x200 | Show background behind text |
+| TEXT_FLAG_BORDER | 0x400 | Show border around text |
+| TEXT_FLAG_HEADING | 0x3000 | Heading font (uses gradient color) |
+| TEXT_FLAG_DIM | 0x4000 | Dim text |
+| TEXT_FLAG_OFFSET_H | 0x8000 | Horizontal offset |
+
+### Alignment
+
+| Axis | Start | Center | End |
+|------|-------|--------|-----|
+| Horizontal | default | TEXT_FLAG_CENTER_H | TEXT_FLAG_END_H |
+| Vertical | default | TEXT_FLAG_CENTER_V | TEXT_FLAG_END_V |
+
+### Text Color Format
+
+TEXT_COLOR is a 32-bit value split into two 16-bit halves (typically set to the same value). Normal font ignores this; only heading font (`TEXT_FLAG_HEADING`) uses it. The high and low bytes within each 16-bit half combine to produce the gradient color.
+
+**Solid Colors:**
+
+| Value | Color |
+|-------|-------|
+| `0x40404040` | Red |
+| `0x20202020` | Green |
+| `0x60606060` | Yellow |
+| `0x80808080` | Teal |
+
+**Gradient Colors:**
+
+| Value | Gradient |
+|-------|----------|
+| `0x00400040` | Light gold → Gold |
+| `0x00200020` | Light green → Green |
+| `0x20002000` | Orange tones |
+| `0x40004000` | Red → Dark red |
+
+The `colorHigh` parameter in AddText sets the upper 16 bits, leaving the lower 16 bits as `0x0000`.
+
 ## Usage
 ### Hooking
 ```javascript
 mod.hook('AddText')
-    .onEnter(function(x, y, z, text) {
-        log('AddText:', x, y, z, text.readUtf8String());
+    .onEnter(function(x, y, colorHigh, text) {
+        log('AddText:', x, y, colorHigh, text.readUtf8String());
     });
 ```
 
 ### Calling from mod code
 ```javascript
-const entry = game.callFunction(game.module, 'AddText', 0, 0, UI_RENDER_LAYER, game.allocString('Hello'));
+const entry = game.callFunction(game.module, 'AddText', 0, 0, 0, game.allocString('Hello'));
 
 // Modify properties on the returned entry
-entry.writeS32(0x1001);                              // TEXT_FLAGS
-entry.add(TEXT_FONT_SIZE).writeS32(11000);            // font size
-entry.add(TEXT_COLOR).writeU16(0x1111);               // color
+entry.writeU32(TEXT_FLAG_ACTIVE | TEXT_FLAG_CENTER_H | TEXT_FLAG_CENTER_V);  // centered text
+entry.add(TEXT_FONT_SIZE).writeU32(11000);            // font size
+entry.add(TEXT_COLOR).writeU32(0x40404040);           // solid red (only for heading font)
 entry.add(TEXT_X).writeFloat(x);                      // x position
 entry.add(TEXT_Y).writeFloat(y);                      // y position
 
@@ -77,7 +123,7 @@ entry.add(TEXT_STRING).readPointer().writeUtf8String('Updated text');
 
 ## Pseudocode
 ```
-function AddText(xOffset, yOffset, zOffset, text):
+function AddText(xOffset, yOffset, colorHigh, text):
     if text == null: return null
     if UiTextsCount >= 64: return null
 
@@ -91,7 +137,7 @@ function AddText(xOffset, yOffset, zOffset, text):
             slot.unknown_0x44 = 0
             slot[TEXT_STRING] = textBuffer[slotIndex]
             slot.unknown_0x14 = 0
-            slot[TEXT_Z_ORDER] = zOffset
+            slot[TEXT_COLOR + 2] = colorHigh  // upper 16 bits
             slot[TEXT_FLAGS] = 1 (active)
             slot.unknown_0x08 = 0
             slot[TEXT_X] = (float)xOffset
