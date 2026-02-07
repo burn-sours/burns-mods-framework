@@ -57,7 +57,6 @@ module.exports = {
         TEXT_X: 0x0c,
         TEXT_Y: 0x10,
         TEXT_COLOR: 0x40,
-        TEXT_Z: 0x42,
         TEXT_STRING: 0x48,
         TEXT_FONT_SIZE: 0x50,
     },

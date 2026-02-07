@@ -22,8 +22,7 @@ The returned pointer can be used to modify the text entry's properties directly 
 | TEXT_FLAGS      | Int32   | Flags (e.g. `0x1001`)          |
 | TEXT_X          | Float   | X position                     |
 | TEXT_Y          | Float   | Y position                     |
-| TEXT_COLOR      | UInt16  | Color — `0x0` = white, `0x1111` = yellow. Exact encoding TBD |
-| TEXT_Z          | UInt16  | Z position                     |
+| TEXT_COLOR      | UInt32  | Color — `0x0` = white. Exact encoding TBD |
 | TEXT_STRING     | Pointer | Text string pointer            |
 | TEXT_FONT_SIZE  | Int16   | Font size (e.g. `11000`)       |
 
@@ -41,7 +40,7 @@ The returned pointer can be used to modify the text entry's properties directly 
 |-----|-----------|----------------------------------------------|
 | 0   | `int`     | X position offset on screen                  |
 | 1   | `int`     | Y position offset on screen                  |
-| 2   | `int`     | Z position                                   |
+| 2   | `int`     | Color high word (upper 16 bits of TEXT_COLOR) |
 | 3   | `pointer` | Pointer to null-terminated text string        |
 
 ### Return Values
@@ -67,7 +66,7 @@ const entry = game.callFunction(game.module, 'AddText', 0, 0, UI_RENDER_LAYER, g
 // Modify properties on the returned entry
 entry.writeS32(0x1001);                              // TEXT_FLAGS
 entry.add(TEXT_FONT_SIZE).writeS16(11000);            // font size
-entry.add(TEXT_COLOR).writeU16(0x1111);               // color
+entry.add(TEXT_COLOR).writeU32(0x1111);               // color
 entry.add(TEXT_X).writeFloat(x);                      // x position
 entry.add(TEXT_Y).writeFloat(y);                      // y position
 
@@ -91,7 +90,7 @@ function AddText(xOffset, yOffset, zOffset, text):
             slot.unknown_0x44 = 0
             slot[TEXT_STRING] = textBuffer[slotIndex]
             slot.unknown_0x14 = 0
-            slot[TEXT_Z] = zOffset
+            slot[TEXT_COLOR + 2] = colorHigh  // upper 16 bits
             slot[TEXT_FLAGS] = 1 (active)
             slot.unknown_0x08 = 0
             slot[TEXT_X] = (float)xOffset
