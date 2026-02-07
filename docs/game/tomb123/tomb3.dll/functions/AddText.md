@@ -75,24 +75,7 @@ The returned pointer can be used to modify the text entry's properties directly 
 
 ### Text Color Format
 
-TEXT_COLOR is a 32-bit value split into two 16-bit halves (typically set to the same value). Normal font ignores this; only heading font (`TEXT_FLAG_HEADING`) uses it. Each 16-bit value defines a vertical gradient where the high byte is the top color and the low byte is the bottom color. Both bytes are palette indices.
-
-```
-   Upper 16 bits      Lower 16 bits
-  [Top]    [Bot]     [Top]    [Bot]
-     └───────┘          └───────┘
-    Gradient 1         Gradient 2
-```
-
-**Palette Indices:**
-
-| Index | Color |
-|-------|-------|
-| 0x00 | White |
-| 0x20 | Green |
-| 0x40 | Red |
-| 0x60 | Yellow |
-| 0x80 | Teal |
+TEXT_COLOR is a 32-bit value split into two 16-bit halves (typically set to the same value). Normal font ignores this; only heading font (`TEXT_FLAG_HEADING`) uses it. The high and low bytes within each 16-bit half combine to produce the gradient color.
 
 **Solid Colors:**
 
