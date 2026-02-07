@@ -77,7 +77,7 @@ Constants are defined at the game level and may be overridden by patch-specific 
 | `TEXT_X` | 12 | Offset to text X position |
 | `TEXT_Y` | 16 | Offset to text Y position |
 | `TEXT_COLOR` | 64 | Offset to text color |
-| `TEXT_Z_ORDER` | 66 | Offset to text Z ordering |
+| `TEXT_Z` | 66 | Offset to text Z position |
 | `TEXT_STRING` | 72 | Offset to text string pointer |
 | `TEXT_FONT_SIZE` | 80 | Offset to font size |
 

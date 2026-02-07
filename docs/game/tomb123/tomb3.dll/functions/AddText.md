@@ -23,7 +23,7 @@ The returned pointer can be used to modify the text entry's properties directly 
 | TEXT_X          | Float   | X position                     |
 | TEXT_Y          | Float   | Y position                     |
 | TEXT_COLOR      | UInt16  | Color — `0x0` = white, `0x1111` = yellow. Exact encoding TBD |
-| TEXT_Z_ORDER    | UInt16  | Z position                     |
+| TEXT_Z          | UInt16  | Z position                     |
 | TEXT_STRING     | Pointer | Text string pointer            |
 | TEXT_FONT_SIZE  | Int16   | Font size (e.g. `11000`)       |
 
@@ -91,7 +91,7 @@ function AddText(xOffset, yOffset, zOffset, text):
             slot.unknown_0x44 = 0
             slot[TEXT_STRING] = textBuffer[slotIndex]
             slot.unknown_0x14 = 0
-            slot[TEXT_Z_ORDER] = zOffset
+            slot[TEXT_Z] = zOffset
             slot[TEXT_FLAGS] = 1 (active)
             slot.unknown_0x08 = 0
             slot[TEXT_X] = (float)xOffset
