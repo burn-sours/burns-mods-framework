@@ -28,29 +28,32 @@ module.exports = mod;
 
 The `modules` array determines which game DLLs your mod is compatible with. Loops are automatically skipped when the player is in an unsupported module.
 
+## Runtime Scope
+A mod file is a **declaration**, not a script. You're using a builder API to describe what should happen — the framework then generates and injects the actual runtime script into the game process.
+
+Only the **bodies of your callbacks** make it into the final script. Everything else in your mod file (constants, variables, functions, imports) exists only during the build step and is discarded. Use `game.*` to store any runtime state or constants. The `game` object persists across all callbacks.
+
+
+```javascript
+const MY_CONST = 100;                    // ❌ Build-time only, discarded
+function myHelper() { ... }              // ❌ Build-time only, discarded
+
+mod.init(function() {                    // ✅ This function body is serialized into the game
+    game.MY_CONST = 100;                 // ✅ Exists at runtime
+    game.myHelper = function() { ... };  // ✅ Exists at runtime
+});
+
+mod.hook('SomeFunction')
+    .onEnter(function() {                // ✅ This function body is serialized into the game
+        log(MY_CONST);                   // ❌ ReferenceError — MY_CONST doesn't exist here
+        log(game.MY_CONST);              // ✅ Works
+    });
+```
+
 ## Builder API
 
 All builder methods return `this` for chaining.
 
-> ⚠️ **Scope Warning:** The builder callbacks (`.onEnter()`, `.onLeave()`, `.replace()`, `.run()`, `init()`, `exit()`, `receive()`) are serialized and executed inside the game process, not in Node.js. **Variables, constants, or functions defined outside these callbacks are not available at runtime.**
->
-> ```javascript
-> // ❌ WRONG — this const won't exist in the game script
-> const MAX_SPEED = 130;
-> mod.loop('myLoop').every(50).run(function() {
->     if (speed > MAX_SPEED) { ... }  // ReferenceError: MAX_SPEED is not defined
-> });
->
-> // ✅ CORRECT — define constants on the game object in init
-> mod.init(function() {
->     game.MAX_SPEED = 130;
-> });
-> mod.loop('myLoop').every(50).run(function() {
->     if (speed > game.MAX_SPEED) { ... }  // works
-> });
-> ```
->
-> Use `game.*` to store any runtime state or constants. The `game` object persists across all callbacks.
 
 ### `mod.init(fn)`
 
@@ -96,7 +99,10 @@ mod.hook('SoundEffect')
 // replace works the same way
 mod.hook('SoundEffect')
     .replace(function(soundId, pos, flags) {
+        // completely replaces the game function with our callback
         if (soundId === 42) return 0;
+
+        // run the original function we replaced
         return game.callFunction(game.module, 'SoundEffect', soundId, pos, flags);
     });
 ```
@@ -114,7 +120,9 @@ mod.hook('SoundEffect')
 
 Use either `.onEnter()`/`.onLeave()` or `.replace()`, not both.
 
-> ⚠️ **Warning:** Using `.replace()` can make your mod incompatible with other mods running at the same time. If a second mod hooks the same function after a replace, and the replacing mod is removed first, it can break the game or the other mod. **Only use `.replace()` when you absolutely cannot achieve the result with `.onEnter()`/`.onLeave()`.** Prefer the enter/leave approach as a rule of thumb.
+You should use `.replace()` if you want to completely replace the function, or conditionally prevent it from running.
+
+> ⚠️ **Warning:** Using `.replace()` can make your mod incompatible with other mods running at the same time. If a second mod hooks the same function after a replace, and the replacing mod is removed first, it can break the game or the other mod. **Only use `.replace()` when you absolutely cannot achieve the result with `.onEnter()`/`.onLeave()`.**
 
 ### `mod.loop(name)`
 
