@@ -46,7 +46,7 @@ The returned pointer can be used to modify the text entry's properties directly 
 | TEXT_FLAGS      | UInt32  | Flags (see Text Flags below)   |
 | TEXT_X          | Float   | X position                     |
 | TEXT_Y          | Float   | Y position                     |
-| TEXT_COLOR      | UInt32  | Color — `0x0` = white. Exact encoding TBD |
+| TEXT_COLOR      | UInt32  | Color (see Text Color Format below). Only affects heading font. |
 | TEXT_STRING     | Pointer | Text string pointer            |
 | TEXT_FONT_SIZE  | UInt32  | Font size (e.g. `11000`)       |
 
@@ -73,6 +73,42 @@ The returned pointer can be used to modify the text entry's properties directly 
 | Horizontal | default | TEXT_FLAG_CENTER_H | TEXT_FLAG_END_H |
 | Vertical | default | TEXT_FLAG_CENTER_V | TEXT_FLAG_END_V |
 
+### Text Color Format
+
+TEXT_COLOR is a 32-bit value containing four 8-bit palette indices:
+
+```
+Byte 3    Byte 2    Byte 1    Byte 0
+[Top1]    [Bot1]    [Top2]    [Bot2]
+ └─────────┘         └─────────┘
+  Gradient 1          Gradient 2
+```
+
+Each 16-bit half defines a vertical gradient from top color to bottom color. Normal font ignores this value; only heading font (`TEXT_FLAG_HEADING`) uses it.
+
+**Palette Indices:**
+
+| Index | Color |
+|-------|-------|
+| 0x00 | White |
+| 0x20 | Green |
+| 0x40 | Red |
+| 0x60 | Yellow |
+| 0x80 | Teal |
+| 0xA0 | Light Blue |
+
+**Examples:**
+
+| Value | Result |
+|-------|--------|
+| `0x40404040` | Solid red |
+| `0x20202020` | Solid green |
+| `0x00400040` | White → Red gradient |
+| `0x40004000` | Red → White gradient |
+| `0x00200020` | White → Green gradient |
+
+The `colorHigh` parameter in AddText sets the upper 16 bits (Gradient 1), leaving the lower 16 bits as `0x0000`.
+
 ## Usage
 ### Hooking
 ```javascript
@@ -89,7 +125,7 @@ const entry = game.callFunction(game.module, 'AddText', 0, 0, 0, game.allocStrin
 // Modify properties on the returned entry
 entry.writeU32(TEXT_FLAG_ACTIVE | TEXT_FLAG_CENTER_H | TEXT_FLAG_CENTER_V);  // centered text
 entry.add(TEXT_FONT_SIZE).writeU32(11000);            // font size
-entry.add(TEXT_COLOR).writeU32(0x1111);               // color
+entry.add(TEXT_COLOR).writeU32(0x40404040);           // solid red (only for heading font)
 entry.add(TEXT_X).writeFloat(x);                      // x position
 entry.add(TEXT_Y).writeFloat(y);                      // y position
 
