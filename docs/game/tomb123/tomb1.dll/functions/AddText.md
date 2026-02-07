@@ -50,7 +50,7 @@ The returned pointer can be used to modify the text entry's properties directly 
 | TEXT_STRING     | Pointer | Text string pointer            |
 | TEXT_FONT_SIZE  | UInt32  | Font size (e.g. `11000`)       |
 
-## Text Flags
+### Text Flags
 
 | Flag | Value | Description |
 |------|-------|-------------|
