@@ -26,6 +26,34 @@ The returned pointer can be used to modify the text entry's properties directly 
 | TEXT_STRING     | Pointer | Text string pointer            |
 | TEXT_FONT_SIZE  | UInt32  | Font size (e.g. `11000`)       |
 
+## Text Flags
+
+| Flag | Value | Description |
+|------|-------|-------------|
+| TEXT_FLAG_ACTIVE | 0x1 | Entry is in use |
+| TEXT_FLAG_ALT_COLOR | 0x4 | Alt color for normal font (TR2/TR3 only) |
+| TEXT_FLAG_CENTER_H | 0x10 | Horizontal center |
+| TEXT_FLAG_CENTER_V | 0x20 | Vertical center |
+| TEXT_FLAG_END_H | 0x80 | Horizontal end (right align) |
+| TEXT_FLAG_END_V | 0x100 | Vertical end (bottom align) |
+| TEXT_FLAG_BACKGROUND | 0x200 | Show background behind text |
+| TEXT_FLAG_BORDER | 0x400 | Show border around text |
+| TEXT_FLAG_HEADING | 0x3000 | Heading font (uses gradient color) |
+| TEXT_FLAG_DIM | 0x4000 | Dim text |
+| TEXT_FLAG_OFFSET_H | 0x8000 | Horizontal offset |
+
+### Alignment
+
+| Axis | Start | Center | End |
+|------|-------|--------|-----|
+| Horizontal | default | TEXT_FLAG_CENTER_H | TEXT_FLAG_END_H |
+| Vertical | default | TEXT_FLAG_CENTER_V | TEXT_FLAG_END_V |
+
+### Color Behavior
+
+- **Normal font**: Fixed color with outline. TEXT_COLOR is ignored. Use TEXT_FLAG_ALT_COLOR for alternate color (TR2/TR3 only).
+- **Heading font** (TEXT_FLAG_HEADING): Uses TEXT_COLOR for gradient. Color value controls both gradient colors.
+
 ## Details
 
 | Field     | Value                          |
