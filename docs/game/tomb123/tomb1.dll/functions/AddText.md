@@ -23,7 +23,7 @@ The returned pointer can be used to modify the text entry's properties directly 
 | TEXT_X          | Float   | X position                     |
 | TEXT_Y          | Float   | Y position                     |
 | TEXT_COLOR      | UInt16  | Color — `0x0` = white, `0x1111` = yellow. Exact encoding TBD |
-| TEXT_Z_ORDER    | UInt16  | Z order / render layer         |
+| TEXT_Z_ORDER    | UInt16  | Z position                     |
 | TEXT_STRING     | Pointer | Text string pointer            |
 | TEXT_FONT_SIZE  | Int16   | Font size (e.g. `11000`)       |
 
@@ -41,7 +41,7 @@ The returned pointer can be used to modify the text entry's properties directly 
 |-----|-----------|----------------------------------------------|
 | 0   | `int`     | X position offset on screen                  |
 | 1   | `int`     | Y position offset on screen                  |
-| 2   | `int`     | Z order / render layer offset                |
+| 2   | `int`     | Z position                                   |
 | 3   | `pointer` | Pointer to null-terminated text string        |
 
 ### Return Values
