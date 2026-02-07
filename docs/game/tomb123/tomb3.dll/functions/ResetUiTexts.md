@@ -22,7 +22,7 @@ Resets the UI text pool by clearing all 64 text slots and setting `UiTextsCount`
 mod.hook('ResetUiTexts')
     .onLeave(function() {
         // Add persistent text after the pool is cleared
-        const label = game.callFunction(game.module, 'AddText', 100, 50, UI_RENDER_LAYER, game.allocString('Level Loaded'));
+        const label = game.callFunction(game.module, 'AddText', 100, 50, 0, game.allocString('Level Loaded'));
         // Configure the text entry as needed
         label.add(TEXT_FONT_SIZE).writeS32(11000);
     });
