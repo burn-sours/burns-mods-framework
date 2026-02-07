@@ -79,6 +79,17 @@ Constants are defined at the game level and may be overridden by patch-specific 
 | `TEXT_COLOR` | 64 | Offset to text color |
 | `TEXT_STRING` | 72 | Offset to text string pointer |
 | `TEXT_FONT_SIZE` | 80 | Offset to font size |
+| `TEXT_FLAG_ACTIVE` | 1 | Text entry is in use |
+| `TEXT_FLAG_ALT_COLOR` | 4 | Alt color for normal font (TR2/TR3 only) |
+| `TEXT_FLAG_CENTER_H` | 16 | Horizontal center |
+| `TEXT_FLAG_CENTER_V` | 32 | Vertical center |
+| `TEXT_FLAG_END_H` | 128 | Horizontal end (right align) |
+| `TEXT_FLAG_END_V` | 256 | Vertical end (bottom align) |
+| `TEXT_FLAG_BACKGROUND` | 512 | Show background behind text |
+| `TEXT_FLAG_BORDER` | 1024 | Show border around text |
+| `TEXT_FLAG_HEADING` | 12288 | Heading font (uses gradient color) |
+| `TEXT_FLAG_DIM` | 16384 | Dim text |
+| `TEXT_FLAG_OFFSET_H` | 32768 | Horizontal offset |
 
 ### Rendering
 
