@@ -19,7 +19,7 @@ The returned pointer can be used to modify the text entry's properties directly 
 
 | Constant       | Type    | Description                    |
 |----------------|---------|--------------------------------|
-| TEXT_FLAGS      | Int32   | Flags (e.g. `0x1001`)          |
+| TEXT_FLAGS      | UInt32  | Flags (e.g. `0x1001`)          |
 | TEXT_X          | Float   | X position                     |
 | TEXT_Y          | Float   | Y position                     |
 | TEXT_COLOR      | UInt32  | Color — `0x0` = white. Exact encoding TBD |
@@ -64,7 +64,7 @@ mod.hook('AddText')
 const entry = game.callFunction(game.module, 'AddText', 0, 0, UI_RENDER_LAYER, game.allocString('Hello'));
 
 // Modify properties on the returned entry
-entry.writeS32(0x1001);                              // TEXT_FLAGS
+entry.writeU32(0x1001);                              // TEXT_FLAGS
 entry.add(TEXT_FONT_SIZE).writeU32(11000);            // font size
 entry.add(TEXT_COLOR).writeU32(0x1111);               // color
 entry.add(TEXT_X).writeFloat(x);                      // x position
