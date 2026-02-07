@@ -59,6 +59,17 @@ module.exports = {
         TEXT_COLOR: 0x40,
         TEXT_STRING: 0x48,
         TEXT_FONT_SIZE: 0x50,
+        TEXT_FLAG_ACTIVE: 0x1,
+        TEXT_FLAG_ALT_COLOR: 0x4,
+        TEXT_FLAG_CENTER_H: 0x10,
+        TEXT_FLAG_CENTER_V: 0x20,
+        TEXT_FLAG_END_H: 0x80,
+        TEXT_FLAG_END_V: 0x100,
+        TEXT_FLAG_BACKGROUND: 0x200,
+        TEXT_FLAG_BORDER: 0x400,
+        TEXT_FLAG_HEADING: 0x3000,
+        TEXT_FLAG_DIM: 0x4000,
+        TEXT_FLAG_OFFSET_H: 0x8000,
     },
     patches: {
         "patch4": {
