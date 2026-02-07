@@ -5,6 +5,16 @@ Adds a text entry to the UI text pool for on-screen rendering. Allocates a slot 
 
 The returned pointer can be used to modify the text entry's properties directly (position, font size, color, flags).
 
+## Notes
+- Maximum of 64 simultaneous text entries (pool size `0x40`). Returns null when full.
+- Each text slot has a 512-byte string buffer (`0x200`), so text is limited to that length.
+- The text string is copied into the internal buffer — the original pointer does not need to stay valid after the call.
+- Increments UiTextsCount on success.
+- The pool search is unrolled — walks 4 slots at a time looking for inactive entries (active flag bit 0 == 0).
+- X and Y offsets are stored internally as floats.
+- A default font size value is applied from a global setting if it is not -1, otherwise defaults to `0x10000`.
+- The text content can be updated after creation by writing to the text buffer via `entry.add(TEXT_STRING).readPointer().writeUtf8String()`.
+
 ## Details
 
 | Field     | Value                          |
@@ -28,16 +38,6 @@ The returned pointer can be used to modify the text entry's properties directly 
 |-----------|----------------------------------------------|
 | `pointer` | Pointer to the allocated text entry in the pool |
 | `null`    | Text was null or pool is full (64 entries)   |
-
-## Notes
-- Maximum of 64 simultaneous text entries (pool size `0x40`). Returns null when full.
-- Each text slot has a 512-byte string buffer (`0x200`), so text is limited to that length.
-- The text string is copied into the internal buffer — the original pointer does not need to stay valid after the call.
-- Increments UiTextsCount on success.
-- The pool search is unrolled — walks 4 slots at a time looking for inactive entries (active flag bit 0 == 0).
-- X and Y offsets are stored internally as floats.
-- A default font size value is applied from a global setting if it is not -1, otherwise defaults to `0x10000`.
-- The text content can be updated after creation by writing to the text buffer via `entry.add(TEXT_STRING).readPointer().writeUtf8String()`.
 
 ## Text Entry Structure
 
