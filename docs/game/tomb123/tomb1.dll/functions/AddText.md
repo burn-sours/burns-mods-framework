@@ -75,7 +75,7 @@ The returned pointer can be used to modify the text entry's properties directly 
 
 ### Text Color Format
 
-TEXT_COLOR is a 32-bit value containing four 8-bit palette indices:
+TEXT_COLOR is a 32-bit value containing four 8-bit palette indices. Each 16-bit half defines a vertical gradient from top color to bottom color. Normal font ignores this value; only heading font (`TEXT_FLAG_HEADING`) uses it.
 
 ```
 Byte 3    Byte 2    Byte 1    Byte 0
@@ -83,8 +83,6 @@ Byte 3    Byte 2    Byte 1    Byte 0
  └─────────┘         └─────────┘
   Gradient 1          Gradient 2
 ```
-
-Each 16-bit half defines a vertical gradient from top color to bottom color. Normal font ignores this value; only heading font (`TEXT_FLAG_HEADING`) uses it.
 
 **Palette Indices:**
 
