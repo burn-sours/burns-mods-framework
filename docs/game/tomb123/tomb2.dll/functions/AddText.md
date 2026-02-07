@@ -75,34 +75,37 @@ The returned pointer can be used to modify the text entry's properties directly 
 
 ### Text Color Format
 
-TEXT_COLOR is a 32-bit value split into two 16-bit color values. Normal font ignores this; only heading font (`TEXT_FLAG_HEADING`) uses it.
+TEXT_COLOR is a 32-bit value split into two 16-bit halves (typically set to the same value). Normal font ignores this; only heading font (`TEXT_FLAG_HEADING`) uses it.
+
+Each 16-bit value defines a vertical gradient:
+- **High byte** = top color (palette index)
+- **Low byte** = bottom color (palette index)
 
 ```
    Upper 16 bits      Lower 16 bits
-  [High]   [Low]     [High]   [Low]
+  [Top]    [Bot]     [Top]    [Bot]
      └───────┘          └───────┘
-      Color 1            Color 2
+    Gradient 1         Gradient 2
 ```
 
-Each 16-bit color produces a gradient. The high byte and low byte combine to determine the gradient colors.
+**Palette Indices:**
 
-**Solid Colors (same byte repeated):**
-
-| Value | Color |
+| Index | Color |
 |-------|-------|
-| `0x40404040` | Red |
-| `0x20202020` | Green |
-| `0x60606060` | Yellow |
-| `0x80808080` | Teal |
+| 0x00 | White |
+| 0x20 | Green |
+| 0x40 | Red |
+| 0x60 | Yellow |
+| 0x80 | Teal |
 
-**Gradient Colors (different high/low bytes):**
+**Examples:**
 
-| Value | Gradient |
-|-------|----------|
-| `0x00400040` | Light gold → Gold |
-| `0x40004000` | Red → Dark red |
-| `0x00200020` | Light green → Green |
-| `0x20002000` | Orange tones |
+| Value | Result |
+|-------|--------|
+| `0x40404040` | Solid red (0x40 → 0x40) |
+| `0x00400040` | Light gold → Gold (0x00 → 0x40) |
+| `0x00200020` | Light green → Green (0x00 → 0x20) |
+| `0x20002000` | Orange gradient (0x20 → 0x00) |
 
 The `colorHigh` parameter in AddText sets the upper 16 bits, leaving the lower 16 bits as `0x0000`.
 
