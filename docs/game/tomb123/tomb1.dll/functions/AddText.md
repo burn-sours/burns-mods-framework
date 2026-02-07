@@ -75,13 +75,12 @@ The returned pointer can be used to modify the text entry's properties directly 
 
 ### Text Color Format
 
-TEXT_COLOR is a 32-bit value containing four 8-bit palette indices. Each 16-bit half defines a vertical gradient from top color to bottom color. Normal font ignores this value; only heading font (`TEXT_FLAG_HEADING`) uses it.
+TEXT_COLOR is a 32-bit value containing four 8-bit palette indices that combine to produce gradient colors. Normal font ignores this value; only heading font (`TEXT_FLAG_HEADING`) uses it.
 
 ```
 Byte 3    Byte 2    Byte 1    Byte 0
-[Top1]    [Bot1]    [Top2]    [Bot2]
- └─────────┘         └─────────┘
-  Gradient 1          Gradient 2
+  └─────────┘         └─────────┘
+   Color 1             Color 2
 ```
 
 **Palette Indices:**
@@ -101,9 +100,10 @@ Byte 3    Byte 2    Byte 1    Byte 0
 |-------|--------|
 | `0x40404040` | Solid red |
 | `0x20202020` | Solid green |
-| `0x00400040` | White → Red gradient |
-| `0x40004000` | Red → White gradient |
-| `0x00200020` | White → Green gradient |
+| `0x00400040` | Golds |
+| `0x40004000` | Reds |
+| `0x00200020` | Greens |
+| `0x20002000` | Oranges |
 
 The `colorHigh` parameter in AddText sets the upper 16 bits (Gradient 1), leaving the lower 16 bits as `0x0000`.
 
