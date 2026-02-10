@@ -129,6 +129,8 @@ process.on('unhandledRejection', async (err) => {
     process.exit(1);
 });
 
+ipcMain.handle('get-platform', () => process.platform);
+
 ipcMain.handle('launch', async () => {
     await client.start();
 });
